@@ -1,9 +1,9 @@
 public class Tile {
-    private TileType tileType;
+    private ResourceType resourceType;
     private int value;
     private boolean robber;
-    public Tile(TileType type, int val){
-        tileType = type;
+    public Tile(ResourceType type, int val){
+        resourceType = type;
         value = val;
         robber = false;
     }
@@ -20,7 +20,7 @@ public class Tile {
         return value;
     }
 
-    public TileType getTileType() {
-        return tileType;
+    public ResourceType getTileType() {
+        return resourceType;
     }
 }

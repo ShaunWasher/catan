@@ -1,10 +1,10 @@
 public class ResourceCard {
-    TileType cardType;
-    public ResourceCard(TileType type){
+    ResourceType cardType;
+    public ResourceCard(ResourceType type){
         cardType = type;
     }
 
-    public TileType getCardType() {
+    public ResourceType getCardType() {
         return cardType;
     }
 }
