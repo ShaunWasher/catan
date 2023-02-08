@@ -1,3 +1,5 @@
+package com.example.thesettlers;
+
 public class Settlement {
     private Road[] roads;
     private Tile[] tiles;

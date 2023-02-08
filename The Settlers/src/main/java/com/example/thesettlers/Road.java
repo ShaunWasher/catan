@@ -1,3 +1,4 @@
+package com.example.thesettlers;
 public class Road {
     private Player owner;
     private Settlement settlementA;
@@ -24,14 +25,14 @@ public class Road {
         this.owner = owner;
     }
 
-    public Settlement getNextSettlement(Settlement startingSettlement){
+    public Settlement getNextSettlement(Settlement startingSettlement) throws Exception {
         if(startingSettlement == settlementA){
             return settlementB;
         }
         else if(startingSettlement == settlementB){
             return settlementA;
         }
-        throw new Exception();
+        throw new Exception("error");
 
     }
 }

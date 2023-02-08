@@ -1,24 +1,29 @@
-import java.util.Arraylist;
+package com.example.thesettlers;
+import com.example.thesettlers.enums.*;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+
 public class Player {
     int playerID;
-    ArrayList settlements;
+    ArrayList<Settlement> settlements;
     Road[] roads;
-    ResourceCard[] resourceCards;
+    Dictionary<ResourceType,Integer> resourceCards;
     DevelopmentCard[] developmentCards;
     int victoryPoints;
     int longestRoadLength;
     int armySize;
     public Player(int playerNumber){
-        settlements = new Settlement[5];
+        settlements = new ArrayList<>();
         roads = new Road[15];
-        resourceCards = new ResourceCard[95];
+        //resourceCards = new Dictionary<ResourceType, Integer>();
         developmentCards = new DevelopmentCard[25];
         victoryPoints = 0;
         longestRoadLength = 0;
         armySize = 0;
         playerID = playerNumber;
     }
-    public void placeSettlement(Settlement settlement){
+    public void placeSettlement(Settlement settlement) throws Exception {
         for (Road road:settlement.getRoads()){
             if(road.getNextSettlement(settlement).getOwner() != null){
                 throw new Exception();
