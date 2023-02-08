@@ -1,5 +1,6 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.TerrainType;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import java.util.ArrayList;
@@ -12,17 +13,14 @@ public class GameBoard {
 
     private int rowCount = 5;
     private double yStartOffset = 240;
-    private final static double r = 60; // the inner radius from hexagon center to outer corner
-    private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
-    private final static double TILE_HEIGHT = 2 * r;
-    private final static double TILE_WIDTH = 2 * n;
     private Pane gameBoard;
     private Pane tilePane;
     private Pane circlePane;
     private String mapType;
-    private List<String> tileList;
+    private List<TerrainType> tileList;
     private List<Integer> indices;
-
+    private final static double r = 60; // the inner radius from hexagon center to outer corner
+    private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
     public GameBoard(String mapType) {
         this.mapType = mapType;
         gameBoard = new Pane();
@@ -30,25 +28,25 @@ public class GameBoard {
         circlePane = new Pane();
 
         tileList = new ArrayList<>();
-        tileList.add("MOUNTAIN");
-        tileList.add("PASTURE");
-        tileList.add("FOREST");
-        tileList.add("FIELDS");
-        tileList.add("HILLS");
-        tileList.add("PASTURE");
-        tileList.add("HILLS");
-        tileList.add("FIELDS");
-        tileList.add("FOREST");
-        tileList.add("DESERT");
-        tileList.add("FOREST");
-        tileList.add("MOUNTAIN");
-        tileList.add("FOREST");
-        tileList.add("MOUNTAIN");
-        tileList.add("FIELDS");
-        tileList.add("PASTURE");
-        tileList.add("HILLS");
-        tileList.add("FIELDS");
-        tileList.add("PASTURE");
+        tileList.add(TerrainType.MOUNTAINS);
+        tileList.add(TerrainType.PASTURE);
+        tileList.add(TerrainType.FOREST);
+        tileList.add(TerrainType.FIELDS);
+        tileList.add(TerrainType.HILLS);
+        tileList.add(TerrainType.PASTURE);
+        tileList.add(TerrainType.HILLS);
+        tileList.add(TerrainType.FIELDS);
+        tileList.add(TerrainType.FOREST);
+        tileList.add(TerrainType.DESERT);
+        tileList.add(TerrainType.FOREST);
+        tileList.add(TerrainType.MOUNTAINS);
+        tileList.add(TerrainType.FOREST);
+        tileList.add(TerrainType.MOUNTAINS);
+        tileList.add(TerrainType.FIELDS);
+        tileList.add(TerrainType.PASTURE);
+        tileList.add(TerrainType.HILLS);
+        tileList.add(TerrainType.FIELDS);
+        tileList.add(TerrainType.PASTURE);
 
         indices = new ArrayList<>();
         for (int i = 0; i < tileList.size(); i++) {
@@ -74,19 +72,18 @@ public class GameBoard {
             }
 
             for (int x = 0; x < tilesPerRow; x++) {
-                double xCoord = x * TILE_WIDTH + (y % 2) * n + xStartOffset;
-                double yCoord = y * TILE_HEIGHT * 0.75 + yStartOffset;
+                double xCoord = x * (r*2) + (y % 2) * n + xStartOffset;
+                double yCoord = y * (n*2) * 0.75 + yStartOffset;
                 if (Objects.equals(mapType, "Starting Map")) {
-                    Polygon tile = new Hexagon(r, n, TILE_WIDTH, xCoord, yCoord, tileList.get(count));
-                    tilePane.getChildren().add(tile);
+                    Tile tile = new Tile(xCoord, yCoord, tileList.get(count), 10);
+                    tilePane.getChildren().add(tile.getHexagon());
                     count++;
                 } else if (Objects.equals(mapType, "Random")) {
                     java.util.Collections.shuffle(indices);
                     int randomIndex = indices.remove(indices.size() - 1);
-                    String randomElement = tileList.get(randomIndex);
-                    Polygon tile = new Hexagon(r, n, TILE_WIDTH, xCoord, yCoord, randomElement);
-
-                    tilePane.getChildren().add(tile);
+                    TerrainType randomElement = tileList.get(randomIndex);
+                    Tile tile = new Tile(xCoord, yCoord, randomElement, 0);
+                    tilePane.getChildren().add(tile.getHexagon());
                 }
 
             }
