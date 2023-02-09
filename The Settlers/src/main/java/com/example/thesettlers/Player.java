@@ -12,7 +12,7 @@ public class Player {
     private ArrayList<Settlement> settlements;
     private int roadCount;
     private EnumMap<ResourceType,Integer> resourceCards;
-    private DevelopmentCard[] developmentCards;
+    private ArrayList<DevelopmentCard> developmentCards;
     private int victoryPoints;
     private int longestRoadLength;
     private int armySize;
@@ -25,7 +25,7 @@ public class Player {
         resourceCards.put(ResourceType.ORE, 0);
         resourceCards.put(ResourceType.WOOL, 0);
         resourceCards.put(ResourceType.GRAIN, 0);
-        developmentCards = new DevelopmentCard[25];
+        developmentCards = new ArrayList<>();
         victoryPoints = 0;
         longestRoadLength = 0;
         armySize = 0;
@@ -93,6 +93,20 @@ public class Player {
             else{
                 throw new Exception("not enough resources");
             }
+        }
+    }
+
+    public void buyDevCard() throws Exception {
+        //TODO check queue is not empty
+        //spend resources on road
+        if(resourceCards.get(ResourceType.ORE) > 0 && resourceCards.get(ResourceType.WOOL) > 0 && resourceCards.get(ResourceType.GRAIN) > 0){
+            resourceCards.merge(ResourceType.ORE, -1, Integer::sum);
+            resourceCards.merge(ResourceType.WOOL, -1, Integer::sum);
+            resourceCards.merge(ResourceType.GRAIN, -1, Integer::sum);
+            // TODO developmentCards.add() [take card off queue and put in player's hand]
+        }
+        else{
+            throw new Exception("not enough resources");
         }
     }
 
