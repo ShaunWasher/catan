@@ -29,10 +29,10 @@ public class Player {
                 throw new Exception();
             }
         }
-        if(!gamestate! == "start"){
-            settlement.setOwner(this);
-            settlements
-        }
+        //if(!gamestate! == "start"){
+        //    settlement.setOwner(this);
+        //    settlements
+        //}
     }
     public int getNumberOfCities(){
         int count = 0;

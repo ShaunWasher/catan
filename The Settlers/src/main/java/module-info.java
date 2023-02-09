@@ -8,6 +8,7 @@ module com.example.numbertwo {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
+    requires com.opencsv;
 
     opens com.example.thesettlers to javafx.fxml;
     exports com.example.thesettlers;

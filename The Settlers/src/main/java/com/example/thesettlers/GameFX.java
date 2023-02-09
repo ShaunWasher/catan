@@ -13,7 +13,7 @@ public class GameFX extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Settlers");
         primaryStage.setFullScreen(true);
-        Pane gameBoard = new GameBoard("Random").getBoard();
+        Pane gameBoard = new GameBoard("Starting Map").getBoard();
         gameBoard.setId("tile_map");
         Scene content = new Scene(gameBoard);
         content.setFill(Color.web("3e91c4"));
