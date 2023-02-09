@@ -8,13 +8,13 @@ public class Settlement {
     private ArrayList<Tile> tiles;
     private Player owner;
     boolean isCity;
-    Icon icon;
+    SettlementIcon icon;
     public Settlement(double x, double y){
         this.roads = new ArrayList<>();
         this.tiles = new ArrayList<>();
         owner = null;
         isCity = false;
-        icon = new Icon(x, y, owner);
+        icon = new SettlementIcon(x, y, owner);
     }
     public Rectangle getIcon() {
         return icon.getRectangle();

@@ -4,10 +4,10 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
-public class Icon {
+public class SettlementIcon {
     private Rectangle rectangle;
 
-    Icon(double x, double y, Player owner) {
+    SettlementIcon(double x, double y, Player owner) {
         rectangle = new Rectangle(x,y,35,35);
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
         rectangle.setOnMouseClicked(e -> rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm()))));

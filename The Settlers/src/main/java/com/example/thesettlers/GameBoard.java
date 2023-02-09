@@ -1,6 +1,8 @@
 package com.example.thesettlers;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,11 +15,12 @@ import static java.lang.Math.sqrt;
 
 public class GameBoard {
 
-    private int rowCount = 5;
+    private int rowCount = 6;
     private double yStartOffset = 240;
     private Pane gameBoard;
     private Pane tilePane;
-    private Pane circlePane;
+    private Pane labelPane;
+    private Pane settlementPane;
     private String mapType;
     private List<String> terrainList;
     private List<Integer> valueList;
@@ -29,7 +32,8 @@ public class GameBoard {
         this.mapType = mapType;
         gameBoard = new Pane();
         tilePane = new Pane();
-        circlePane = new Pane();
+        labelPane = new Pane();
+        settlementPane = new Pane();
         terrainList = new ArrayList<>();
         valueList = new ArrayList<>();
 
@@ -40,7 +44,7 @@ public class GameBoard {
         String line = "";
         String splitBy = ",";
         while ((line = br.readLine()) != null) {
-            String[] data = line.split(splitBy);    // use comma as separator
+            String[] data = line.split(splitBy);
             terrainList.add(data[0]);
             valueList.add(Integer.parseInt(data[1]));
         }
@@ -52,33 +56,29 @@ public class GameBoard {
     }
 
     public Pane getBoard() {
+        int[] tilesPerRowValues = {3, 4, 5, 4, 3, 0};
+        int[] settlementsPerRowValues = {3,4,5,6,5,4};
+        int[] settlementsPerRowValues2 = {4,5,6,5,4,3};
+        double[] tilesxStartOffsetValue = {(460 + (2 * n)),460,460,460,(460 + (2 * n)),0};
+        double[] settlementxStartOffsetValue = {(460 + (2 * n)),460,460,460-(2 * n),460,460};
+        double[] settlementxStartOffsetValue2 = {(460 + n),460-n,(460-n),460-n,460+n,460+n};
         int count = 0;
         for (int y = 0; y < rowCount; y++) {
-
-            int tilesPerRow;
-            double xStartOffset;
-            if (y == 0 || y == rowCount - 1) {
-                tilesPerRow = 3;
-                xStartOffset = 460 + (2 * n);
-            } else if (y == 1 || y == rowCount - 2) {
-                tilesPerRow = 4;
-                xStartOffset = 460;
-            } else {
-                tilesPerRow = 5;
-                xStartOffset = 460;
-            }
+            int tilesPerRow = tilesPerRowValues[y];
+            int settlementsPerRow = settlementsPerRowValues[y];
+            int settlementsPerRow2 = settlementsPerRowValues2[y];
+            double tilesxStartOffset = tilesxStartOffsetValue[y];
+            double settlementxStartOffset = settlementxStartOffsetValue[y];
+            double settlementxStartOffset2 = settlementxStartOffsetValue2[y];
 
             for (int x = 0; x < tilesPerRow; x++) {
-                double xCoord = x * (n * 2) + (y % 2) * n + xStartOffset;
+                double xCoord = x * (n * 2) + (y % 2) * n + tilesxStartOffset;
                 double yCoord = y * (r * 2) * 0.75 + yStartOffset;
                 if (Objects.equals(mapType, "Starting Map")) {
                     Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count));
-                    Settlement settlement = new Settlement (xCoord+ n - 17.5,yCoord- 47.5);
-                    circlePane.getChildren().add(settlement.getIcon());
                     tilePane.getChildren().add(tile.getHexagon());
-                    circlePane.getChildren().add(tile.getValueLabel());
+                    labelPane.getChildren().add(tile.getValueLabel());
                     count++;
-
                 } else if (Objects.equals(mapType, "Random")) {
                     // Does not work yet
                     /*java.util.Collections.shuffle(indices);
@@ -93,15 +93,38 @@ public class GameBoard {
                     rect.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
                     rect.setOnMouseClicked(e -> rect.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm()))));
                     circlePane.getChildren().add(rect);
-
-
                     */
                 }
 
             }
+            for (int x = 0; x < settlementsPerRow; x++) {
+                System.out.println(y);
+                System.out.println(settlementsPerRow);
+                System.out.println(settlementxStartOffset);
+                double xCoord = x * (n * 2) + (y % 2) * n + settlementxStartOffset;
+                double yCoord = y * (r * 2) * 0.75 + yStartOffset;
+                Settlement settlement = new Settlement(xCoord + n - 17.5, yCoord - 47.5);
+                settlementPane.getChildren().add(settlement.getIcon());
+            }
+
+            for (int x = 0; x < settlementsPerRow2; x++) {
+                System.out.println(y);
+                System.out.println(settlementsPerRow2);
+                System.out.println(settlementxStartOffset2);
+                double xCoord = x * (n * 2) + (y % 2) * n + settlementxStartOffset2;
+                double yCoord = y * (r * 2) * 0.75 + yStartOffset + r -30;
+                Settlement settlement = new Settlement(xCoord + n - 17.5, yCoord - 47.5);
+                settlementPane.getChildren().add(settlement.getIcon());
+            }
+
+
+
+
         }
-        gameBoard.getChildren().addAll(circlePane, tilePane);
-        circlePane.toFront();
+        
+        gameBoard.getChildren().addAll(labelPane, tilePane, settlementPane);
+        tilePane.toBack();
+        settlementPane.toFront();
         return gameBoard;
     }
 }
