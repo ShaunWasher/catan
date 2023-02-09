@@ -12,6 +12,16 @@ public class Settlement {
         isCity = false;
     }
 
+    //check if there is a road connection to the player
+    public boolean checkRoadConnection(Player player){
+        for(Road road: roads){
+            if(road.getOwner() == player){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Road[] getRoads() {
         return roads;
     }

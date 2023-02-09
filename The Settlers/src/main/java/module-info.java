@@ -1,4 +1,4 @@
-module com.example.numbertwo {
+module com.example.thesettlers {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -7,7 +7,7 @@ module com.example.numbertwo {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
-    requires com.almasb.fxgl.all;
+    //requires com.almasb.fxgl.all;
     requires com.opencsv;
 
     opens com.example.thesettlers to javafx.fxml;

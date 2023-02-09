@@ -25,14 +25,13 @@ public class Road {
         this.owner = owner;
     }
 
-    public Settlement getNextSettlement(Settlement startingSettlement) throws Exception {
+    public Settlement getNextSettlement(Settlement startingSettlement){
         if(startingSettlement == settlementA){
             return settlementB;
         }
         else if(startingSettlement == settlementB){
             return settlementA;
         }
-        throw new Exception("error");
-
+        return null;
     }
 }
