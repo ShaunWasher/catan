@@ -1,8 +1,7 @@
 package com.example.thesettlers;
-import com.example.thesettlers.enums.TerrainType;
-import javafx.scene.image.Image;
-import javafx.scene.shape.Circle;
 
+import com.example.thesettlers.enums.TerrainType;
+import javafx.scene.shape.Circle;
 import java.util.Objects;
 
 public class Tile {

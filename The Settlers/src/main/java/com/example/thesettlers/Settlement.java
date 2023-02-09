@@ -1,15 +1,23 @@
 package com.example.thesettlers;
 
+import javafx.scene.shape.Rectangle;
+import java.util.ArrayList;
+
 public class Settlement {
-    private Road[] roads;
-    private Tile[] tiles;
+    private ArrayList<Road> roads;
+    private ArrayList<Tile> tiles;
     private Player owner;
     boolean isCity;
-    public Settlement(Road[] roads, Tile[] tiles){
-        this.roads = roads;
-        this.tiles = tiles;
+    Icon icon;
+    public Settlement(double x, double y){
+        this.roads = new ArrayList<>();
+        this.tiles = new ArrayList<>();
         owner = null;
         isCity = false;
+        icon = new Icon(x, y, owner);
+    }
+    public Rectangle getIcon() {
+        return icon.getRectangle();
     }
 
     //check if there is a road connection to the player
@@ -22,11 +30,11 @@ public class Settlement {
         return false;
     }
 
-    public Road[] getRoads() {
+    public ArrayList<Road> getRoads() {
         return roads;
     }
 
-    public Tile[] getTiles() {
+    public ArrayList<Tile> getTiles() {
         return tiles;
     }
 

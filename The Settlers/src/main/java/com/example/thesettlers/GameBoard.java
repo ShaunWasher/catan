@@ -1,26 +1,14 @@
 package com.example.thesettlers;
 
-import com.example.thesettlers.enums.TerrainType;
-import com.opencsv.exceptions.CsvException;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import com.opencsv.CSVReader;
 import java.io. * ;
-import java.util.Scanner;
-
 import static java.lang.Math.sqrt;
 
 public class GameBoard {
@@ -71,7 +59,7 @@ public class GameBoard {
             double xStartOffset;
             if (y == 0 || y == rowCount - 1) {
                 tilesPerRow = 3;
-                xStartOffset = 460 + (2 * ((sqrt(3) / 2) * r));
+                xStartOffset = 460 + (2 * n);
             } else if (y == 1 || y == rowCount - 2) {
                 tilesPerRow = 4;
                 xStartOffset = 460;
@@ -85,6 +73,8 @@ public class GameBoard {
                 double yCoord = y * (r * 2) * 0.75 + yStartOffset;
                 if (Objects.equals(mapType, "Starting Map")) {
                     Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count));
+                    Settlement settlement = new Settlement (xCoord+ n - 17.5,yCoord- 47.5);
+                    circlePane.getChildren().add(settlement.getIcon());
                     tilePane.getChildren().add(tile.getHexagon());
                     circlePane.getChildren().add(tile.getValueLabel());
                     count++;
@@ -97,34 +87,19 @@ public class GameBoard {
                     int randomValue = valueList.get(randomIndex);
                     Tile tile = new Tile(xCoord, yCoord,randomTile,randomIndex);
                     tilePane.getChildren().add(tile.getHexagon());
-                    circlePane.getChildren().add(tile.getValueLabel());*/
+                    circlePane.getChildren().add(tile.getValueLabel());
+
+                    Rectangle rect = new Rectangle(xCoord+ n - 17.5,yCoord- 47.5,35,35);
+                    rect.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
+                    rect.setOnMouseClicked(e -> rect.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm()))));
+                    circlePane.getChildren().add(rect);
+
+
+                    */
                 }
 
             }
         }
-        /*for (int y = 0; y < rowCount; y++) {
-
-            int tilesPerRow;
-            double xStartOffset;
-            if (y == 0 || y == rowCount - 1) {
-                tilesPerRow = 3;
-                xStartOffset = 460 + (3 * ((sqrt(3) / 2) * r));
-            } else if (y == 1 || y == rowCount - 2) {
-                tilesPerRow = 4;
-                xStartOffset = 460 + (((sqrt(3) / 2) * r));
-            } else {
-                tilesPerRow = 5;
-                xStartOffset = 460 + (((sqrt(3) / 2) * r));
-            }
-
-            for (int x = 0; x < tilesPerRow; x++) {
-                double xCoord = x * (n * 2) + (y % 2) * n + xStartOffset;
-                double yCoord = y * (r * 2) * 0.75 + yStartOffset + 30;
-                Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count));
-                tilePane.getChildren().add(tile.getValueLabel());
-                count++;
-            }
-        }*/
         gameBoard.getChildren().addAll(circlePane, tilePane);
         circlePane.toFront();
         return gameBoard;
