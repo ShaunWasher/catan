@@ -16,6 +16,7 @@ public class GameBoard {
     private Pane tilePane;
     private Pane labelPane;
     private Pane settlementPane;
+    private Pane roadPane;
     private String mapType;
     private List<String> terrainList;
     private List<Integer> valueList;
@@ -29,6 +30,7 @@ public class GameBoard {
         tilePane = new Pane();
         labelPane = new Pane();
         settlementPane = new Pane();
+        roadPane = new Pane();
         terrainList = new ArrayList<>();
         valueList = new ArrayList<>();
 
@@ -54,9 +56,8 @@ public class GameBoard {
             int tilesPerRow = tilesPerRowValues[y];
             double tilesxStartOffset = tilesxStartOffsetValue[y];
             for (int x = 0; x < tilesPerRow; x++) {
-                System.out.println("Y Value:"+ y);
-                double xCoord = x * (n * 2) + (y % 2) * n + tilesxStartOffset;
-                double yCoord = y * (r * 2) * 0.75 + yStartOffset;
+                double xCoord = (x * (n * 2) + (y % 2) * n) + tilesxStartOffset;
+                double yCoord = (y * (r * 2) * 0.75) + yStartOffset;
                 Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count));
                 tilePane.getChildren().add(tile.getHexagon());
                 labelPane.getChildren().add(tile.getValueLabel());
@@ -76,38 +77,51 @@ public class GameBoard {
                 if (y % 2 == 0) {
                     yCoord = (y / 2) * (r * 2) * 0.75 + yStartOffset;
                 } else {
-                    yCoord = ((y - 1) / 2) * (r * 2) * 0.75 + yStartOffset + r - 30;
+                    yCoord = ((y - 1) / 2) * (r * 2) * 0.75 + yStartOffset + 30;
                 }
                 Settlement settlement = new Settlement(xCoord + n - 17.5, yCoord - 47.5);
                 settlementPane.getChildren().add(settlement.getIcon());
             }
         }
-        /*
-        int[] roadsPerRowValues = {6,4,8,5,10,6,10,5,8,4,6};
-        double[] roadxStartOffsetValue = {460 + (2 * n),460,460+n,460-n,460,460-(2*n),460-n,460-n,460,460,460+n};
+        int[] roadsPerRowValues = {6, 4, 8, 5, 10, 6, 10, 5, 8, 4, 6};
+        double[] roadxStartOffsetValue = {460 + (2.5 * n), 460 + (2 * n), 460 + (1.5 * n), 460 + n, 460 + (0.5 * n), 460, 460 + (0.5 * n), 460 + n, 460 + (1.5 * n), 460 + (2 * n), 460 + (2.5 * n)};
 
         for (int y = 0; y < 11; y++) {
+            int version;
+            double xCoord;
+            double yCoord;
             int roadsPerRow = roadsPerRowValues[y];
             double roadxStartOffset = roadxStartOffsetValue[y];
             for (int x = 0; x < roadsPerRow; x++) {
-                double xCoord = x * (n * 2) + (y % 2) * n + roadxStartOffset;
-                double yCoord;
+                yCoord = (y * 45) + yStartOffset - 15;
                 if (y % 2 == 0) {
-                    yCoord = (y / 2) * (r * 2) * 0.75 + yStartOffset;
+                    xCoord = (x * (n)) + roadxStartOffset;
+                    if (y < 6) {
+                        if (x % 2 == 0) {
+                            version = 1;
+                        } else {
+                            version = 2;
+                        }
+                    } else {
+                        if (x % 2 == 0) {
+                            version = 2;
+                        } else {
+                            version = 1;
+                        }
+                    }
+                } else {
+                    xCoord = (x * (2 * n)) + roadxStartOffset;
+                    version = 3;
                 }
-                else {
-                    yCoord = ((y-1)/2) * (r * 2) * 0.75 + yStartOffset + r - 30;
-                }
-                Settlement settlement = new Settlement(xCoord + n - 17.5, yCoord - 47.5);
-                settlementPane.getChildren().add(settlement.getIcon());
+                Road road = new Road(xCoord - 22.5, yCoord - 22.5, version);
+                roadPane.getChildren().add(road.getIcon());
             }
-        }*/
+        }
 
-
-
-        gameBoard.getChildren().addAll(labelPane, tilePane, settlementPane);
+        gameBoard.getChildren().addAll(labelPane, tilePane, settlementPane, roadPane);
         tilePane.toBack();
         settlementPane.toFront();
         return gameBoard;
+
     }
 }

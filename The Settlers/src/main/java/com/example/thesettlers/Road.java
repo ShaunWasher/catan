@@ -1,14 +1,23 @@
 package com.example.thesettlers;
+
+import javafx.scene.shape.Rectangle;
+
 public class Road {
     private Player owner;
     private Settlement settlementA;
     private Settlement settlementB;
-    public Road(Settlement setA, Settlement setB){
+    RoadIcon icon;
+
+    public Road(double x, double y, int version){
+        settlementA = null;
+        settlementB = null;
         owner = null;
-        settlementA = setA;
-        settlementB = setB;
+        icon = new RoadIcon(x, y, version);
     }
 
+    public Rectangle getIcon() {
+        return icon.getRectangle();
+    }
     public Player getOwner() {
         return owner;
     }
