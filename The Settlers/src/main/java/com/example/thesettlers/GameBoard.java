@@ -20,6 +20,11 @@ public class GameBoard {
     private String mapType;
     private List<String> terrainList;
     private List<Integer> valueList;
+    private Integer[][] tileSettlementData;
+    private Integer[][] roadSettlementData;
+    private Settlement[] settlementList;
+    private Road[] roadList;
+    private Tile[] tileList;
     private double yStartOffset = 240;
     private final static double r = 60; // the inner radius from hexagon center to outer corner
     private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
@@ -33,18 +38,54 @@ public class GameBoard {
         roadPane = new Pane();
         terrainList = new ArrayList<>();
         valueList = new ArrayList<>();
+        tileSettlementData = new Integer[19][6];
+        roadSettlementData = new Integer[72][2];
+        settlementList = new Settlement[54];
+        tileList = new Tile[19];
+        roadList = new Road[72];
 
-        URL fileUrl = getClass().getResource("startingmap.csv");
-        File file = new File(fileUrl.toURI());
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
+
         String line = "";
         String splitBy = ",";
-        while ((line = br.readLine()) != null) {
+        URL fileUrlSM = getClass().getResource("startingmap.csv");
+        File fileSM = new File(fileUrlSM.toURI());
+        FileReader frSM = new FileReader(fileSM);
+        BufferedReader brSM = new BufferedReader(frSM);
+        while ((line = brSM.readLine()) != null) {
             String[] data = line.split(splitBy);
             terrainList.add(data[0]);
             valueList.add(Integer.parseInt(data[1]));
         }
+
+        URL fileUrlTS = getClass().getResource("tilesettlementdata.csv");
+        File fileTS = new File(fileUrlTS.toURI());
+        FileReader frTS = new FileReader(fileTS);
+        BufferedReader brTS = new BufferedReader(frTS);
+        int i = 0;
+        while ((line = brTS.readLine()) != null) {
+            String[] data = line.split(splitBy);
+            for (int j = 0; j < 6; j++) {
+                Integer d = Integer.parseInt(data[j]);
+                tileSettlementData[i][j]=d;
+            }
+            i++;
+        }
+
+        URL fileUrlRS = getClass().getResource("roadsettlementdata.csv");
+        File fileRS = new File(fileUrlRS.toURI());
+        FileReader frRS = new FileReader(fileRS);
+        BufferedReader brRS = new BufferedReader(frRS);
+        i = 0;
+        while ((line = brRS.readLine()) != null) {
+            String[] data = line.split(splitBy);
+            for (int j = 0; j < 2; j++) {
+                Integer d = Integer.parseInt(data[j]);
+                roadSettlementData[i][j]=d;
+                System.out.println(d);
+            }
+            i++;
+        }
+
     }
     public Pane getBoard() {
 
@@ -59,6 +100,7 @@ public class GameBoard {
                 double xCoord = (x * (n * 2) + (y % 2) * n) + tilesxStartOffset;
                 double yCoord = (y * (r * 2) * 0.75) + yStartOffset;
                 Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count));
+                tileList[count] = tile;
                 tilePane.getChildren().add(tile.getHexagon());
                 labelPane.getChildren().add(tile.getValueLabel());
                 count++;
@@ -68,6 +110,7 @@ public class GameBoard {
         int[] roadsPerRowValues = {6, 4, 8, 5, 10, 6, 10, 5, 8, 4, 6};
         double[] roadxStartOffsetValue = {460 + (2.5 * n), 460 + (2 * n), 460 + (1.5 * n), 460 + n, 460 + (0.5 * n), 460, 460 + (0.5 * n), 460 + n, 460 + (1.5 * n), 460 + (2 * n), 460 + (2.5 * n)};
 
+        count = 0;
         for (int y = 0; y < 11; y++) {
             int version;
             double xCoord;
@@ -96,13 +139,15 @@ public class GameBoard {
                     version = 3;
                 }
                 Road road = new Road(xCoord - 17.5, yCoord - 17.5, version);
+                roadList[count] = road;
                 settlementPane.getChildren().add(road.getIcon());
+                count++;
             }
         }
 
         int[] settlementsPerRowValues = {3,4,4,5,5,6,6,5,5,4,4,3};
         double[] settlementxStartOffsetValue = {460 + (2 * n),460+n,460+n,460,460,460-n,460-n,460,460,460+n,460+n,460+(2*n)};
-
+        count = 0;
         for (int y = 0; y < 12; y++) {
             int settlementsPerRow = settlementsPerRowValues[y];
             double settlementxStartOffset = settlementxStartOffsetValue[y];
@@ -115,7 +160,9 @@ public class GameBoard {
                     yCoord = (((y - 1) / 2) * 1.5 * r) + yStartOffset;
                 }
                 Settlement settlement = new Settlement(xCoord - 17.5, yCoord - 17.5);
+                settlementList[count] = settlement;
                 settlementPane.getChildren().add(settlement.getIcon());
+                count++;
             }
         }
 
