@@ -10,7 +10,15 @@ public class SettlementIcon {
     SettlementIcon(double x, double y, Player owner) {
         rectangle = new Rectangle(x,y,35,35);
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
-        rectangle.setOnMouseClicked(e -> rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm()))));
+        rectangle.setOnMouseClicked(e -> {
+            rectangle.setX(x - 5);
+            rectangle.setY(y - 5);
+            rectangle.setHeight(45);
+            rectangle.setWidth(45);
+            rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm())));
+        });
+
+
 
     }
 

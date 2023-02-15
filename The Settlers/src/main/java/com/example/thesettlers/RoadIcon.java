@@ -12,13 +12,16 @@ public class RoadIcon {
     private Image image;
 
     RoadIcon(double x, double y, int version) {
-        rectangle = new Rectangle(x,y,45,45);
+        rectangle = new Rectangle(x,y,35,35);
+        rectangle.setFill(new ImagePattern(getImage(version)));
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
         rectangle.setOnMouseClicked(e -> {
-            rectangle.setFill(new ImagePattern(getImage(version)));});
-
-
-
+            rectangle.setX(x - 13);
+            rectangle.setY(y - 13);
+            rectangle.setHeight(61);
+            rectangle.setWidth(61);
+            rectangle.setFill(new ImagePattern(getImage(version)));
+        });
     }
 
     public Rectangle getRectangle() {
