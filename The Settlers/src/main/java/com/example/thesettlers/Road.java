@@ -43,4 +43,10 @@ public class Road {
         }
         return null;
     }
+
+    public void addSettlements(Settlement settlementA, Settlement settlementB) {
+        this.settlementA = settlementA;
+        this.settlementB = settlementB;
+    }
+
 }

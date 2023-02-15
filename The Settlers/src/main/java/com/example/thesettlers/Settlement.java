@@ -53,4 +53,11 @@ public class Settlement {
     public boolean isCity() {
         return isCity;
     }
+
+    public void addRoad(Road road){
+        roads.add(road);
+    }
+    public void addTile(Tile tile){
+        tiles.add(tile);
+    }
 }
