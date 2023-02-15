@@ -44,7 +44,6 @@ public class GameBoard {
         tileList = new Tile[19];
         roadList = new Road[72];
 
-
         String line = "";
         String splitBy = ",";
         URL fileUrlSM = getClass().getResource("startingmap.csv");
@@ -81,7 +80,6 @@ public class GameBoard {
             for (int j = 0; j < 2; j++) {
                 Integer d = Integer.parseInt(data[j]);
                 roadSettlementData[i][j]=d;
-                System.out.println(d);
             }
             i++;
         }
@@ -164,6 +162,19 @@ public class GameBoard {
                 settlementPane.getChildren().add(settlement.getIcon());
                 count++;
             }
+        }
+
+        for (int t = 0; t < 19; t++){
+            for (int s = 0; s < 6; s++) {
+                settlementList[tileSettlementData[t][s]].addTile(tileList[t]);
+            }
+        }
+
+        for (int r = 0; r < 72; r++){
+            for (int s = 0; s < 2; s++) {
+                settlementList[roadSettlementData[r][s]].addRoad(roadList[r]);
+            }
+            roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
 
         gameBoard.getChildren().addAll(labelPane, tilePane, settlementPane, roadPane);
