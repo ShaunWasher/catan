@@ -110,14 +110,10 @@ public class Player {
         }
     }
 
-    public int getNumberOfCities(){
-        int count = 0;
-        for (Settlement settlement: settlements){
-            if(settlement.isCity()){
-                count++;
-            }
+    public void giveResource(ResourceType resourceType, int amount) {
+        if (resourceType != null) {
+            resourceCards.put(resourceType, resourceCards.get(resourceType) + amount);
         }
-        return count;
     }
 
     public int getArmySize() {

@@ -22,7 +22,7 @@ public class GameBoard {
     private List<Integer> valueList;
     private Integer[][] tileSettlementData;
     private Integer[][] roadSettlementData;
-    private Settlement[] settlementList;
+    public Settlement[] settlementList;
     private Road[] roadList;
     private Tile[] tileList;
     private double yStartOffset = 240;
