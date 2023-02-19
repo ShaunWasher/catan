@@ -134,7 +134,7 @@ public class GameBoard {
                 }
                 Road road = new Road(xCoord - 17.5, yCoord - 17.5, version);
                 roadList[count] = road;
-                //settlementPane.getChildren().add(road.getIcon());
+                roadPane.getChildren().add(road.getIcon());
                 count++;
             }
         }
@@ -155,7 +155,7 @@ public class GameBoard {
                 }
                 Settlement settlement = new Settlement(xCoord - 17.5, yCoord - 17.5);
                 settlementList[count] = settlement;
-                //settlementPane.getChildren().add(settlement.getIcon());
+                settlementPane.getChildren().add(settlement.getIcon());
                 count++;
             }
         }
@@ -172,11 +172,27 @@ public class GameBoard {
             }
             roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
-
-        gameBoard.getChildren().addAll(labelPane, tilePane, settlementPane, roadPane);
-        tilePane.toBack();
-        settlementPane.toFront();
+        gameBoard.getChildren().addAll(labelPane, tilePane);
         return gameBoard;
 
     }
+
+    public Pane getSettlementPane() {
+        return settlementPane;
+    }
+
+    public Pane getRoadPane() {
+        return roadPane;
+    }
+    public void setSettlementPane() {
+        System.out.println("code works?");
+        settlementPane.setVisible(false);
+    }
+
+    public void setRoadPane() {
+        roadPane.setVisible(true);
+        roadPane.toFront();
+    }
+
+
 }
