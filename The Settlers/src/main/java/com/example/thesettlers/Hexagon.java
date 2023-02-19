@@ -11,7 +11,7 @@ import static java.lang.Math.sqrt;
 
 public class Hexagon extends Polygon {
     private Image image;
-    private final static double r = 60; // the inner radius from hexagon center to outer corner
+    private final static double r = 70; // the inner radius from hexagon center to outer corner
     private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
     Hexagon(double x, double y, TerrainType type) {
         // creates the polygon using the corner coordinates

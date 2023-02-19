@@ -1,5 +1,7 @@
 package com.example.thesettlers;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -17,9 +19,6 @@ public class SettlementIcon {
             rectangle.setWidth(45);
             rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm())));
         });
-
-
-
     }
 
     public Rectangle getRectangle() {

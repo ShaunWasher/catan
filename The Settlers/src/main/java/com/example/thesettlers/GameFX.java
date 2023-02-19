@@ -8,14 +8,14 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 public class GameFX extends Application {
 
-    public GameBoard gameBoard;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Settlers");
         primaryStage.setFullScreen(true);
         Pane gameBoard = new GameBoard("Starting Map").getBoard();
         gameBoard.setId("tile_map");
+        Pane GUI = new GUI().getGUI();
+        gameBoard.getChildren().add(GUI);
         Scene content = new Scene(gameBoard);
         content.setFill(Color.web("3e91c4"));
         content.getStylesheets().add(String.valueOf(this.getClass().getResource("sample.css")));

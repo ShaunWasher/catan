@@ -11,7 +11,7 @@ public class ValueLabel {
     private Circle circle;
     ValueLabel(double x, double y, int value) {
         // creates the polygon using the corner coordinates
-        circle = new Circle((x + ((sqrt(3) / 2) * 60)),(y+30),20);
+        circle = new Circle((x + ((sqrt(3) / 2) * 70)),(y+35),20);
         circle.setFill(new ImagePattern(getImage(value)));
         circle.setOnMouseClicked(e -> System.out.println("Clicked: " + this));
     }

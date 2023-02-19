@@ -12,30 +12,26 @@ import static java.lang.Math.sqrt;
 
 public class GameBoard {
 
-    private Pane gameBoard;
-    private Pane tilePane;
-    private Pane labelPane;
-    private Pane settlementPane;
-    private Pane roadPane;
+    private Pane gameBoard = new Pane();
+    private Pane tilePane = new Pane();;
+    private Pane labelPane = new Pane();;
+    private Pane settlementPane = new Pane();;
+    private Pane roadPane = new Pane();;
     private String mapType;
     private List<String> terrainList;
     private List<Integer> valueList;
     private Integer[][] tileSettlementData;
     private Integer[][] roadSettlementData;
-    public Settlement[] settlementList;
+    Settlement[] settlementList;
     private Road[] roadList;
     private Tile[] tileList;
-    private double yStartOffset = 240;
-    private final static double r = 60; // the inner radius from hexagon center to outer corner
+    private double yStartOffset = 155;
+    private double xOff = 410;
+    private final static double r = 70; // the inner radius from hexagon center to outer corner
     private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
 
     public GameBoard(String mapType) throws IOException, URISyntaxException {
         this.mapType = mapType;
-        gameBoard = new Pane();
-        tilePane = new Pane();
-        labelPane = new Pane();
-        settlementPane = new Pane();
-        roadPane = new Pane();
         terrainList = new ArrayList<>();
         valueList = new ArrayList<>();
         tileSettlementData = new Integer[19][6];
@@ -88,7 +84,7 @@ public class GameBoard {
     public Pane getBoard() {
 
         int[] tilesPerRowValues = {3, 4, 5, 4, 3};
-        double[] tilesxStartOffsetValue = {(460 + (2 * n)), 460, 460, 460, (460 + (2 * n))};
+        double[] tilesxStartOffsetValue = {(xOff + (2 * n)), xOff, xOff, xOff, (xOff + (2 * n))};
 
         int count = 0;
         for (int y = 0; y < 5; y++) {
@@ -106,7 +102,7 @@ public class GameBoard {
         }
 
         int[] roadsPerRowValues = {6, 4, 8, 5, 10, 6, 10, 5, 8, 4, 6};
-        double[] roadxStartOffsetValue = {460 + (2.5 * n), 460 + (2 * n), 460 + (1.5 * n), 460 + n, 460 + (0.5 * n), 460, 460 + (0.5 * n), 460 + n, 460 + (1.5 * n), 460 + (2 * n), 460 + (2.5 * n)};
+        double[] roadxStartOffsetValue = {xOff + (2.5 * n), xOff + (2 * n), xOff + (1.5 * n), xOff + n, xOff + (0.5 * n), xOff, xOff + (0.5 * n), xOff + n, xOff + (1.5 * n), xOff + (2 * n), xOff + (2.5 * n)};
 
         count = 0;
         for (int y = 0; y < 11; y++) {
@@ -116,7 +112,7 @@ public class GameBoard {
             int roadsPerRow = roadsPerRowValues[y];
             double roadxStartOffset = roadxStartOffsetValue[y];
             for (int x = 0; x < roadsPerRow; x++) {
-                yCoord = (y * 45) + yStartOffset - 15;
+                yCoord = (y * (r*3/4)) + yStartOffset - r/4;
                 if (y % 2 == 0) {
                     xCoord = (x * (n)) + roadxStartOffset;
                     if (y < 6) {
@@ -138,13 +134,13 @@ public class GameBoard {
                 }
                 Road road = new Road(xCoord - 17.5, yCoord - 17.5, version);
                 roadList[count] = road;
-                settlementPane.getChildren().add(road.getIcon());
+                //settlementPane.getChildren().add(road.getIcon());
                 count++;
             }
         }
 
         int[] settlementsPerRowValues = {3,4,4,5,5,6,6,5,5,4,4,3};
-        double[] settlementxStartOffsetValue = {460 + (2 * n),460+n,460+n,460,460,460-n,460-n,460,460,460+n,460+n,460+(2*n)};
+        double[] settlementxStartOffsetValue = {xOff + (2 * n),xOff+n,xOff+n,xOff,xOff,xOff-n,xOff-n,xOff,xOff,xOff+n,xOff+n,xOff+(2*n)};
         count = 0;
         for (int y = 0; y < 12; y++) {
             int settlementsPerRow = settlementsPerRowValues[y];
@@ -153,13 +149,13 @@ public class GameBoard {
                 double xCoord = (x * (2 * n)) + settlementxStartOffset + n;
                 double yCoord;
                 if (y % 2 == 0) {
-                    yCoord = ((y / 2) * 1.5 * r) + yStartOffset - 30;
+                    yCoord = ((y / 2) * 1.5 * r) + yStartOffset - r/2;
                 } else {
                     yCoord = (((y - 1) / 2) * 1.5 * r) + yStartOffset;
                 }
                 Settlement settlement = new Settlement(xCoord - 17.5, yCoord - 17.5);
                 settlementList[count] = settlement;
-                settlementPane.getChildren().add(settlement.getIcon());
+                //settlementPane.getChildren().add(settlement.getIcon());
                 count++;
             }
         }
