@@ -31,7 +31,7 @@ public class GUI {
         settlementPane = gameboard.getSettlementPane();
         roadPane = gameboard.getRoadPane();
     }
-    public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack
+    public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
         GUI.getChildren().addAll(boardPane,settlementPane,roadPane);
         settlementPane.setVisible(false);
         roadPane.setVisible(false);
@@ -68,7 +68,7 @@ public class GUI {
         Rectangle buyRoad = new Rectangle(840 - 67.5, 790, 60, 39.5);
         buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
-            //TODO check if player has sufficient resources
+            //TODO check if player has sufficient resources ***done in playerclass*** just use try-catch
             roadPane.setVisible(true);
             //TODO allow player to place road
             //TODO hide road spaces
@@ -77,7 +77,7 @@ public class GUI {
         Rectangle buySettlement = new Rectangle(910 - 67.5, 790, 60, 39.5);
         buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource("buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
-            //TODO check if player has sufficient resources
+            //TODO check if player has sufficient resources ***done in playerclass*** just use try-catch
             //TODO check if player has correct roads for a settlement to be placed
             settlementPane.setVisible(true);
             //TODO allow player to place settlement
@@ -87,14 +87,14 @@ public class GUI {
         Rectangle buyCity = new Rectangle(980 - 67.5, 790, 60, 39.5);
         buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource("buycity.png").toExternalForm())));
         buyCity.setOnMouseClicked(e -> {
-            //TODO check if player has sufficient resources
+            //TODO check if player has sufficient resources ***done in playerclass*** just use try-catch
             //TODO allow player to turn settlement into city
         });
 
         Rectangle buyDevCard = new Rectangle(840 - 67.5, 839.5, 60, 39.5);
         buyDevCard.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
         buyDevCard.setOnMouseClicked(e -> {
-            //TODO checks if player has sufficient resources
+            //TODO checks if player has sufficient resources ***done in playerclass*** just use try-catch
             //TODO allow player to buy development card
             //TODO display development card
         });
