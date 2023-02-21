@@ -6,17 +6,16 @@ import com.example.thesettlers.enums.ResourceType;
 import com.example.thesettlers.enums.TerrainType;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 public class Game {
     private GameState gameState;
     private ArrayList<Player> players;
     private int longestRoad;
     private int largestArmy;
-    private Queue<DevelopmentCard> developmentCards;
+    private LinkedList<DevelopmentCard> developmentCards;
     private GameBoard gameBoard;
+    private int turnCount;
     public Game(GameBoard gameBoard, int numOfPlayers){
         this.gameBoard = gameBoard;
         gameState = GameState.START;
@@ -26,6 +25,7 @@ public class Game {
         for(int i = 0;i<numOfPlayers;i++) {
             players.add(new Player(i + 1));
         }
+        turnCount = 0;
         ArrayList<DevelopmentCard> cards = new ArrayList<>();
         for(int i = 0;i<14;i++) {
             cards.add(new DevelopmentCard(DevelopmentCardType.KNIGHT));
@@ -42,35 +42,31 @@ public class Game {
         for(int i = 0;i<2;i++) {
             cards.add(new DevelopmentCard(DevelopmentCardType.MONOPOLY));
         }
+        developmentCards = new LinkedList<>();
         Random rand = new Random();
         for(int i = 0;i<25;i++) {
-            developmentCards.add(cards.get(rand.nextInt(25-i)));
+            developmentCards.addFirst(cards.get(rand.nextInt(25-i)));
         }
     }
 
-    public void play(){
+    // don't use in second half of opening turns as the reversed order of the opening turns won't be represented
+    public Player getCurrentPlayer(){
+        return players.get(turnCount%players.size());
+    }
+
+    public Player nextPlayer(){
+        turnCount++;
         // first round of settlement placement
-        for(int i = 0; i<players.size(); i++){
-            //TODO show player's UI, show settlement placement options then road placement
+        if(turnCount<players.size()){
+            return players.get(turnCount);
         }
-        for(int i = players.size(); i>0; i--){
-            //TODO show player's UI, show settlement placement options then road placement, give resources based on tiles around selected settlement
+        // second round
+        if(turnCount<players.size()*2){
+            return players.get((2*players.size())-turnCount-1);
         }
         //starting phase over
         gameState = GameState.MAIN;
-        //int turn = 1;
-        //begin taking turns loop ends when someone gets 10 VPs
-        int victorID = 0;
-        while(victorID == 0){
-            int player = 0; // player ID is player+1
-            // each player takes a turn, loop breaks if someone hits 10VPs
-            while(player < players.size()){
-                //TODO show player UI
-                //TODO roll dice
-                //TODO allow trading and purchasing
-                //TODO wait for end turn button press
-            }
-        }
+        return getCurrentPlayer();
     }
 
     private Pair<Integer,Integer> rollDice(Player player){
@@ -92,7 +88,9 @@ public class Game {
         }
         return new Pair<>(die1,die2);
     }
-    private static ResourceType terrainToResource(TerrainType terrainType){
+
+    // converts terrain to resource enums returns null if dessert
+    public static ResourceType terrainToResource(TerrainType terrainType){
         if(terrainType == TerrainType.HILLS){
             return ResourceType.BRICK;
         }

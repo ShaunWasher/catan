@@ -23,6 +23,8 @@ public class GUI {
     private Rectangle dice1;
     private GameBoard gameBoard;
     private Scene scene = new Scene(GUI);
+    private Game game;
+    private Player currentPlayer;
 
     public GUI(GameBoard gameboard){
         this.gameBoard = gameboard;
@@ -30,6 +32,8 @@ public class GUI {
         boardPane = gameBoard.getBoard();
         settlementPane = gameboard.getSettlementPane();
         roadPane = gameboard.getRoadPane();
+        game = new Game(gameBoard, 4); //TODO get number of players from setup screen
+        currentPlayer = game.getCurrentPlayer();
     }
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
         GUI.getChildren().addAll(boardPane,settlementPane,roadPane);
@@ -68,7 +72,7 @@ public class GUI {
         Rectangle buyRoad = new Rectangle(840 - 67.5, 790, 60, 39.5);
         buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
-            //TODO check if player has sufficient resources ***done in playerclass*** just use try-catch
+            //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             roadPane.setVisible(true);
             //TODO allow player to place road
             //TODO hide road spaces
@@ -77,8 +81,8 @@ public class GUI {
         Rectangle buySettlement = new Rectangle(910 - 67.5, 790, 60, 39.5);
         buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource("buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
-            //TODO check if player has sufficient resources ***done in playerclass*** just use try-catch
-            //TODO check if player has correct roads for a settlement to be placed
+            //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
+            //TODO check if player has correct roads for a settlement to be placed *** already done
             settlementPane.setVisible(true);
             //TODO allow player to place settlement
             //TODO hide settlement spaces
@@ -87,7 +91,7 @@ public class GUI {
         Rectangle buyCity = new Rectangle(980 - 67.5, 790, 60, 39.5);
         buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource("buycity.png").toExternalForm())));
         buyCity.setOnMouseClicked(e -> {
-            //TODO check if player has sufficient resources ***done in playerclass*** just use try-catch
+            //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO allow player to turn settlement into city
         });
 

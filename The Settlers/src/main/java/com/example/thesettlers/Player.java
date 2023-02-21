@@ -6,8 +6,9 @@ import java.util.EnumMap;
 import java.util.Enumeration;
 
 public class Player {
-    private int MAXSETTLEMENTS = 5;
-    private int MAXROADS = 15;
+    private final int MAXSETTLEMENTS = 5;
+    private final int MAXCITIES = 4;
+    private final int MAXROADS = 15;
     private int playerID;
     private ArrayList<Settlement> settlements;
     private int roadCount;
@@ -32,6 +33,16 @@ public class Player {
         playerID = playerNumber;
     }
 
+    public int getNumberOfCities() {
+        int count = 0;
+        for (Settlement settlement : settlements) {
+            if (settlement.isCity()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void placeSettlement(Settlement settlement) throws Exception{
         //check if settlement is empty
         if(settlement.getOwner() != null){
@@ -52,7 +63,7 @@ public class Player {
             //check a road is connected to the settlement
             if(!settlement.checkRoadConnection(this)) throw new Exception("no road connecting settlement");
             //check if over settlement limit
-            if(settlements.size() >= MAXSETTLEMENTS) throw new Exception("too many settlements");
+            if(settlements.size()-getNumberOfCities() >= MAXSETTLEMENTS) throw new Exception("too many settlements");
             //spend resource on new settlement
             if(resourceCards.get(ResourceType.BRICK) > 0 && resourceCards.get(ResourceType.GRAIN) > 0 && resourceCards.get(ResourceType.LUMBER) > 0 && resourceCards.get(ResourceType.WOOL) > 0){
                 resourceCards.merge(ResourceType.BRICK, -1, Integer::sum);
@@ -93,6 +104,24 @@ public class Player {
             else{
                 throw new Exception("not enough resources");
             }
+        }
+    }
+
+    public void upgradeToCity(Settlement settlement) throws Exception {
+        //check if settlement is owned by player
+        if(settlement.getOwner() != this){
+            throw new Exception("settlement is not owned by player");
+        }
+        //check if the max cities have been reached
+        if(getNumberOfCities() >= MAXCITIES) throw new Exception("too many cities");
+        //buy city
+        if(resourceCards.get(ResourceType.ORE) > 2 && resourceCards.get(ResourceType.GRAIN) > 1){
+            resourceCards.merge(ResourceType.ORE, -3, Integer::sum);
+            resourceCards.merge(ResourceType.GRAIN, -2, Integer::sum);
+            settlement.makeCity();
+        }
+        else{
+            throw new Exception("not enough resources");
         }
     }
 
