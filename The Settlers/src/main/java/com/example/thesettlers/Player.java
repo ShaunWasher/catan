@@ -17,7 +17,8 @@ public class Player {
     private int victoryPoints;
     private int longestRoadLength;
     private int armySize;
-    public Player(int playerNumber){
+    private Game game;
+    public Player(int playerNumber, Game game){
         settlements = new ArrayList<>();
         roadCount = 0;
         resourceCards = new EnumMap<>(ResourceType.class);
@@ -31,6 +32,7 @@ public class Player {
         longestRoadLength = 0;
         armySize = 0;
         playerID = playerNumber;
+        this.game = game;
     }
 
     public int getNumberOfCities() {
@@ -126,8 +128,8 @@ public class Player {
     }
 
     public void buyDevCard() throws Exception {
-        //TODO check queue is not empty
-        //spend resources on road
+        //TODO check if queue is empty
+        //spend resources on card
         if(resourceCards.get(ResourceType.ORE) > 0 && resourceCards.get(ResourceType.WOOL) > 0 && resourceCards.get(ResourceType.GRAIN) > 0){
             resourceCards.merge(ResourceType.ORE, -1, Integer::sum);
             resourceCards.merge(ResourceType.WOOL, -1, Integer::sum);

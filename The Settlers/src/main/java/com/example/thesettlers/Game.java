@@ -23,7 +23,7 @@ public class Game {
         largestArmy = 0;
         players = new ArrayList<>();
         for(int i = 0;i<numOfPlayers;i++) {
-            players.add(new Player(i + 1));
+            players.add(new Player(i + 1, this));
         }
         turnCount = 0;
         ArrayList<DevelopmentCard> cards = new ArrayList<>();
@@ -47,6 +47,14 @@ public class Game {
         for(int i = 0;i<25;i++) {
             developmentCards.addFirst(cards.get(rand.nextInt(25-i)));
         }
+    }
+
+    public DevelopmentCard getDevCard(){
+        return developmentCards.removeLast();
+    }
+
+    public void returnDevCard(DevelopmentCard card){
+        developmentCards.addFirst(card);
     }
 
     // don't use in second half of opening turns as the reversed order of the opening turns won't be represented
