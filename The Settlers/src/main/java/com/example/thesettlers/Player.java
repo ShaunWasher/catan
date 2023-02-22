@@ -128,13 +128,15 @@ public class Player {
     }
 
     public void buyDevCard() throws Exception {
-        //TODO check if queue is empty
+        if(game.getDevQueueSize() <= 0){
+            throw new Exception("dev card queue empty");
+        }
         //spend resources on card
         if(resourceCards.get(ResourceType.ORE) > 0 && resourceCards.get(ResourceType.WOOL) > 0 && resourceCards.get(ResourceType.GRAIN) > 0){
             resourceCards.merge(ResourceType.ORE, -1, Integer::sum);
             resourceCards.merge(ResourceType.WOOL, -1, Integer::sum);
             resourceCards.merge(ResourceType.GRAIN, -1, Integer::sum);
-            // TODO developmentCards.add() [take card off queue and put in player's hand]
+            developmentCards.add(game.getDevCard());
         }
         else{
             throw new Exception("not enough resources");

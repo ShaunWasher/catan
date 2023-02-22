@@ -57,6 +57,10 @@ public class Game {
         developmentCards.addFirst(card);
     }
 
+    public int getDevQueueSize(){
+        return developmentCards.size();
+    }
+
     // don't use in second half of opening turns as the reversed order of the opening turns won't be represented
     public Player getCurrentPlayer(){
         return players.get(turnCount%players.size());
