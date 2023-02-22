@@ -57,7 +57,7 @@ public class Road {
         this.settlementA = settlementA;
         this.settlementB = settlementB;
     }
-    public Rectangle getRectangle() {
+    public Rectangle getIcon() {
         return rectangle;
     }
     public Image getImage(int version) {

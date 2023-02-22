@@ -67,7 +67,7 @@ public class Settlement {
     public void addTile(Tile tile){
         tiles.add(tile);
     }
-    public Rectangle getRectangle() {
+    public Rectangle getIcon() {
         return rectangle;
     }
 }
