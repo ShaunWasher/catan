@@ -9,7 +9,7 @@ import javafx.util.Pair;
 import java.util.*;
 
 public class Game {
-    private GameState gameState;
+    public GameState gameState;
     private ArrayList<Player> players;
     private int longestRoad;
     private int largestArmy;

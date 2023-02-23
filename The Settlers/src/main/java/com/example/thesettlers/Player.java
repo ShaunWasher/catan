@@ -57,7 +57,7 @@ public class Player {
             }
         }
         //give player settlement based on game state
-        if(/*!gamestate! == "start"'*/true){
+        if(game.gameState == GameState.START){
             settlement.setOwner(this);
             settlements.add(settlement);
         }
@@ -89,7 +89,7 @@ public class Player {
             throw new Exception("not connected to player");
         }
         //give player road, based on game state
-        if(/*!gamestate! == "start"'*/true){
+        if(game.gameState == GameState.START){
             road.setOwner(this);
             roadCount++;
         }
@@ -136,12 +136,14 @@ public class Player {
             resourceCards.merge(ResourceType.ORE, -1, Integer::sum);
             resourceCards.merge(ResourceType.WOOL, -1, Integer::sum);
             resourceCards.merge(ResourceType.GRAIN, -1, Integer::sum);
-            developmentCards.add(game.getDevCard());
+            developmentCards.add(game.getDevCard()); // takes card off stack
         }
         else{
             throw new Exception("not enough resources");
         }
     }
+
+    //TODO use dev card
 
     public void giveResource(ResourceType resourceType, int amount) {
         if (resourceType != null) {
