@@ -1,6 +1,9 @@
 package com.example.thesettlers;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,7 +14,6 @@ import java.io. * ;
 import static java.lang.Math.sqrt;
 
 public class GameBoard {
-
     private Pane gameBoard = new Pane();
     private Pane tilePane = new Pane();;
     private Pane labelPane = new Pane();;
@@ -30,7 +32,7 @@ public class GameBoard {
     private final static double r = 70; // the inner radius from hexagon center to outer corner
     private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
 
-    public GameBoard(String mapType) throws IOException, URISyntaxException {
+    public GameBoard() throws URISyntaxException, IOException {
         this.mapType = mapType;
         terrainList = new ArrayList<>();
         valueList = new ArrayList<>();
@@ -79,9 +81,6 @@ public class GameBoard {
             }
             i++;
         }
-
-    }
-    public Pane getBoard() {
 
         int[] tilesPerRowValues = {3, 4, 5, 4, 3};
         double[] tilesxStartOffsetValue = {(xOff + (2 * n)), xOff, xOff, xOff, (xOff + (2 * n))};
@@ -173,8 +172,11 @@ public class GameBoard {
             roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
         gameBoard.getChildren().addAll(labelPane, tilePane);
-        return gameBoard;
 
+    }
+
+    public Pane getGameBoard() {
+        return gameBoard;
     }
 
     public Pane getSettlementPane() {
@@ -185,7 +187,6 @@ public class GameBoard {
         return roadPane;
     }
     public void setSettlementPane() {
-        System.out.println("code works?");
         settlementPane.setVisible(false);
     }
 

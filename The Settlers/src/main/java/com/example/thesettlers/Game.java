@@ -6,6 +6,8 @@ import com.example.thesettlers.enums.ResourceType;
 import com.example.thesettlers.enums.TerrainType;
 import javafx.util.Pair;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class Game {
@@ -16,8 +18,8 @@ public class Game {
     private LinkedList<DevelopmentCard> developmentCards;
     private GameBoard gameBoard;
     private int turnCount;
-    public Game(GameBoard gameBoard, int numOfPlayers){
-        this.gameBoard = gameBoard;
+    public Game(int numOfPlayers) throws URISyntaxException, IOException {
+        this.gameBoard = new GameBoard();
         gameState = GameState.START;
         longestRoad = 0;
         largestArmy = 0;
@@ -49,6 +51,9 @@ public class Game {
         }
     }
 
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
     public DevelopmentCard getDevCard(){
         return developmentCards.removeLast();
     }

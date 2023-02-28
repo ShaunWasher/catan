@@ -1,6 +1,7 @@
 package com.example.thesettlers;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -8,7 +9,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -21,21 +25,20 @@ public class GUI {
     private Rectangle box;
     private Rectangle dice2;
     private Rectangle dice1;
-    private GameBoard gameBoard;
     private Scene scene = new Scene(GUI);
     private Game game;
+    private GameBoard gameBoard;
     private Player currentPlayer;
 
-    public GUI(GameBoard gameboard){
-        this.gameBoard = gameboard;
+    public GUI(Game game) throws URISyntaxException, IOException {
+        this.game = game;
+        this.gameBoard = game.getGameBoard();
         GUI.setId("GUI");
-        boardPane = gameBoard.getBoard();
-        settlementPane = gameboard.getSettlementPane();
-        roadPane = gameboard.getRoadPane();
-        game = new Game(gameBoard, 4); //TODO get number of players from setup screen
+        boardPane = gameBoard.getGameBoard();
+        settlementPane = gameBoard.getSettlementPane();
+        roadPane = gameBoard.getRoadPane();
         currentPlayer = game.getCurrentPlayer();
-    }
-    public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
+
         GUI.getChildren().addAll(boardPane,settlementPane,roadPane);
         settlementPane.setVisible(false);
         roadPane.setVisible(false);
@@ -138,6 +141,8 @@ public class GUI {
         });
 
         GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, trade, endTurn, rollDice);
+    }
+    public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
         return scene;
     }
     public void diceRollAnimation() {
