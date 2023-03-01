@@ -1,26 +1,19 @@
 package com.example.thesettlers;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
-
+import javafx.scene.text.Text;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 
 public class GUI {
     Random random = new Random();
@@ -51,15 +44,9 @@ public class GUI {
         nonActivePlayers.remove(currentPlayer);
         String[] playerColours =  {"red","blue","gold","white"};
 
-        Label labeleee = new Label("e"+9);
-        Font font = Font.font("Brush Script MT", FontWeight.BOLD, FontPosture.REGULAR, 40);
-        labeleee.setFont(font);
-        labeleee.setTranslateX(72.5);
-        labeleee.setTranslateY(790);
-        GUI.getChildren().add(labeleee);
-        labeleee.toFront();
-
-        GUI.getChildren().addAll(boardPane,settlementPane,roadPane);
+        Rectangle portbg = new Rectangle(0,0,1440,900);
+        portbg.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
+        GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane);
         settlementPane.setVisible(false);
         roadPane.setVisible(false);
 
@@ -128,19 +115,6 @@ public class GUI {
             playerBox.toBack();
         }
 
-        /*
-        Rectangle p2box = new Rectangle(960, 765 - 165, 450, 140);
-        p2box.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
-        GUI.getChildren().add(p2box);
-
-        Rectangle p3box = new Rectangle(960, 765 - 165 - 165, 450, 140);
-        p3box.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
-        GUI.getChildren().add(p3box);
-
-        Rectangle p4box = new Rectangle(960, 270 + 165, 450, 140);
-        p4box.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
-        GUI.getChildren().add(p4box);*/
-
         Rectangle tbox = new Rectangle(960, 765 - 165 - 165 - 165 - 220 - 25, 450, 220);
         tbox.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
         GUI.getChildren().add(tbox);
@@ -159,7 +133,10 @@ public class GUI {
             Rectangle label = new Rectangle(90 + (70 * y), 860, 25, 25);
             resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(resourceTypes[y] + ".png").toExternalForm())));
             label.setFill(new ImagePattern(new Image(this.getClass().getResource(resourceTypes[y] + "label.png").toExternalForm())));
-            GUI.getChildren().addAll(resCard, label);
+            Text text = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(y));
+            //TODO set text value to current players resource count for each resource
+            text.setFont(new Font(20));
+            GUI.getChildren().addAll(resCard, label, text);
         }
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
@@ -230,7 +207,7 @@ public class GUI {
             diceRollAnimation();
         });
         GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, trade, endTurn, rollDice);
-        labeleee.toFront();
+        portbg.toBack();
     }
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
         return scene;
