@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 public class GUI {
     Random random = new Random();
@@ -135,9 +136,6 @@ public class GUI {
 
         rollDice.setOnMouseClicked(e -> {
             diceRollAnimation();
-            //TODO return dice roll value
-            dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d1.png").toExternalForm())));
-            dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d1.png").toExternalForm())));
         });
 
         GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, trade, endTurn, rollDice);
@@ -149,11 +147,16 @@ public class GUI {
         Thread thread = new Thread() {
             public void run() {
                 try {
+                    int value1 = 0;
+                    int value2 = 0;
                     for (int i = 0; i < 15; i++) {
-                        dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d" + (random.nextInt(6) + 1) + ".png").toExternalForm())));
-                        dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d" + (random.nextInt(6) + 1) + ".png").toExternalForm())));
+                        value1 = random.nextInt(6) + 1;
+                        value2 = random.nextInt(6) + 1;
+                        dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d" + value1 + ".png").toExternalForm())));
+                        dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d" + value2 + ".png").toExternalForm())));
                         Thread.sleep(50);
                     }
+                    game.rollDice(value1, value2);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -86,24 +86,19 @@ public class Game {
         return getCurrentPlayer();
     }
 
-    private Pair<Integer,Integer> rollDice(Player player){
-        Random rand = new Random();
-        Integer die1 = rand.nextInt(5)+1;
-        Integer die2 = rand.nextInt(5)+1;
-        //dont deal with 7s here
+    public void rollDice(int die1, int die2){
         if(die1+die2 == 7){
-            return new Pair<>(die1,die2);
+            //TODO deal with robber
         }
         //for all settlements
         for(Settlement settlement: gameBoard.settlementList){
             if(settlement.getOwner() != null){ // *owned settlements
                 // give players resources based on dice roll
                 for(Tile tile: settlement.getTiles()){
-                    player.giveResource(terrainToResource(tile.getTileType()), 1);
+                    getCurrentPlayer().giveResource(terrainToResource(tile.getTileType()), 1);
                 }
             }
         }
-        return new Pair<>(die1,die2);
     }
 
     // converts terrain to resource enums returns null if dessert

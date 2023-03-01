@@ -94,7 +94,7 @@ public class GameBoard {
                 double yCoord = (y * (r * 2) * 0.75) + yStartOffset;
                 Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count));
                 tileList[count] = tile;
-                tilePane.getChildren().add(tile.getHexagon());
+                tilePane.getChildren().add(tile);
                 labelPane.getChildren().add(tile.getValueLabel());
                 count++;
             }
