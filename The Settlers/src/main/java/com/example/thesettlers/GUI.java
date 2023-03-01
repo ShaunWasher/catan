@@ -4,15 +4,20 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -29,6 +34,8 @@ public class GUI {
     private Scene scene = new Scene(GUI);
     private Game game;
     private GameBoard gameBoard;
+    private ArrayList<Player> players;
+    private ArrayList<Player> nonActivePlayers;
     private Player currentPlayer;
 
     public GUI(Game game) throws URISyntaxException, IOException {
@@ -38,42 +45,127 @@ public class GUI {
         boardPane = gameBoard.getGameBoard();
         settlementPane = gameBoard.getSettlementPane();
         roadPane = gameBoard.getRoadPane();
+        players = game.getPlayers();
         currentPlayer = game.getCurrentPlayer();
+        nonActivePlayers = new ArrayList<>(players);
+        nonActivePlayers.remove(currentPlayer);
+        String[] playerColours =  {"red","blue","gold","white"};
+
+        Label labeleee = new Label("e"+9);
+        Font font = Font.font("Brush Script MT", FontWeight.BOLD, FontPosture.REGULAR, 40);
+        labeleee.setFont(font);
+        labeleee.setTranslateX(72.5);
+        labeleee.setTranslateY(790);
+        GUI.getChildren().add(labeleee);
+        labeleee.toFront();
 
         GUI.getChildren().addAll(boardPane,settlementPane,roadPane);
         settlementPane.setVisible(false);
         roadPane.setVisible(false);
 
-        box = new Rectangle(360 - 75, 765, 715, 140);
+        box = new Rectangle(45, 765, 715, 140);
         box.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
         GUI.getChildren().add(box);
 
-        Rectangle box2 = new Rectangle(1090 - 75, 765, 140, 140);
+        Rectangle box2 = new Rectangle(774, 765, 140, 140);
         box2.setFill(new ImagePattern(new Image(this.getClass().getResource("box2.png").toExternalForm())));
         GUI.getChildren().add(box2);
 
-        dice1 = new Rectangle(1090 - 60, 790, 50, 50);
+        Rectangle currentPlayerBox = new Rectangle(960, 765, 450, 140);
+        currentPlayerBox.setFill(new ImagePattern(new Image(this.getClass().getResource("pbox.png").toExternalForm())));
+
+        Rectangle currentPlayerIcon = new Rectangle(1000, 810,65, 65);
+        currentPlayerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"player.png").toExternalForm())));
+        Rectangle currentPlayerIconLabel = new Rectangle(1020, 860, 25, 25);
+        currentPlayerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+
+        Rectangle resCards = new Rectangle(1105, 790, 60, 84);
+        Rectangle resCardsLabel = new Rectangle(1105 + 17.5, 860, 25, 25);
+        resCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
+        resCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
+
+        Rectangle devCards = new Rectangle(1180, 790, 60, 84);
+        Rectangle devCardsLabel = new Rectangle(1180 + 17.5, 860, 25, 25);
+        devCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
+        devCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
+
+        Rectangle largestArmy = new Rectangle(1255, 790, 60, 84);
+        largestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
+
+        Rectangle longestRoad = new Rectangle(1330, 790, 60, 84);
+        longestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
+
+        GUI.getChildren().addAll(currentPlayerBox,currentPlayerIcon,currentPlayerIconLabel,resCards,resCardsLabel, devCards, devCardsLabel, largestArmy, longestRoad);
+        currentPlayerBox.toBack();
+
+        for (int y = 0; y < players.size() - 1; y++) {
+            Rectangle playerBox = new Rectangle(960, 270 + (165 * y) , 450, 140);
+            playerBox.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
+
+            Rectangle playerIcon = new Rectangle(1000, 315 + (165 * y) ,65, 65);
+            playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
+
+            Rectangle playerIconLabel = new Rectangle(1020, 365 + (165 * y) , 25, 25);
+            playerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+
+            Rectangle playerResCards = new Rectangle(1105, 295 + (165 * y) , 60, 84);
+            Rectangle playerResCardsLabel = new Rectangle(1105 + 17.5, 365 + (165 * y), 25, 25);
+            playerResCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
+            playerResCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
+
+            Rectangle playerDevCards = new Rectangle(1180, 295 + (165 * y) , 60, 84);
+            Rectangle layerDevCardsLabel = new Rectangle(1180 + 17.5, 365 + (165 * y), 25, 25);
+            playerDevCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
+            layerDevCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
+
+            Rectangle playerLargestArmy = new Rectangle(1255, 295 + (165 * y) , 60, 84);
+            playerLargestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
+
+            Rectangle playerLongestRoad = new Rectangle(1330, 295 + (165 * y) , 60, 84);
+            playerLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
+
+            GUI.getChildren().addAll(playerBox,playerIcon,playerIconLabel,playerResCards,playerResCardsLabel,playerDevCards,layerDevCardsLabel,playerLargestArmy,playerLongestRoad);
+            playerBox.toBack();
+        }
+
+        /*
+        Rectangle p2box = new Rectangle(960, 765 - 165, 450, 140);
+        p2box.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
+        GUI.getChildren().add(p2box);
+
+        Rectangle p3box = new Rectangle(960, 765 - 165 - 165, 450, 140);
+        p3box.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
+        GUI.getChildren().add(p3box);
+
+        Rectangle p4box = new Rectangle(960, 270 + 165, 450, 140);
+        p4box.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
+        GUI.getChildren().add(p4box);*/
+
+        Rectangle tbox = new Rectangle(960, 765 - 165 - 165 - 165 - 220 - 25, 450, 220);
+        tbox.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
+        GUI.getChildren().add(tbox);
+
+        dice1 = new Rectangle(790, 790, 50, 50);
         dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d6.png").toExternalForm())));
         GUI.getChildren().add(dice1);
 
-        dice2 = new Rectangle(1090, 790, 50, 50);
+        dice2 = new Rectangle(850, 790, 50, 50);
         dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d2.png").toExternalForm())));
         GUI.getChildren().add(dice2);
 
         String[] resourceTypes = {"brick", "lumber", "ore", "grain", "wool"};
         for (int y = 0; y < 5; y++) {
-            Rectangle resCard = new Rectangle(380 - 67.5 + (70 * y), 790, 60, 84);
-            Rectangle label = new Rectangle(397.5 - 67.5 + (70 * y), 860, 25, 25);
+            Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
+            Rectangle label = new Rectangle(90 + (70 * y), 860, 25, 25);
             resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(resourceTypes[y] + ".png").toExternalForm())));
             label.setFill(new ImagePattern(new Image(this.getClass().getResource(resourceTypes[y] + "label.png").toExternalForm())));
             GUI.getChildren().addAll(resCard, label);
-
         }
-        Rectangle devCard = new Rectangle(750 - 67.5, 790, 60, 84);
+        Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         GUI.getChildren().add(devCard);
 
-        Rectangle buyRoad = new Rectangle(840 - 67.5, 790, 60, 39.5);
+        Rectangle buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
@@ -82,7 +174,7 @@ public class GUI {
             //TODO hide road spaces
         });
 
-        Rectangle buySettlement = new Rectangle(910 - 67.5, 790, 60, 39.5);
+        Rectangle buySettlement = new Rectangle(602.5, 790, 60, 39.5);
         buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource("buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
@@ -92,14 +184,14 @@ public class GUI {
             //TODO hide settlement spaces
         });
 
-        Rectangle buyCity = new Rectangle(980 - 67.5, 790, 60, 39.5);
+        Rectangle buyCity = new Rectangle(672.5, 790, 60, 39.5);
         buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource("buycity.png").toExternalForm())));
         buyCity.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO allow player to turn settlement into city
         });
 
-        Rectangle buyDevCard = new Rectangle(840 - 67.5, 839.5, 60, 39.5);
+        Rectangle buyDevCard = new Rectangle(532.5, 839.5, 60, 39.5);
         buyDevCard.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
         buyDevCard.setOnMouseClicked(e -> {
             //TODO checks if player has sufficient resources ***done in playerclass*** just use try-catch
@@ -107,21 +199,21 @@ public class GUI {
             //TODO display development card
         });
 
-        Rectangle trade = new Rectangle(910 - 67.5, 839.5, 60, 39.5);
+        Rectangle trade = new Rectangle(602.5, 839.5, 60, 39.5);
         trade.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
         trade.setOnMouseClicked(e -> {
             //TODO display trade menu
             //TODO allow players to trade
         });
 
-        Rectangle endTurn = new Rectangle(980 - 67.5, 839.5, 60, 39.5);
+        Rectangle endTurn = new Rectangle(672.5, 839.5, 60, 39.5);
         endTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurn.setOnMouseClicked(e -> {
             //TODO end players turn
         });
 
 
-        Rectangle rollDice = new Rectangle(1040, 844.5 + 5, 90, 39.5);
+        Rectangle rollDice = new Rectangle(800, 844.5 + 5, 90, 39.5);
         rollDice.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
         rollDice.setOnMouseEntered(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
@@ -137,8 +229,8 @@ public class GUI {
         rollDice.setOnMouseClicked(e -> {
             diceRollAnimation();
         });
-
         GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, trade, endTurn, rollDice);
+        labeleee.toFront();
     }
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
         return scene;

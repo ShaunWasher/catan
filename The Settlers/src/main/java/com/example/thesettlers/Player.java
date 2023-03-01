@@ -162,4 +162,8 @@ public class Player {
     public int getVictoryPoints() {
         return victoryPoints;
     }
+
+    public int getPlayerID() {
+        return playerID;
+    }
 }

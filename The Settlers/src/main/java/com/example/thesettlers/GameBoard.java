@@ -1,9 +1,6 @@
 package com.example.thesettlers;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,7 +25,7 @@ public class GameBoard {
     private Road[] roadList;
     private Tile[] tileList;
     private double yStartOffset = 155;
-    private double xOff = 410;
+    private double xOff = 145;
     private final static double r = 70; // the inner radius from hexagon center to outer corner
     private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
 
@@ -172,6 +169,7 @@ public class GameBoard {
             roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
         gameBoard.getChildren().addAll(labelPane, tilePane);
+        labelPane.toFront();
 
     }
 

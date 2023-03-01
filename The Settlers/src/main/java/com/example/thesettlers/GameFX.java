@@ -12,7 +12,7 @@ public class GameFX extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Settlers");
         primaryStage.setFullScreen(true);
-        Game game = new Game(4); //TODO get number of players from setup screen
+        Game game = new Game(3); //TODO get number of players from setup screen
         Scene content = new GUI(game).getGUI();
         content.setFill(Color.web("3e91c4"));
         content.getStylesheets().add(String.valueOf(this.getClass().getResource("sample.css")));
