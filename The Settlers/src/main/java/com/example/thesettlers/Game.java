@@ -19,7 +19,7 @@ public class Game {
     private GameBoard gameBoard;
     private int turnCount;
     public Game(int numOfPlayers) throws URISyntaxException, IOException {
-        this.gameBoard = new GameBoard();
+        this.gameBoard = new GameBoard(this);
         gameState = GameState.START;
         longestRoad = 0;
         largestArmy = 0;
@@ -75,10 +75,12 @@ public class Game {
         turnCount++;
         // first round of settlement placement
         if(turnCount<players.size()){
+            gameBoard.setSettlementPane();
             return players.get(turnCount);
         }
         // second round
         if(turnCount<players.size()*2){
+            gameBoard.setSettlementPane();
             return players.get((2*players.size())-turnCount-1);
         }
         //starting phase over
@@ -123,5 +125,34 @@ public class Game {
 
     public ArrayList<Player> getPlayers() {
         return players;
+    }
+
+    public boolean buySettlement(Settlement settlement){
+        try {
+            getCurrentPlayer().placeSettlement(settlement);
+            gameBoard.setSettlementPane();
+            if(gameState == GameState.START){
+                gameBoard.setRoadPane();
+            }
+            return true;
+        } catch (Exception exception){
+            System.out.println("cant place settlement there");
+            System.out.println(exception);
+        }
+        return false;
+    }
+    public boolean buyRoad(Road road){
+        try {
+            getCurrentPlayer().placeRoad(road);
+            gameBoard.setRoadPane();
+            if(gameState == GameState.START){
+                nextPlayer();
+            }
+            return true;
+        } catch (Exception exception){
+            System.out.println("cant place road there");
+            System.out.println(exception);
+        }
+        return false;
     }
 }

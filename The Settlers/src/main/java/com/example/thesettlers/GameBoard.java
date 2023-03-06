@@ -28,8 +28,10 @@ public class GameBoard {
     private double xOff = 145;
     private final static double r = 70; // the inner radius from hexagon center to outer corner
     private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
+    private Game game;
 
-    public GameBoard() throws URISyntaxException, IOException {
+    public GameBoard(Game game) throws URISyntaxException, IOException {
+        this.game = game;
         this.mapType = mapType;
         terrainList = new ArrayList<>();
         valueList = new ArrayList<>();
@@ -128,7 +130,7 @@ public class GameBoard {
                     xCoord = (x * (2 * n)) + roadxStartOffset;
                     version = 3;
                 }
-                Road road = new Road(xCoord - 17.5, yCoord - 17.5, version);
+                Road road = new Road(xCoord - 17.5, yCoord - 17.5, version, game);
                 roadList[count] = road;
                 roadPane.getChildren().add(road.getIcon());
                 count++;
@@ -149,7 +151,7 @@ public class GameBoard {
                 } else {
                     yCoord = (((y - 1) / 2) * 1.5 * r) + yStartOffset;
                 }
-                Settlement settlement = new Settlement(xCoord - 17.5, yCoord - 17.5);
+                Settlement settlement = new Settlement(xCoord - 17.5, yCoord - 17.5, game);
                 settlementList[count] = settlement;
                 settlementPane.getChildren().add(settlement.getIcon());
                 count++;
@@ -185,11 +187,12 @@ public class GameBoard {
         return roadPane;
     }
     public void setSettlementPane() {
-        settlementPane.setVisible(false);
+        settlementPane.setVisible(!settlementPane.isVisible());
+        settlementPane.toFront();
     }
 
     public void setRoadPane() {
-        roadPane.setVisible(true);
+        roadPane.setVisible(!roadPane.isVisible());
         roadPane.toFront();
     }
 

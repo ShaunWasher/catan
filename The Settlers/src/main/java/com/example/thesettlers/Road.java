@@ -10,8 +10,10 @@ public class Road {
     private Settlement settlementB;
     private Rectangle rectangle;
     private Image image;
+    private Game game;
 
-    public Road(double x, double y, int version){
+    public Road(double x, double y, int version, Game game){
+        this.game = game;
         settlementA = null;
         settlementB = null;
         owner = null;
@@ -19,11 +21,14 @@ public class Road {
         rectangle.setFill(new ImagePattern(getImage(version)));
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
         rectangle.setOnMouseClicked(e -> {
-            rectangle.setX(x - 13);
-            rectangle.setY(y - 13);
-            rectangle.setHeight(61);
-            rectangle.setWidth(61);
-            rectangle.setFill(new ImagePattern(getImage(version)));
+
+            if(game.buyRoad(this)){
+                rectangle.setX(x - 13);
+                rectangle.setY(y - 13);
+                rectangle.setHeight(61);
+                rectangle.setWidth(61);
+                rectangle.setFill(new ImagePattern(getImage(version)));
+            }
         });
     }
 

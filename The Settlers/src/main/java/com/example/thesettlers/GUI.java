@@ -47,7 +47,7 @@ public class GUI {
         Rectangle portbg = new Rectangle(0,0,1440,900);
         portbg.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
         GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane);
-        settlementPane.setVisible(false);
+        settlementPane.setVisible(true);
         roadPane.setVisible(false);
 
         box = new Rectangle(45, 765, 715, 140);

@@ -11,7 +11,9 @@ public class Settlement {
     private Player owner;
     boolean isCity;
     private Rectangle rectangle;
-    public Settlement(double x, double y){
+    private Game game;
+    public Settlement(double x, double y, Game game){
+        this.game = game;
         this.roads = new ArrayList<>();
         this.tiles = new ArrayList<>();
         owner = null;
@@ -19,11 +21,13 @@ public class Settlement {
         rectangle = new Rectangle(x,y,35,35);
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
         rectangle.setOnMouseClicked(e -> {
-            rectangle.setX(x - 5);
-            rectangle.setY(y - 5);
-            rectangle.setHeight(45);
-            rectangle.setWidth(45);
-            rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm())));
+                if(game.buySettlement(this)) {
+                    rectangle.setX(x - 5);
+                    rectangle.setY(y - 5);
+                    rectangle.setHeight(45);
+                    rectangle.setWidth(45);
+                    rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm())));
+                }
         });
     }
 
