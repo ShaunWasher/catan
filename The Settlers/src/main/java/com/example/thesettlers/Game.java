@@ -18,7 +18,10 @@ public class Game {
     private LinkedList<DevelopmentCard> developmentCards;
     private GameBoard gameBoard;
     private int turnCount;
+    private Player currentPlayer;
+    private GUI gui;
     public Game(int numOfPlayers) throws URISyntaxException, IOException {
+        gui = null;
         this.gameBoard = new GameBoard(this);
         gameState = GameState.START;
         longestRoad = 0;
@@ -27,6 +30,7 @@ public class Game {
         for(int i = 0;i<numOfPlayers;i++) {
             players.add(new Player(i + 1, this));
         }
+        currentPlayer = players.get(0);
         turnCount = 0;
         ArrayList<DevelopmentCard> cards = new ArrayList<>();
         for(int i = 0;i<14;i++) {
@@ -51,6 +55,10 @@ public class Game {
         }
     }
 
+    public void setGUI(GUI gui){
+        this.gui = gui;
+    }
+
     public GameBoard getGameBoard() {
         return gameBoard;
     }
@@ -68,7 +76,7 @@ public class Game {
 
     // don't use in second half of opening turns as the reversed order of the opening turns won't be represented
     public Player getCurrentPlayer(){
-        return players.get(turnCount%players.size());
+        return currentPlayer;
     }
 
     public Player nextPlayer(){
@@ -76,16 +84,20 @@ public class Game {
         // first round of settlement placement
         if(turnCount<players.size()){
             gameBoard.setSettlementPane();
-            return players.get(turnCount);
+            return currentPlayer = players.get(turnCount);
         }
         // second round
         if(turnCount<players.size()*2){
             gameBoard.setSettlementPane();
-            return players.get((2*players.size())-turnCount-1);
+            currentPlayer = players.get((2*players.size())-turnCount-1);
+            gui.refreshUI();
+            return currentPlayer;
         }
         //starting phase over
         gameState = GameState.MAIN;
-        return getCurrentPlayer();
+        currentPlayer = players.get(turnCount%players.size());
+        gui.refreshUI();
+        return currentPlayer;
     }
 
     public void rollDice(int die1, int die2){
@@ -94,13 +106,16 @@ public class Game {
         }
         //for all settlements
         for(Settlement settlement: gameBoard.settlementList){
-            if(settlement.getOwner() != null){ // *owned settlements
+            if((settlement.getOwner() != null)){ // *owned settlements
                 // give players resources based on dice roll
                 for(Tile tile: settlement.getTiles()){
-                    getCurrentPlayer().giveResource(terrainToResource(tile.getTileType()), 1);
+                    if(tile.getValue() == die1+die2) {
+                        settlement.getOwner().giveResource(terrainToResource(tile.getTileType()), 1);
+                    }
                 }
             }
         }
+        gui.refreshUI();
     }
 
     // converts terrain to resource enums returns null if dessert
@@ -128,16 +143,24 @@ public class Game {
     }
 
     public boolean buySettlement(Settlement settlement){
-        try {
+        try {// attempts to buy a settlement
             getCurrentPlayer().placeSettlement(settlement);
             gameBoard.setSettlementPane();
             if(gameState == GameState.START){
+                // if its the second round of placement you get the resources on the settlement
+                if ((turnCount<players.size()*2)&&(turnCount>=players.size())){
+                    for(Tile tile: settlement.getTiles()){
+                        getCurrentPlayer().giveResource(terrainToResource(tile.getTileType()), 1);
+                    }
+                }
+                // auto shows the road pane as part of the starting phase
                 gameBoard.setRoadPane();
             }
+            gui.refreshUI();
             return true;
         } catch (Exception exception){
-            System.out.println("cant place settlement there");
-            System.out.println(exception);
+            System.out.println("cant place settlement there"); // problem shows in console for now
+            System.out.println(exception);//TODO send to UI so the player can be told whats wrong
         }
         return false;
     }
@@ -145,13 +168,15 @@ public class Game {
         try {
             getCurrentPlayer().placeRoad(road);
             gameBoard.setRoadPane();
+            gui.refreshUI();
+            // moves to the next player as part of the starting phase of the game
             if(gameState == GameState.START){
                 nextPlayer();
             }
             return true;
         } catch (Exception exception){
             System.out.println("cant place road there");
-            System.out.println(exception);
+            System.out.println(exception);//TODO send to UI so the player can be told whats wrong
         }
         return false;
     }

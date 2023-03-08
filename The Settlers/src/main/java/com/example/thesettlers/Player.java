@@ -12,7 +12,7 @@ public class Player {
     private int playerID;
     private ArrayList<Settlement> settlements;
     private int roadCount;
-    private EnumMap<ResourceType,Integer> resourceCards;
+     EnumMap<ResourceType,Integer> resourceCards;
     private ArrayList<DevelopmentCard> developmentCards;
     private int victoryPoints;
     private int longestRoadLength;

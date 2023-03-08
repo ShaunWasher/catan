@@ -1,5 +1,6 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.ResourceType;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -30,6 +31,7 @@ public class GUI {
     private ArrayList<Player> players;
     private ArrayList<Player> nonActivePlayers;
     private Player currentPlayer;
+    private Text[] resourceValues;
 
     public GUI(Game game) throws URISyntaxException, IOException {
         this.game = game;
@@ -127,16 +129,16 @@ public class GUI {
         dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d2.png").toExternalForm())));
         GUI.getChildren().add(dice2);
 
-        String[] resourceTypes = {"brick", "lumber", "ore", "grain", "wool"};
+        resourceValues = new Text[5]; //stores text boxes for resource values in here
         for (int y = 0; y < 5; y++) {
             Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
             Rectangle label = new Rectangle(90 + (70 * y), 860, 25, 25);
-            resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(resourceTypes[y] + ".png").toExternalForm())));
-            label.setFill(new ImagePattern(new Image(this.getClass().getResource(resourceTypes[y] + "label.png").toExternalForm())));
-            Text text = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(y));
-            //TODO set text value to current players resource count for each resource
+            resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            label.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
+            Text text = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
             text.setFont(new Font(20));
             GUI.getChildren().addAll(resCard, label, text);
+            resourceValues[y] = text; // adding text to array
         }
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
@@ -208,6 +210,11 @@ public class GUI {
         });
         GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, trade, endTurn, rollDice);
         portbg.toBack();
+    }
+    public void refreshUI(){
+        for (int y = 0; y < 5; y++) {
+            resourceValues[y].setText(String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
+        }
     }
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
         return scene;
