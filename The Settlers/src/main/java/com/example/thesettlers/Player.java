@@ -155,16 +155,20 @@ public class Player {
         }
     }
 
+    public boolean addVP(){
+        victoryPoints++;
+        if(victoryPoints >= game.getMaxVPs()){
+            return true;
+        }
+        return false;
+    }
+
     public int getArmySize() {
         return armySize;
     }
 
     public int getLongestRoadLength() {
         return longestRoadLength;
-    }
-
-    public int getVictoryPoints() {
-        return victoryPoints;
     }
 
     public int getPlayerID() {

@@ -20,7 +20,9 @@ public class Game {
     private int turnCount;
     private Player currentPlayer;
     private GUI gui;
-    public Game(int numOfPlayers) throws URISyntaxException, IOException {
+    private int maxVPs;
+    public Game(int numOfPlayers, int requiredVPs) throws URISyntaxException, IOException {
+        maxVPs = requiredVPs;
         gui = null;
         this.gameBoard = new GameBoard(this);
         gameState = GameState.START;
@@ -142,9 +144,16 @@ public class Game {
         return players;
     }
 
+    public int getMaxVPs() {
+        return maxVPs;
+    }
+
     public boolean buySettlement(Settlement settlement){
         try {// attempts to buy a settlement
             getCurrentPlayer().placeSettlement(settlement);
+            if(getCurrentPlayer().addVP()){
+                winGame();
+            }
             gameBoard.setSettlementPane();
             if(gameState == GameState.START){
                 // if its the second round of placement you get the resources on the settlement
@@ -183,6 +192,9 @@ public class Game {
     public boolean upgradeToCity(Settlement settlement){
         try {
             getCurrentPlayer().upgradeToCity(settlement);
+            if(getCurrentPlayer().addVP()){
+                winGame();
+            }
             gameBoard.setSettlementPane();
             gui.refreshUI();
             return true;
@@ -191,5 +203,9 @@ public class Game {
             System.out.println(exception);//TODO send to UI so the player can be told whats wrong
         }
         return false;
+    }
+
+    private void winGame(){
+        //TODO send data to UI to show scores
     }
 }
