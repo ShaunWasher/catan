@@ -114,6 +114,10 @@ public class Player {
         if(settlement.getOwner() != this){
             throw new Exception("settlement is not owned by player");
         }
+        // check if city
+        if(settlement.isCity){
+            throw new Exception("settlement is already a city");
+        }
         //check if the max cities have been reached
         if(getNumberOfCities() >= MAXCITIES) throw new Exception("too many cities");
         //buy city

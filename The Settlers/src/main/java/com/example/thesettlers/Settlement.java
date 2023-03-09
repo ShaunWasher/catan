@@ -21,13 +21,19 @@ public class Settlement {
         rectangle = new Rectangle(x,y,35,35);
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
         rectangle.setOnMouseClicked(e -> {
-                if(game.buySettlement(this)) {
+            if(owner == null) {
+                if (game.buySettlement(this)) {
                     rectangle.setX(x - 5);
                     rectangle.setY(y - 5);
                     rectangle.setHeight(45);
                     rectangle.setWidth(45);
                     rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm())));
                 }
+            } else {
+                if(game.upgradeToCity(this)){
+                    //TODO make settlement look like city
+                }
+            }
         });
     }
 

@@ -180,4 +180,16 @@ public class Game {
         }
         return false;
     }
+    public boolean upgradeToCity(Settlement settlement){
+        try {
+            getCurrentPlayer().upgradeToCity(settlement);
+            gameBoard.setSettlementPane();
+            gui.refreshUI();
+            return true;
+        } catch (Exception exception){
+            System.out.println("cant place city there");
+            System.out.println(exception);//TODO send to UI so the player can be told whats wrong
+        }
+        return false;
+    }
 }

@@ -168,6 +168,7 @@ public class GUI {
         buyCity.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO allow player to turn settlement into city
+            settlementPane.setVisible(true);
         });
 
         Rectangle buyDevCard = new Rectangle(532.5, 839.5, 60, 39.5);
