@@ -178,10 +178,6 @@ public class Game {
             getCurrentPlayer().placeRoad(road);
             gameBoard.setRoadPane();
             gui.refreshUI();
-            // moves to the next player as part of the starting phase of the game
-            if(gameState == GameState.START){
-                nextPlayer();
-            }
             return true;
         } catch (Exception exception){
             System.out.println("cant place road there");

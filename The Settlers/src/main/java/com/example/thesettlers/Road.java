@@ -1,5 +1,6 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.GameState;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -28,6 +29,10 @@ public class Road {
                 rectangle.setHeight(61);
                 rectangle.setWidth(61);
                 rectangle.setFill(new ImagePattern(getImage(version)));
+                // moves to the next player as part of the starting phase of the game
+                if(game.gameState == GameState.START){
+                    game.nextPlayer();
+                }
             }
         });
     }
