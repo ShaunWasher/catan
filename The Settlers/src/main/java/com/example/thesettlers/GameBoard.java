@@ -196,5 +196,7 @@ public class GameBoard {
         roadPane.toFront();
     }
 
-
+    public Settlement[] getSettlementList() {
+        return settlementList;
+    }
 }

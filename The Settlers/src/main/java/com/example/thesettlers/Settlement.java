@@ -81,4 +81,5 @@ public class Settlement {
     public Rectangle getIcon() {
         return rectangle;
     }
+
 }

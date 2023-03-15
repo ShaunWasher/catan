@@ -174,4 +174,8 @@ public class Player {
     public int getPlayerID() {
         return playerID;
     }
+
+    public ArrayList<Settlement> getSettlements() {
+        return settlements;
+    }
 }

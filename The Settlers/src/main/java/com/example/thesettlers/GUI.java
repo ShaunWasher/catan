@@ -1,5 +1,6 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -22,7 +23,6 @@ public class GUI {
     private Pane boardPane;
     private Pane settlementPane;
     private Pane roadPane;
-    private Rectangle box;
     private Rectangle dice2;
     private Rectangle dice1;
     private Scene scene = new Scene(GUI);
@@ -30,8 +30,15 @@ public class GUI {
     private GameBoard gameBoard;
     private ArrayList<Player> players;
     private ArrayList<Player> nonActivePlayers;
-    private Player currentPlayer;
     private Text[] resourceValues;
+    private Rectangle currentPlayerIcon;
+    private Rectangle currentPlayerIconLabel;
+    private String[] playerColours;
+    private Rectangle buySettlement;
+    private Rectangle buyRoad;
+    private Rectangle buyCity;
+    private ArrayList<Rectangle> playerIcons;
+    private ArrayList<Rectangle> playerIconLabels;
 
     public GUI(Game game) throws URISyntaxException, IOException {
         this.game = game;
@@ -40,11 +47,12 @@ public class GUI {
         boardPane = gameBoard.getGameBoard();
         settlementPane = gameBoard.getSettlementPane();
         roadPane = gameBoard.getRoadPane();
+        playerColours = new String[]{"red", "blue", "gold", "white"};
         players = game.getPlayers();
-        currentPlayer = game.getCurrentPlayer();
         nonActivePlayers = new ArrayList<>(players);
-        nonActivePlayers.remove(currentPlayer);
-        String[] playerColours =  {"red","blue","gold","white"};
+        nonActivePlayers.remove(game.getCurrentPlayer());
+        playerIcons = new ArrayList<>();
+        playerIconLabels = new ArrayList<>();
 
         Rectangle portbg = new Rectangle(0,0,1440,900);
         portbg.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
@@ -52,7 +60,7 @@ public class GUI {
         settlementPane.setVisible(true);
         roadPane.setVisible(false);
 
-        box = new Rectangle(45, 765, 715, 140);
+        Rectangle box = new Rectangle(45, 765, 715, 140);
         box.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
         GUI.getChildren().add(box);
 
@@ -63,10 +71,10 @@ public class GUI {
         Rectangle currentPlayerBox = new Rectangle(960, 765, 450, 140);
         currentPlayerBox.setFill(new ImagePattern(new Image(this.getClass().getResource("pbox.png").toExternalForm())));
 
-        Rectangle currentPlayerIcon = new Rectangle(1000, 810,65, 65);
-        currentPlayerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"player.png").toExternalForm())));
-        Rectangle currentPlayerIconLabel = new Rectangle(1020, 860, 25, 25);
-        currentPlayerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+        currentPlayerIcon = new Rectangle(1000, 810,65, 65);
+        currentPlayerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"player.png").toExternalForm())));
+        currentPlayerIconLabel = new Rectangle(1020, 860, 25, 25);
+        currentPlayerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"playerlabel.png").toExternalForm())));
 
         Rectangle resCards = new Rectangle(1105, 790, 60, 84);
         Rectangle resCardsLabel = new Rectangle(1105 + 17.5, 860, 25, 25);
@@ -93,9 +101,11 @@ public class GUI {
 
             Rectangle playerIcon = new Rectangle(1000, 315 + (165 * y) ,65, 65);
             playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
+            playerIcons.add(playerIcon);
 
             Rectangle playerIconLabel = new Rectangle(1020, 365 + (165 * y) , 25, 25);
             playerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+            playerIconLabels.add(playerIconLabel);
 
             Rectangle playerResCards = new Rectangle(1105, 295 + (165 * y) , 60, 84);
             Rectangle playerResCardsLabel = new Rectangle(1105 + 17.5, 365 + (165 * y), 25, 25);
@@ -140,12 +150,13 @@ public class GUI {
             GUI.getChildren().addAll(resCard, label, text);
             resourceValues[y] = text; // adding text to array
         }
+
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         GUI.getChildren().add(devCard);
 
-        Rectangle buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
-        buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"buyroad.png").toExternalForm())));
+        buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
+        buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             roadPane.setVisible(true);
@@ -153,18 +164,19 @@ public class GUI {
             //TODO hide road spaces
         });
 
-        Rectangle buySettlement = new Rectangle(602.5, 790, 60, 39.5);
-        buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"buysettlement.png").toExternalForm())));
+        buySettlement = new Rectangle(602.5, 790, 60, 39.5);
+        buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
+            //for (Settlement settlement:game.getGameBoard().getSettlementList()) {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO check if player has correct roads for a settlement to be placed *** already done
-            settlementPane.setVisible(true);
             //TODO allow player to place settlement
             //TODO hide settlement spaces
+            settlementPane.setVisible(true);
         });
 
-        Rectangle buyCity = new Rectangle(672.5, 790, 60, 39.5);
-        buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"buycity.png").toExternalForm())));
+        buyCity = new Rectangle(672.5, 790, 60, 39.5);
+        buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCity.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO allow player to turn settlement into city
@@ -189,10 +201,8 @@ public class GUI {
         Rectangle endTurn = new Rectangle(672.5, 839.5, 60, 39.5);
         endTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurn.setOnMouseClicked(e -> {
-            //TODO end players turn
             game.nextPlayer();
         });
-
 
         Rectangle rollDice = new Rectangle(800, 844.5 + 5, 90, 39.5);
         rollDice.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
@@ -213,9 +223,21 @@ public class GUI {
         GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, trade, endTurn, rollDice);
         portbg.toBack();
     }
-    public void refreshUI(){
+    public void refreshUI() {
         for (int y = 0; y < 5; y++) {
             resourceValues[y].setText(String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
+        }
+        currentPlayerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
+        currentPlayerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
+        buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
+        buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
+        buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
+        players = game.getPlayers();
+        nonActivePlayers = new ArrayList<>(players);
+        nonActivePlayers.remove(game.getCurrentPlayer());
+        for (int y = 0; y < players.size() - 1; y++) {
+            playerIcons.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+            playerIconLabels.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
         }
     }
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
