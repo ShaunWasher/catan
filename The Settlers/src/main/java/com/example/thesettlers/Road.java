@@ -11,24 +11,22 @@ public class Road {
     private Rectangle rectangle;
     private Image image;
     private Game game;
+    private String[] playerColours;
 
     public Road(double x, double y, int version, Game game){
         this.game = game;
         settlementA = null;
         settlementB = null;
         owner = null;
+        playerColours = new String[]{"red", "blue", "gold", "white"};
         rectangle = new Rectangle(x,y,35,35);
-        rectangle.setFill(new ImagePattern(getImage(version)));
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
         rectangle.setOnMouseClicked(e -> {
-
             if(game.buyRoad(this)){
                 rectangle.setX(x - 13);
                 rectangle.setY(y - 13);
                 rectangle.setHeight(61);
                 rectangle.setWidth(61);
-                // TODO owner needs to be accessible so colour can be set dependent on the owner
-                // TODO road needs to be moved to separate, permanently visible, pane once clicked
                 rectangle.setFill(new ImagePattern(getImage(version)));
             }
         });
@@ -69,11 +67,11 @@ public class Road {
     }
     public Image getImage(int version) {
         if (version == 1) {
-            this.image = new Image(this.getClass().getResource("redroad1.png").toExternalForm());
+            this.image = new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"road1.png").toExternalForm());
         } else if (version == 2) {
-            this.image = new Image(this.getClass().getResource("redroad2.png").toExternalForm());
+            this.image = new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"road2.png").toExternalForm());
         } else if (version == 3) {
-            this.image = new Image(this.getClass().getResource("redroad3.png").toExternalForm());
+            this.image = new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"road3.png").toExternalForm());
         } else {
         }
         return this.image;

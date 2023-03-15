@@ -28,8 +28,6 @@ public class Settlement {
                     rectangle.setY(y - 5);
                     rectangle.setHeight(45);
                     rectangle.setWidth(45);
-                    // TODO owner needs to be accessible so colour can be set dependent on the owner
-                    // TODO settlement needs to be moved to separate, permanently visible, pane once clicked
                     rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"settlement.png").toExternalForm())));
                 }
             } else {
