@@ -39,6 +39,8 @@ public class GUI {
     private Rectangle buyCity;
     private ArrayList<Rectangle> playerIcons;
     private ArrayList<Rectangle> playerIconLabels;
+    private Rectangle endTurnMenu;
+    private Rectangle nextTurn;
 
     public GUI(Game game) throws URISyntaxException, IOException {
         this.game = game;
@@ -53,10 +55,14 @@ public class GUI {
         nonActivePlayers.remove(game.getCurrentPlayer());
         playerIcons = new ArrayList<>();
         playerIconLabels = new ArrayList<>();
-
+        nextTurn = new Rectangle(521.5,485,397,50.5);
+        nextTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("clicktocontinue.png").toExternalForm())));
+        endTurnMenu = new Rectangle(0,0,1440,900);
+        nextTurn.setVisible(false);
+        endTurnMenu.setVisible(false);
         Rectangle portbg = new Rectangle(0,0,1440,900);
         portbg.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
-        GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane);
+        GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane,endTurnMenu,nextTurn);
         settlementPane.setVisible(true);
         roadPane.setVisible(false);
 
@@ -198,10 +204,19 @@ public class GUI {
             //TODO allow players to trade
         });
 
-        Rectangle endTurn = new Rectangle(672.5, 839.5, 60, 39.5);
+        Rectangle endTurn = new Rectangle(602.5, 839.5, 130, 39.5);
         endTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurn.setOnMouseClicked(e -> {
             game.nextPlayer();
+            endTurnMenu.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
+            endTurnMenu.setVisible(true);
+            endTurnMenu.toFront();
+            nextTurn.setVisible(true);
+            nextTurn.toFront();
+            nextTurn.setOnMouseClicked(ee -> {
+                endTurnMenu.setVisible(false);
+                nextTurn.setVisible(false);
+            });
         });
 
         Rectangle rollDice = new Rectangle(800, 844.5 + 5, 90, 39.5);
