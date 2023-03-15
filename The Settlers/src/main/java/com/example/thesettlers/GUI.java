@@ -145,7 +145,7 @@ public class GUI {
         GUI.getChildren().add(devCard);
 
         Rectangle buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
-        buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("buyroad.png").toExternalForm())));
+        buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             roadPane.setVisible(true);
@@ -154,7 +154,7 @@ public class GUI {
         });
 
         Rectangle buySettlement = new Rectangle(602.5, 790, 60, 39.5);
-        buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource("buysettlement.png").toExternalForm())));
+        buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO check if player has correct roads for a settlement to be placed *** already done
@@ -164,7 +164,7 @@ public class GUI {
         });
 
         Rectangle buyCity = new Rectangle(672.5, 790, 60, 39.5);
-        buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource("buycity.png").toExternalForm())));
+        buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[currentPlayer.getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCity.setOnMouseClicked(e -> {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO allow player to turn settlement into city

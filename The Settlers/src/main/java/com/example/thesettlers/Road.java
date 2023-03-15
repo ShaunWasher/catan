@@ -27,6 +27,8 @@ public class Road {
                 rectangle.setY(y - 13);
                 rectangle.setHeight(61);
                 rectangle.setWidth(61);
+                // TODO owner needs to be accessible so colour can be set dependent on the owner
+                // TODO road needs to be moved to separate, permanently visible, pane once clicked
                 rectangle.setFill(new ImagePattern(getImage(version)));
             }
         });

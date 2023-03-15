@@ -16,6 +16,7 @@ public class Settlement {
         this.game = game;
         this.roads = new ArrayList<>();
         this.tiles = new ArrayList<>();
+        String[] playerColours =  {"red","blue","gold","white"};
         owner = null;
         isCity = false;
         rectangle = new Rectangle(x,y,35,35);
@@ -27,11 +28,13 @@ public class Settlement {
                     rectangle.setY(y - 5);
                     rectangle.setHeight(45);
                     rectangle.setWidth(45);
-                    rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("redsettlement.png").toExternalForm())));
+                    // TODO owner needs to be accessible so colour can be set dependent on the owner
+                    // TODO settlement needs to be moved to separate, permanently visible, pane once clicked
+                    rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"settlement.png").toExternalForm())));
                 }
             } else {
                 if(game.upgradeToCity(this)){
-                    //TODO make settlement look like city
+                    rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"city.png").toExternalForm())));
                 }
             }
         });
