@@ -190,6 +190,7 @@ public class GUI {
         endTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurn.setOnMouseClicked(e -> {
             //TODO end players turn
+            game.nextPlayer();
         });
 
 
