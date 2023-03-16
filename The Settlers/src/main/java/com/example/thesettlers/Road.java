@@ -29,6 +29,7 @@ public class Road {
                 rectangle.setHeight(61);
                 rectangle.setWidth(61);
                 rectangle.setFill(new ImagePattern(getImage(version)));
+                game.getGameBoard().getRoadPermPane().getChildren().add(rectangle);
                 // moves to the next player as part of the starting phase of the game
                 if(game.gameState == GameState.START){
                     game.nextPlayer();

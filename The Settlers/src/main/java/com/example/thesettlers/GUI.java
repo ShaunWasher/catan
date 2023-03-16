@@ -23,6 +23,7 @@ public class GUI {
     private Pane boardPane;
     private Pane settlementPane;
     private Pane roadPane;
+    private Pane permPane;
     private Rectangle dice2;
     private Rectangle dice1;
     private Scene scene = new Scene(GUI);
@@ -45,7 +46,11 @@ public class GUI {
     public GUI(Game game) throws URISyntaxException, IOException {
         this.game = game;
         this.gameBoard = game.getGameBoard();
+
         GUI.setId("GUI");
+        permPane = new Pane();
+        permPane.getChildren().addAll(gameBoard.getRoadPermPane(), gameBoard.getSettlementPermPane());
+        gameBoard.getGameBoard().toFront();
         boardPane = gameBoard.getGameBoard();
         settlementPane = gameBoard.getSettlementPane();
         roadPane = gameBoard.getRoadPane();
@@ -62,7 +67,7 @@ public class GUI {
         endTurnMenu.setVisible(false);
         Rectangle portbg = new Rectangle(0,0,1440,900);
         portbg.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
-        GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane,endTurnMenu,nextTurn);
+        GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane,endTurnMenu,nextTurn,permPane);
         settlementPane.setVisible(true);
         roadPane.setVisible(false);
 
@@ -175,12 +180,11 @@ public class GUI {
         buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
             roadPane.setVisible(false);
-            //for (Settlement settlement:game.getGameBoard().getSettlementList()) {
+            settlementPane.setVisible(true);
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO check if player has correct roads for a settlement to be placed *** already done
             //TODO allow player to place settlement
             //TODO hide settlement spaces
-            settlementPane.setVisible(true);
         });
 
         buyCity = new Rectangle(672.5, 790, 60, 39.5);

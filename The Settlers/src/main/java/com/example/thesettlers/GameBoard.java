@@ -11,6 +11,8 @@ import java.io. * ;
 import static java.lang.Math.sqrt;
 
 public class GameBoard {
+    private Pane settlementPermPane = new Pane();
+    private Pane roadPermPane = new Pane();
     private Pane gameBoard = new Pane();
     private Pane tilePane = new Pane();;
     private Pane labelPane = new Pane();;
@@ -198,5 +200,13 @@ public class GameBoard {
 
     public Settlement[] getSettlementList() {
         return settlementList;
+    }
+
+    public Pane getRoadPermPane() {
+        return roadPermPane;
+    }
+
+    public Pane getSettlementPermPane() {
+        return settlementPermPane;
     }
 }
