@@ -164,6 +164,7 @@ public class GUI {
         buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
+            settlementPane.setVisible(false);
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             roadPane.setVisible(true);
             //TODO allow player to place road
@@ -173,6 +174,7 @@ public class GUI {
         buySettlement = new Rectangle(602.5, 790, 60, 39.5);
         buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
+            roadPane.setVisible(false);
             //for (Settlement settlement:game.getGameBoard().getSettlementList()) {
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO check if player has correct roads for a settlement to be placed *** already done
@@ -184,6 +186,7 @@ public class GUI {
         buyCity = new Rectangle(672.5, 790, 60, 39.5);
         buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCity.setOnMouseClicked(e -> {
+            roadPane.setVisible(false);
             //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
             //TODO allow player to turn settlement into city
             settlementPane.setVisible(true);
@@ -207,6 +210,8 @@ public class GUI {
         Rectangle endTurn = new Rectangle(602.5, 839.5, 130, 39.5);
         endTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurn.setOnMouseClicked(e -> {
+            settlementPane.setVisible(false);
+            roadPane.setVisible(false);
             game.nextPlayer();
             endTurnMenu.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
             endTurnMenu.setVisible(true);

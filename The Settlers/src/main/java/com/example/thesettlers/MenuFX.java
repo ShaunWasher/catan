@@ -4,16 +4,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-public class GameFX extends Application {
+public class MenuFX extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Settlers");
         primaryStage.setFullScreen(true);
-        Game game = new Game(2, 10); //TODO get number of players from setup screen
-        GUI gui = new GUI(game);
-        game.setGUI(gui);
-        Scene content = gui.getGUI();
+        Menu gui = new Menu();
+        Scene content = gui.getMenu();
         content.setFill(Color.web("3e91c4"));
         content.getStylesheets().add(String.valueOf(this.getClass().getResource("sample.css")));
         primaryStage.setScene(content);
