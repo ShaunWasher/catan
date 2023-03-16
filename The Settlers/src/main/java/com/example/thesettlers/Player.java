@@ -178,4 +178,8 @@ public class Player {
     public ArrayList<Settlement> getSettlements() {
         return settlements;
     }
+
+    public EnumMap<ResourceType, Integer> getResourceCards() {
+        return resourceCards;
+    }
 }

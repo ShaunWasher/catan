@@ -2,6 +2,7 @@ package com.example.thesettlers;
 
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
+import javafx.animation.FadeTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -12,6 +13,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ public class GUI {
     private ArrayList<Rectangle> playerIconLabels;
     private Rectangle endTurnMenu;
     private Rectangle nextTurn;
+    private Rectangle notEnoughResources;
 
     public GUI(Game game) throws URISyntaxException, IOException {
         this.game = game;
@@ -70,6 +74,13 @@ public class GUI {
         GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane,endTurnMenu,nextTurn,permPane);
         settlementPane.setVisible(true);
         roadPane.setVisible(false);
+
+        Rectangle notEnoughResources = new Rectangle(644,712.5,270,42.5);
+        notEnoughResources.setFill(new ImagePattern(new Image(this.getClass().getResource("notenoughresources.png").toExternalForm())));
+        // TODO ADD IMAGE FOR MESSAGE!!!!
+        GUI.getChildren().add(notEnoughResources);
+        notEnoughResources.setVisible(false);
+        notEnoughResources.toFront();
 
         Rectangle box = new Rectangle(45, 765, 715, 140);
         box.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
@@ -169,9 +180,23 @@ public class GUI {
         buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
-            settlementPane.setVisible(false);
-            //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
-            roadPane.setVisible(true);
+            if(game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0){
+                settlementPane.setVisible(false);
+                roadPane.setVisible(true);
+            }
+            else{
+                notEnoughResources.setVisible(true);
+                FadeTransition fade = new FadeTransition();
+                //setting the duration for the Fade transition
+                fade.setDuration(Duration.millis(3500));
+                //setting the initial and the target opacity value for the transition
+                fade.setFromValue(10);
+                fade.setToValue(0);
+                //setting Circle as the node onto which the transition will be applied
+                fade.setNode(notEnoughResources);
+                //playing the transition
+                fade.play();
+            }
             //TODO allow player to place road
             //TODO hide road spaces
         });
@@ -179,9 +204,24 @@ public class GUI {
         buySettlement = new Rectangle(602.5, 790, 60, 39.5);
         buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
-            roadPane.setVisible(false);
-            settlementPane.setVisible(true);
-            //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
+            if(game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0){
+                roadPane.setVisible(false);
+                settlementPane.setVisible(true);
+            }
+            else{
+                notEnoughResources.setVisible(true);
+                FadeTransition fade = new FadeTransition();
+                //setting the duration for the Fade transition
+                fade.setDuration(Duration.millis(3500));
+                //setting the initial and the target opacity value for the transition
+                fade.setFromValue(10);
+                fade.setToValue(0);
+                //setting Circle as the node onto which the transition will be applied
+                fade.setNode(notEnoughResources);
+                //playing the transition
+                fade.play();
+
+            }
             //TODO check if player has correct roads for a settlement to be placed *** already done
             //TODO allow player to place settlement
             //TODO hide settlement spaces

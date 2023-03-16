@@ -10,7 +10,7 @@ public class GameFX extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Settlers");
         primaryStage.setFullScreen(true);
-        Game game = new Game(4, 10); //TODO get number of players from setup screen
+        Game game = new Game(2, 10); //TODO get number of players from setup screen
         GUI gui = new GUI(game);
         game.setGUI(gui);
         Scene content = gui.getGUI();
