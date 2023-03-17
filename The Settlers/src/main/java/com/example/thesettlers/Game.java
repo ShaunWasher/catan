@@ -168,6 +168,7 @@ public class Game {
             gui.refreshUI();
             return true;
         } catch (Exception exception){
+            GUI.cantPlaceSettlementError();
             System.out.println("cant place settlement there"); // problem shows in console for now
             System.out.println(exception);//TODO send to UI so the player can be told whats wrong
         }
@@ -180,6 +181,7 @@ public class Game {
             gui.refreshUI();
             return true;
         } catch (Exception exception){
+            GUI.cantPlaceRoadError();
             System.out.println("cant place road there");
             System.out.println(exception);//TODO send to UI so the player can be told whats wrong
         }

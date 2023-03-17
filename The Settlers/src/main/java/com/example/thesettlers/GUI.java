@@ -1,6 +1,5 @@
 package com.example.thesettlers;
 
-import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
 import javafx.event.EventHandler;
@@ -45,7 +44,9 @@ public class GUI {
     private ArrayList<Rectangle> playerIconLabels;
     private Rectangle endTurnMenu;
     private Rectangle nextTurn;
-    private Rectangle notEnoughResources;
+    private Rectangle notEnoughResourcesError;
+    private static Rectangle cantPlaceRoadError;
+    private static Rectangle cantPlaceSettlementError;
 
     public GUI(Game game) throws URISyntaxException, IOException {
         this.game = game;
@@ -75,12 +76,25 @@ public class GUI {
         settlementPane.setVisible(true);
         roadPane.setVisible(false);
 
-        Rectangle notEnoughResources = new Rectangle(644,712.5,270,42.5);
-        notEnoughResources.setFill(new ImagePattern(new Image(this.getClass().getResource("notenoughresources.png").toExternalForm())));
-        // TODO ADD IMAGE FOR MESSAGE!!!!
-        GUI.getChildren().add(notEnoughResources);
-        notEnoughResources.setVisible(false);
-        notEnoughResources.toFront();
+        notEnoughResourcesError = new Rectangle(644,712.5,270,42.5);
+        notEnoughResourcesError.setFill(new ImagePattern(new Image(this.getClass().getResource("notenoughresources.png").toExternalForm())));
+        GUI.getChildren().add(notEnoughResourcesError);
+        notEnoughResourcesError.setVisible(false);
+        notEnoughResourcesError.toFront();
+
+        cantPlaceRoadError = new Rectangle(644,712.5,270,42.5);
+        cantPlaceRoadError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplaceroad.png").toExternalForm())));
+        GUI.getChildren().add(cantPlaceRoadError);
+        cantPlaceRoadError.setVisible(false);
+        cantPlaceRoadError.toFront();
+
+        cantPlaceSettlementError = new Rectangle(581.5,712.5,332.5,42.5);
+        cantPlaceSettlementError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplacesettlement.png").toExternalForm())));
+        GUI.getChildren().add(cantPlaceSettlementError);
+        cantPlaceSettlementError.setVisible(false);
+        cantPlaceSettlementError.toFront();
+
+
 
         Rectangle box = new Rectangle(45, 765, 715, 140);
         box.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
@@ -185,17 +199,7 @@ public class GUI {
                 roadPane.setVisible(true);
             }
             else{
-                notEnoughResources.setVisible(true);
-                FadeTransition fade = new FadeTransition();
-                //setting the duration for the Fade transition
-                fade.setDuration(Duration.millis(3500));
-                //setting the initial and the target opacity value for the transition
-                fade.setFromValue(10);
-                fade.setToValue(0);
-                //setting Circle as the node onto which the transition will be applied
-                fade.setNode(notEnoughResources);
-                //playing the transition
-                fade.play();
+                notEnoughResourcesError();
             }
             //TODO allow player to place road
             //TODO hide road spaces
@@ -209,18 +213,7 @@ public class GUI {
                 settlementPane.setVisible(true);
             }
             else{
-                notEnoughResources.setVisible(true);
-                FadeTransition fade = new FadeTransition();
-                //setting the duration for the Fade transition
-                fade.setDuration(Duration.millis(3500));
-                //setting the initial and the target opacity value for the transition
-                fade.setFromValue(10);
-                fade.setToValue(0);
-                //setting Circle as the node onto which the transition will be applied
-                fade.setNode(notEnoughResources);
-                //playing the transition
-                fade.play();
-
+                notEnoughResourcesError();
             }
             //TODO check if player has correct roads for a settlement to be placed *** already done
             //TODO allow player to place settlement
@@ -328,4 +321,46 @@ public class GUI {
         };
         thread.start();
     }
+    public void notEnoughResourcesError(){
+        notEnoughResourcesError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(notEnoughResourcesError);
+        //playing the transition
+        fade.play();
+    }
+
+    public static void cantPlaceSettlementError(){
+        cantPlaceSettlementError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(cantPlaceSettlementError);
+        //playing the transition
+        fade.play();
+    }
+
+    public static void cantPlaceRoadError(){
+        cantPlaceRoadError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(cantPlaceRoadError);
+        //playing the transition
+        fade.play();
+    }
+
 }
