@@ -45,8 +45,10 @@ public class GUI {
     private Rectangle endTurnMenu;
     private Rectangle nextTurn;
     private Rectangle notEnoughResourcesError;
-    private static Rectangle cantPlaceRoadError;
-    private static Rectangle cantPlaceSettlementError;
+    private Rectangle cantPlaceRoadError;
+    private Rectangle cantPlaceSettlementError;
+    private Rectangle rollDiceFirstError;
+    private boolean diceCanBeRolled;
 
     public GUI(Game game) throws URISyntaxException, IOException {
         this.game = game;
@@ -61,6 +63,7 @@ public class GUI {
         roadPane = gameBoard.getRoadPane();
         playerColours = new String[]{"red", "blue", "gold", "white"};
         players = game.getPlayers();
+        diceCanBeRolled = false;
         nonActivePlayers = new ArrayList<>(players);
         nonActivePlayers.remove(game.getCurrentPlayer());
         playerIcons = new ArrayList<>();
@@ -94,7 +97,11 @@ public class GUI {
         cantPlaceSettlementError.setVisible(false);
         cantPlaceSettlementError.toFront();
 
-
+        rollDiceFirstError = new Rectangle(729,712.5,185,42.5);
+        rollDiceFirstError.setFill(new ImagePattern(new Image(this.getClass().getResource("rolldicefirst.png").toExternalForm())));
+        GUI.getChildren().add(rollDiceFirstError);
+        rollDiceFirstError.setVisible(false);
+        rollDiceFirstError.toFront();
 
         Rectangle box = new Rectangle(45, 765, 715, 140);
         box.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
@@ -194,71 +201,87 @@ public class GUI {
         buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoad.setOnMouseClicked(e -> {
-            if(game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0){
-                settlementPane.setVisible(false);
-                roadPane.setVisible(true);
+            if (diceCanBeRolled == false) {
+                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
+                    settlementPane.setVisible(false);
+                    //TODO spaces only appear where roads can be placed
+                    roadPane.setVisible(true);
+                } else {
+                    notEnoughResourcesError();
+                }
             }
             else{
-                notEnoughResourcesError();
+                rollDiceFirstError();
+                System.out.println("dice must be rolled first");
             }
-            //TODO allow player to place road
-            //TODO hide road spaces
         });
 
         buySettlement = new Rectangle(602.5, 790, 60, 39.5);
         buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlement.setOnMouseClicked(e -> {
-            if(game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0){
-                roadPane.setVisible(false);
-                settlementPane.setVisible(true);
+            if (diceCanBeRolled == false) {
+                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
+                    roadPane.setVisible(false);
+                    //TODO spaces only appear where settlements can be placed
+                    settlementPane.setVisible(true);
+                } else {
+                    notEnoughResourcesError();
+                }
             }
             else{
-                notEnoughResourcesError();
+                rollDiceFirstError();
+                System.out.println("dice must be rolled first");
             }
-            //TODO check if player has correct roads for a settlement to be placed *** already done
-            //TODO allow player to place settlement
-            //TODO hide settlement spaces
         });
 
         buyCity = new Rectangle(672.5, 790, 60, 39.5);
         buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCity.setOnMouseClicked(e -> {
-            roadPane.setVisible(false);
-            //TODO check if player has sufficient resources *** should this be done in deciding weather its clickable?
-            //TODO allow player to turn settlement into city
-            settlementPane.setVisible(true);
+            if (diceCanBeRolled == false) {
+                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
+                    roadPane.setVisible(false);
+                    settlementPane.setVisible(true);
+                } else {
+                    notEnoughResourcesError();
+                }
+            }
+            else{
+                rollDiceFirstError();
+                System.out.println("dice must be rolled first");
+            }
         });
 
         Rectangle buyDevCard = new Rectangle(532.5, 839.5, 60, 39.5);
         buyDevCard.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
         buyDevCard.setOnMouseClicked(e -> {
-            //TODO checks if player has sufficient resources ***done in playerclass*** just use try-catch
-            //TODO allow player to buy development card
-            //TODO display development card
-        });
+            if (diceCanBeRolled == false) {
 
-        Rectangle trade = new Rectangle(602.5, 839.5, 60, 39.5);
-        trade.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
-        trade.setOnMouseClicked(e -> {
-            //TODO display trade menu
-            //TODO allow players to trade
+                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
+                    //TODO allow player to buy development card
+                    //TODO display development card
+                } else {
+                    notEnoughResourcesError();
+                }
+            }
+            else{
+                rollDiceFirstError();
+                System.out.println("dice must be rolled first");
+            }
         });
 
         Rectangle endTurn = new Rectangle(602.5, 839.5, 130, 39.5);
         endTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurn.setOnMouseClicked(e -> {
-            settlementPane.setVisible(false);
-            roadPane.setVisible(false);
-            game.nextPlayer();
-            endTurnMenu.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
-            endTurnMenu.setVisible(true);
-            endTurnMenu.toFront();
-            nextTurn.setVisible(true);
-            nextTurn.toFront();
-            nextTurn.setOnMouseClicked(ee -> {
-                endTurnMenu.setVisible(false);
-                nextTurn.setVisible(false);
-            });
+            if (diceCanBeRolled == false){
+                settlementPane.setVisible(false);
+                roadPane.setVisible(false);
+                game.nextPlayer();
+                endTurnMenu();
+            }
+            else{
+                rollDiceFirstError();
+                System.out.println("dice must be rolled first");
+            }
         });
 
         Rectangle rollDice = new Rectangle(800, 844.5 + 5, 90, 39.5);
@@ -275,9 +298,15 @@ public class GUI {
         });
 
         rollDice.setOnMouseClicked(e -> {
-            diceRollAnimation();
+            if (diceCanBeRolled == true){
+                diceCanBeRolled = false;
+                diceRollAnimation();
+            }
+            else{
+                System.out.println("dice can't be rolled");
+            }
         });
-        GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, trade, endTurn, rollDice);
+        GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, endTurn, rollDice);
         portbg.toBack();
     }
     public void refreshUI() {
@@ -335,7 +364,7 @@ public class GUI {
         fade.play();
     }
 
-    public static void cantPlaceSettlementError(){
+    public void cantPlaceSettlementError(){
         cantPlaceSettlementError.setVisible(true);
         FadeTransition fade = new FadeTransition();
         //setting the duration for the Fade transition
@@ -349,7 +378,7 @@ public class GUI {
         fade.play();
     }
 
-    public static void cantPlaceRoadError(){
+    public void cantPlaceRoadError(){
         cantPlaceRoadError.setVisible(true);
         FadeTransition fade = new FadeTransition();
         //setting the duration for the Fade transition
@@ -363,4 +392,33 @@ public class GUI {
         fade.play();
     }
 
+    public void rollDiceFirstError(){
+        rollDiceFirstError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(rollDiceFirstError);
+        //playing the transition
+        fade.play();
+    }
+
+    public void endTurnMenu(){
+        endTurnMenu.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
+        endTurnMenu.setVisible(true);
+        endTurnMenu.toFront();
+        nextTurn.setVisible(true);
+        nextTurn.toFront();
+        nextTurn.setOnMouseClicked(ee -> {
+            endTurnMenu.setVisible(false);
+            nextTurn.setVisible(false);
+        });
+    }
+
+    public void setDiceCanBeRolledTrue(){
+        diceCanBeRolled = true;
+    }
 }

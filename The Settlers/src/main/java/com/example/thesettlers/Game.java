@@ -86,19 +86,23 @@ public class Game {
         // first round of settlement placement
         if(turnCount<players.size()){
             gameBoard.setSettlementPane();
-            return currentPlayer = players.get(turnCount);
+            currentPlayer = players.get(turnCount);
+            gui.endTurnMenu();
+            return currentPlayer;
         }
         // second round
         if(turnCount<players.size()*2){
             gameBoard.setSettlementPane();
             currentPlayer = players.get((2*players.size())-turnCount-1);
             gui.refreshUI();
+            gui.endTurnMenu();
             return currentPlayer;
         }
         //starting phase over
         gameState = GameState.MAIN;
         currentPlayer = players.get(turnCount%players.size());
         gui.refreshUI();
+        gui.setDiceCanBeRolledTrue();
         return currentPlayer;
     }
 
@@ -168,7 +172,7 @@ public class Game {
             gui.refreshUI();
             return true;
         } catch (Exception exception){
-            GUI.cantPlaceSettlementError();
+            gui.cantPlaceSettlementError();
             System.out.println("cant place settlement there"); // problem shows in console for now
             System.out.println(exception);//TODO send to UI so the player can be told whats wrong
         }
@@ -181,7 +185,7 @@ public class Game {
             gui.refreshUI();
             return true;
         } catch (Exception exception){
-            GUI.cantPlaceRoadError();
+            gui.cantPlaceRoadError();
             System.out.println("cant place road there");
             System.out.println(exception);//TODO send to UI so the player can be told whats wrong
         }
