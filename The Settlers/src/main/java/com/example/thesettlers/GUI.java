@@ -35,6 +35,10 @@ public class GUI {
     private ArrayList<Player> nonActivePlayers;
     private Text[] currentResourceValues;
     private Text[] resCardsCount;
+    private Text[] devCardsCount;
+    private Text[] VPCount;
+    private Text[] playerLargestArmyValue;
+    private Text[] playerLongestRoadValue;
     private Rectangle CPIcon;
     private Rectangle CPIconLabel;
     private String[] playerColours;
@@ -49,9 +53,13 @@ public class GUI {
     private Rectangle cantPlaceRoadError;
     private Rectangle cantPlaceSettlementError;
     private Rectangle rollDiceFirstError;
+    private Rectangle winMessage;
     private boolean diceCanBeRolled;
     private Text CPResCardsCount;
-
+    private Text CPLargestArmyValue;
+    private Text CPLongestRoadValue;
+    private Text CPDevCardsCount;
+    private Text CPVPCount;
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
     public GUI(Game game) throws URISyntaxException, IOException {
@@ -79,6 +87,10 @@ public class GUI {
         nonActivePlayers.remove(game.getCurrentPlayer());
         playerIcons = new ArrayList<>();
         playerIconLabels = new ArrayList<>();
+
+        winMessage = new Rectangle(0,0,1440,900);
+        winMessage.setVisible(false);
+        GUI.getChildren().add(winMessage);
 
         endTurnPopUp = new Rectangle(0,0,1440,900);
         endTurnPopUp.setVisible(false);
@@ -128,6 +140,8 @@ public class GUI {
         CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"player.png").toExternalForm())));
         CPIconLabel = new Rectangle(1020, 860, 25, 25);
         CPIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+        CPVPCount = new Text(1020 + 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getVictoryPoints()));
+        CPVPCount.setFont(new Font(20));
 
         Rectangle CPResCards = new Rectangle(1105, 790, 60, 84);
         Rectangle CPResCardsLabel = new Rectangle(1105 + 17.5, 860, 25, 25);
@@ -144,17 +158,26 @@ public class GUI {
         Rectangle CPDevCardsLabel = new Rectangle(1180 + 17.5, 860, 25, 25);
         CPDevCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         CPDevCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
+        CPDevCardsCount = new Text(1180 + 17.5 + 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getDevelopmentCards().size()));
+        CPDevCardsCount.setFont(new Font(20));
 
         Rectangle CPLargestArmy = new Rectangle(1255, 790, 60, 84);
         CPLargestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
+        CPLargestArmyValue = new Text(1255+30- 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getArmySize()));
+        CPLargestArmyValue.setFont(new Font(20));;
 
         Rectangle CPLongestRoad = new Rectangle(1330, 790, 60, 84);
         CPLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
+        CPLongestRoadValue = new Text(1330+30- 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getLongestRoadLength()));
+        CPLongestRoadValue.setFont(new Font(20));;
 
-        GUI.getChildren().addAll(CPIcon, CPIconLabel,CPResCards,CPResCardsLabel, CPDevCards, CPDevCardsLabel, CPLargestArmy, CPLongestRoad, CPResCardsCount);
-        CPResCardsCount.toFront();
+        GUI.getChildren().addAll(CPIcon, CPIconLabel,CPResCards,CPResCardsLabel, CPDevCards, CPDevCardsLabel, CPResCardsCount, CPLongestRoad, CPLargestArmy, CPDevCardsCount,CPLongestRoadValue,CPLargestArmyValue,CPVPCount);
 
         resCardsCount = new Text[players.size() - 1];
+        devCardsCount = new Text[players.size() - 1];
+        VPCount = new Text[players.size() - 1];
+        playerLargestArmyValue = new Text[players.size() - 1];
+        playerLongestRoadValue = new Text[players.size() - 1];
         for (int y = 0; y < players.size() - 1; y++) {
             Rectangle playerUI = new Rectangle(960, 270 + (165 * y) , 450, 140);
             playerUI.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
@@ -165,6 +188,9 @@ public class GUI {
             Rectangle playerIconLabel = new Rectangle(1020, 365 + (165 * y) , 25, 25);
             playerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"playerlabel.png").toExternalForm())));
             playerIconLabels.add(playerIconLabel);
+            Text VPCount = new Text(1020 + 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getVictoryPoints()));
+            VPCount.setFont(new Font(20));
+            this.VPCount[y] = VPCount;
 
             Rectangle playerResCards = new Rectangle(1105, 295 + (165 * y) , 60, 84);
             Rectangle playerResCardsLabel = new Rectangle(1105 + 17.5, 365 + (165 * y), 25, 25);
@@ -174,23 +200,34 @@ public class GUI {
             for (int z=0; z < 5;z++){
                  resCount += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
             }
-            Text text = new Text(1105 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(resCount));
-            text.setFont(new Font(20));
-            resCardsCount[y] = text;
+            Text resCardsCount = new Text(1105 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(resCount));
+            resCardsCount.setFont(new Font(20));
+            this.resCardsCount[y] = resCardsCount;
 
             Rectangle playerDevCards = new Rectangle(1180, 295 + (165 * y) , 60, 84);
             Rectangle layerDevCardsLabel = new Rectangle(1180 + 17.5, 365 + (165 * y), 25, 25);
             playerDevCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
             layerDevCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
+            Text devCardsCount = new Text(1180 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getDevelopmentCards().size()));
+            devCardsCount.setFont(new Font(20));
+            this.devCardsCount[y] = devCardsCount;
 
             Rectangle playerLargestArmy = new Rectangle(1255, 295 + (165 * y) , 60, 84);
             playerLargestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
+            Text playerLargestArmyValue = new Text(1255+30- 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getArmySize()));
+            playerLargestArmyValue.setFont(new Font(20));;
+            this.playerLargestArmyValue[y] = playerLargestArmyValue;
 
             Rectangle playerLongestRoad = new Rectangle(1330, 295 + (165 * y) , 60, 84);
             playerLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
+            Text playerLongestRoadValue = new Text(1330+30- 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
+            playerLongestRoadValue.setFont(new Font(20));;
+            this.playerLongestRoadValue[y] = playerLongestRoadValue;
 
-            GUI.getChildren().addAll(playerUI,playerIcon,playerIconLabel,playerResCards,playerResCardsLabel,playerDevCards,layerDevCardsLabel,playerLargestArmy,playerLongestRoad,text);
-            text.toFront();
+            GUI.getChildren().addAll(playerUI,playerIcon,playerIconLabel,playerResCards,playerResCardsLabel,playerDevCards,layerDevCardsLabel,playerLargestArmy,playerLongestRoad,resCardsCount,playerLongestRoadValue,playerLargestArmyValue,devCardsCount,VPCount);
+            resCardsCount.toFront();
+            devCardsCount.toFront();
+            VPCount.toFront();
             playerUI.toBack();
         }
 
@@ -340,8 +377,12 @@ public class GUI {
             currentPlayerResNumber += game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y]);
         }
         CPResCardsCount.setText(String.valueOf(currentPlayerResNumber));
+        CPDevCardsCount.setText(String.valueOf(game.getCurrentPlayer().getDevelopmentCards().size()));
         CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
         CPIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
+        CPVPCount.setText(String.valueOf(game.getCurrentPlayer().getVictoryPoints()));
+        CPLargestArmyValue.setText(String.valueOf(game.getCurrentPlayer().getArmySize()));
+        CPLongestRoadValue.setText(String.valueOf(game.getCurrentPlayer().getLongestRoadLength()));
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
@@ -356,6 +397,10 @@ public class GUI {
                 altResNumber += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
             }
             resCardsCount[y].setText(String.valueOf(altResNumber));
+            devCardsCount[y].setText(String.valueOf(nonActivePlayers.get(y).getDevelopmentCards().size()));
+            VPCount[y].setText(String.valueOf(nonActivePlayers.get(y).getVictoryPoints()));
+            playerLongestRoadValue[y].setText(String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
+            playerLargestArmyValue[y].setText(String.valueOf(nonActivePlayers.get(y).getArmySize()));
         }
     }
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
@@ -448,6 +493,12 @@ public class GUI {
             endTurnPopUp.setVisible(false);
             clickToContinueButton.setVisible(false);
         });
+    }
+
+    public void winMessage(){
+        //TODO add win graphic
+        winMessage.setVisible(true);
+        winMessage.toFront();
     }
 
     public void setDiceCanBeRolledTrue(){

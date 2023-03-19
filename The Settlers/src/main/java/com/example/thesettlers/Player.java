@@ -182,4 +182,12 @@ public class Player {
     public EnumMap<ResourceType, Integer> getResourceCards() {
         return resourceCards;
     }
+
+    public ArrayList<DevelopmentCard> getDevelopmentCards() {
+        return developmentCards;
+    }
+
+    public int getVictoryPoints() {
+        return victoryPoints;
+    }
 }

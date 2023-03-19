@@ -208,6 +208,7 @@ public class Game {
     }
 
     private void winGame(){
+        gui.winMessage();
         //TODO send data to UI to show scores
     }
 }
