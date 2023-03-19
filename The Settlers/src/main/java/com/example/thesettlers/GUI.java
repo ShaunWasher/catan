@@ -25,7 +25,7 @@ public class GUI {
     private Pane boardPane;
     private Pane settlementPane;
     private Pane roadPane;
-    private Pane permPane;
+    private Pane permanentPane;
     private Rectangle dice2;
     private Rectangle dice1;
     private Scene scene = new Scene(GUI);
@@ -33,34 +33,45 @@ public class GUI {
     private GameBoard gameBoard;
     private ArrayList<Player> players;
     private ArrayList<Player> nonActivePlayers;
-    private Text[] resourceValues;
-    private Rectangle currentPlayerIcon;
-    private Rectangle currentPlayerIconLabel;
+    private Text[] currentResourceValues;
+    private Text[] resCardsCount;
+    private Rectangle CPIcon;
+    private Rectangle CPIconLabel;
     private String[] playerColours;
-    private Rectangle buySettlement;
-    private Rectangle buyRoad;
-    private Rectangle buyCity;
+    private Rectangle buySettlementButton;
+    private Rectangle buyRoadButton;
+    private Rectangle buyCityButton;
     private ArrayList<Rectangle> playerIcons;
     private ArrayList<Rectangle> playerIconLabels;
-    private Rectangle endTurnMenu;
-    private Rectangle nextTurn;
+    private Rectangle endTurnPopUp;
+    private Rectangle clickToContinueButton;
     private Rectangle notEnoughResourcesError;
     private Rectangle cantPlaceRoadError;
     private Rectangle cantPlaceSettlementError;
     private Rectangle rollDiceFirstError;
     private boolean diceCanBeRolled;
+    private Text CPResCardsCount;
 
+    //TODO NEATEN THIS CLASS
+    //TODO RENAME THINGS TO MEANINGFUL NAMES
     public GUI(Game game) throws URISyntaxException, IOException {
-        this.game = game;
-        this.gameBoard = game.getGameBoard();
-
         GUI.setId("GUI");
-        permPane = new Pane();
-        permPane.getChildren().addAll(gameBoard.getRoadPermPane(), gameBoard.getSettlementPermPane());
-        gameBoard.getGameBoard().toFront();
+
+        this.game = game;
+        gameBoard = game.getGameBoard();
         boardPane = gameBoard.getGameBoard();
         settlementPane = gameBoard.getSettlementPane();
+        settlementPane.setVisible(true);
         roadPane = gameBoard.getRoadPane();
+        roadPane.setVisible(false);
+        permanentPane = new Pane();
+        permanentPane.getChildren().addAll(gameBoard.getRoadPermPane(), gameBoard.getSettlementPermPane());
+
+        Rectangle background = new Rectangle(0,0,1440,900);
+        background.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
+
+        GUI.getChildren().addAll(background,boardPane,settlementPane,roadPane,permanentPane);
+
         playerColours = new String[]{"red", "blue", "gold", "white"};
         players = game.getPlayers();
         diceCanBeRolled = false;
@@ -68,80 +79,85 @@ public class GUI {
         nonActivePlayers.remove(game.getCurrentPlayer());
         playerIcons = new ArrayList<>();
         playerIconLabels = new ArrayList<>();
-        nextTurn = new Rectangle(521.5,485,397,50.5);
-        nextTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("clicktocontinue.png").toExternalForm())));
-        endTurnMenu = new Rectangle(0,0,1440,900);
-        nextTurn.setVisible(false);
-        endTurnMenu.setVisible(false);
-        Rectangle portbg = new Rectangle(0,0,1440,900);
-        portbg.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
-        GUI.getChildren().addAll(portbg,boardPane,settlementPane,roadPane,endTurnMenu,nextTurn,permPane);
-        settlementPane.setVisible(true);
-        roadPane.setVisible(false);
+
+        endTurnPopUp = new Rectangle(0,0,1440,900);
+        endTurnPopUp.setVisible(false);
+        clickToContinueButton = new Rectangle(521.5,485,397,50.5);
+        clickToContinueButton.setFill(new ImagePattern(new Image(this.getClass().getResource("clicktocontinue.png").toExternalForm())));
+        clickToContinueButton.setVisible(false);
+        GUI.getChildren().addAll(endTurnPopUp, clickToContinueButton);
 
         notEnoughResourcesError = new Rectangle(644,712.5,270,42.5);
         notEnoughResourcesError.setFill(new ImagePattern(new Image(this.getClass().getResource("notenoughresources.png").toExternalForm())));
-        GUI.getChildren().add(notEnoughResourcesError);
         notEnoughResourcesError.setVisible(false);
         notEnoughResourcesError.toFront();
+        GUI.getChildren().add(notEnoughResourcesError);
 
         cantPlaceRoadError = new Rectangle(644,712.5,270,42.5);
         cantPlaceRoadError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplaceroad.png").toExternalForm())));
-        GUI.getChildren().add(cantPlaceRoadError);
         cantPlaceRoadError.setVisible(false);
         cantPlaceRoadError.toFront();
+        GUI.getChildren().add(cantPlaceRoadError);
 
         cantPlaceSettlementError = new Rectangle(581.5,712.5,332.5,42.5);
         cantPlaceSettlementError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplacesettlement.png").toExternalForm())));
-        GUI.getChildren().add(cantPlaceSettlementError);
         cantPlaceSettlementError.setVisible(false);
         cantPlaceSettlementError.toFront();
+        GUI.getChildren().add(cantPlaceSettlementError);
 
         rollDiceFirstError = new Rectangle(729,712.5,185,42.5);
         rollDiceFirstError.setFill(new ImagePattern(new Image(this.getClass().getResource("rolldicefirst.png").toExternalForm())));
-        GUI.getChildren().add(rollDiceFirstError);
         rollDiceFirstError.setVisible(false);
         rollDiceFirstError.toFront();
+        GUI.getChildren().add(rollDiceFirstError);
 
-        Rectangle box = new Rectangle(45, 765, 715, 140);
-        box.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
-        GUI.getChildren().add(box);
+        Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
+        CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
+        GUI.getChildren().add(CPResourceUI);
 
-        Rectangle box2 = new Rectangle(774, 765, 140, 140);
-        box2.setFill(new ImagePattern(new Image(this.getClass().getResource("box2.png").toExternalForm())));
-        GUI.getChildren().add(box2);
+        Rectangle diceUI = new Rectangle(774, 765, 140, 140);
+        diceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box2.png").toExternalForm())));
+        GUI.getChildren().add(diceUI);
 
-        Rectangle currentPlayerBox = new Rectangle(960, 765, 450, 140);
-        currentPlayerBox.setFill(new ImagePattern(new Image(this.getClass().getResource("pbox.png").toExternalForm())));
+        Rectangle CPUI = new Rectangle(960, 765, 450, 140);
+        CPUI.setFill(new ImagePattern(new Image(this.getClass().getResource("pbox.png").toExternalForm())));
+        CPUI.toBack();
+        GUI.getChildren().add(CPUI);
 
-        currentPlayerIcon = new Rectangle(1000, 810,65, 65);
-        currentPlayerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"player.png").toExternalForm())));
-        currentPlayerIconLabel = new Rectangle(1020, 860, 25, 25);
-        currentPlayerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+        CPIcon = new Rectangle(1000, 810,65, 65);
+        CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"player.png").toExternalForm())));
+        CPIconLabel = new Rectangle(1020, 860, 25, 25);
+        CPIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"playerlabel.png").toExternalForm())));
 
-        Rectangle resCards = new Rectangle(1105, 790, 60, 84);
-        Rectangle resCardsLabel = new Rectangle(1105 + 17.5, 860, 25, 25);
-        resCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
-        resCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
+        Rectangle CPResCards = new Rectangle(1105, 790, 60, 84);
+        Rectangle CPResCardsLabel = new Rectangle(1105 + 17.5, 860, 25, 25);
+        CPResCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
+        CPResCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
+        int CPResCount = 0;
+        for (int z=0; z < 5;z++){
+            CPResCount += game.getCurrentPlayer().resourceCards.get(ResourceType.values()[z]);
+        }
+        CPResCardsCount = new Text(1105 + 17.5 + 6.25, 860 + 20, String.valueOf(CPResCount));
+        CPResCardsCount.setFont(new Font(20));
 
-        Rectangle devCards = new Rectangle(1180, 790, 60, 84);
-        Rectangle devCardsLabel = new Rectangle(1180 + 17.5, 860, 25, 25);
-        devCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
-        devCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
+        Rectangle CPDevCards = new Rectangle(1180, 790, 60, 84);
+        Rectangle CPDevCardsLabel = new Rectangle(1180 + 17.5, 860, 25, 25);
+        CPDevCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
+        CPDevCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
 
-        Rectangle largestArmy = new Rectangle(1255, 790, 60, 84);
-        largestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
+        Rectangle CPLargestArmy = new Rectangle(1255, 790, 60, 84);
+        CPLargestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
 
-        Rectangle longestRoad = new Rectangle(1330, 790, 60, 84);
-        longestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
+        Rectangle CPLongestRoad = new Rectangle(1330, 790, 60, 84);
+        CPLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
 
-        GUI.getChildren().addAll(currentPlayerBox,currentPlayerIcon,currentPlayerIconLabel,resCards,resCardsLabel, devCards, devCardsLabel, largestArmy, longestRoad);
-        currentPlayerBox.toBack();
+        GUI.getChildren().addAll(CPIcon, CPIconLabel,CPResCards,CPResCardsLabel, CPDevCards, CPDevCardsLabel, CPLargestArmy, CPLongestRoad, CPResCardsCount);
+        CPResCardsCount.toFront();
 
+        resCardsCount = new Text[players.size() - 1];
         for (int y = 0; y < players.size() - 1; y++) {
-            Rectangle playerBox = new Rectangle(960, 270 + (165 * y) , 450, 140);
-            playerBox.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
-
+            Rectangle playerUI = new Rectangle(960, 270 + (165 * y) , 450, 140);
+            playerUI.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
             Rectangle playerIcon = new Rectangle(1000, 315 + (165 * y) ,65, 65);
             playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
             playerIcons.add(playerIcon);
@@ -154,6 +170,13 @@ public class GUI {
             Rectangle playerResCardsLabel = new Rectangle(1105 + 17.5, 365 + (165 * y), 25, 25);
             playerResCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
             playerResCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
+            int resCount = 0;
+            for (int z=0; z < 5;z++){
+                 resCount += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
+            }
+            Text text = new Text(1105 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(resCount));
+            text.setFont(new Font(20));
+            resCardsCount[y] = text;
 
             Rectangle playerDevCards = new Rectangle(1180, 295 + (165 * y) , 60, 84);
             Rectangle layerDevCardsLabel = new Rectangle(1180 + 17.5, 365 + (165 * y), 25, 25);
@@ -166,13 +189,14 @@ public class GUI {
             Rectangle playerLongestRoad = new Rectangle(1330, 295 + (165 * y) , 60, 84);
             playerLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
 
-            GUI.getChildren().addAll(playerBox,playerIcon,playerIconLabel,playerResCards,playerResCardsLabel,playerDevCards,layerDevCardsLabel,playerLargestArmy,playerLongestRoad);
-            playerBox.toBack();
+            GUI.getChildren().addAll(playerUI,playerIcon,playerIconLabel,playerResCards,playerResCardsLabel,playerDevCards,layerDevCardsLabel,playerLargestArmy,playerLongestRoad,text);
+            text.toFront();
+            playerUI.toBack();
         }
 
-        Rectangle tbox = new Rectangle(960, 765 - 165 - 165 - 165 - 220 - 25, 450, 220);
-        tbox.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
-        GUI.getChildren().add(tbox);
+        Rectangle tradeUI = new Rectangle(960, 765 - 165 - 165 - 165 - 220 - 25, 450, 220);
+        tradeUI.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
+        GUI.getChildren().add(tradeUI);
 
         dice1 = new Rectangle(790, 790, 50, 50);
         dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d6.png").toExternalForm())));
@@ -182,7 +206,7 @@ public class GUI {
         dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d2.png").toExternalForm())));
         GUI.getChildren().add(dice2);
 
-        resourceValues = new Text[5]; //stores text boxes for resource values in here
+        currentResourceValues = new Text[5]; //stores text boxes for resource values in here
         for (int y = 0; y < 5; y++) {
             Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
             Rectangle label = new Rectangle(90 + (70 * y), 860, 25, 25);
@@ -191,16 +215,16 @@ public class GUI {
             Text text = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
             text.setFont(new Font(20));
             GUI.getChildren().addAll(resCard, label, text);
-            resourceValues[y] = text; // adding text to array
+            currentResourceValues[y] = text; // adding text to array
         }
 
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         GUI.getChildren().add(devCard);
 
-        buyRoad = new Rectangle(532.5 , 790, 60, 39.5);
-        buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
-        buyRoad.setOnMouseClicked(e -> {
+        buyRoadButton = new Rectangle(532.5 , 790, 60, 39.5);
+        buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
+        buyRoadButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
                     settlementPane.setVisible(false);
@@ -216,13 +240,12 @@ public class GUI {
             }
         });
 
-        buySettlement = new Rectangle(602.5, 790, 60, 39.5);
-        buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
-        buySettlement.setOnMouseClicked(e -> {
+        buySettlementButton = new Rectangle(602.5, 790, 60, 39.5);
+        buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
+        buySettlementButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
                     roadPane.setVisible(false);
-                    //TODO spaces only appear where settlements can be placed
                     settlementPane.setVisible(true);
                 } else {
                     notEnoughResourcesError();
@@ -234,9 +257,9 @@ public class GUI {
             }
         });
 
-        buyCity = new Rectangle(672.5, 790, 60, 39.5);
-        buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
-        buyCity.setOnMouseClicked(e -> {
+        buyCityButton = new Rectangle(672.5, 790, 60, 39.5);
+        buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
+        buyCityButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
                     roadPane.setVisible(false);
@@ -251,9 +274,9 @@ public class GUI {
             }
         });
 
-        Rectangle buyDevCard = new Rectangle(532.5, 839.5, 60, 39.5);
-        buyDevCard.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
-        buyDevCard.setOnMouseClicked(e -> {
+        Rectangle buyDevCardButton = new Rectangle(532.5, 839.5, 60, 39.5);
+        buyDevCardButton.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
+        buyDevCardButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
 
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
@@ -269,9 +292,9 @@ public class GUI {
             }
         });
 
-        Rectangle endTurn = new Rectangle(602.5, 839.5, 130, 39.5);
-        endTurn.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
-        endTurn.setOnMouseClicked(e -> {
+        Rectangle endTurnButton = new Rectangle(602.5, 839.5, 130, 39.5);
+        endTurnButton.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
+        endTurnButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false){
                 settlementPane.setVisible(false);
                 roadPane.setVisible(false);
@@ -284,20 +307,20 @@ public class GUI {
             }
         });
 
-        Rectangle rollDice = new Rectangle(800, 844.5 + 5, 90, 39.5);
-        rollDice.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
-        rollDice.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        Rectangle rollDiceButton = new Rectangle(800, 844.5 + 5, 90, 39.5);
+        rollDiceButton.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
+        rollDiceButton.setOnMouseEntered(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 scene.setCursor(Cursor.HAND);
             }
         });
-        rollDice.setOnMouseExited(new EventHandler<MouseEvent>() {
+        rollDiceButton.setOnMouseExited(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 scene.setCursor(Cursor.DEFAULT);
             }
         });
 
-        rollDice.setOnMouseClicked(e -> {
+        rollDiceButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == true){
                 diceCanBeRolled = false;
                 diceRollAnimation();
@@ -306,24 +329,33 @@ public class GUI {
                 System.out.println("dice can't be rolled");
             }
         });
-        GUI.getChildren().addAll(buyRoad, buySettlement, buyCity, buyDevCard, endTurn, rollDice);
-        portbg.toBack();
+        GUI.getChildren().addAll(buyRoadButton, buySettlementButton, buyCityButton, buyDevCardButton, endTurnButton, rollDiceButton);
+        background.toBack();
     }
+
     public void refreshUI() {
+        int currentPlayerResNumber = 0;
         for (int y = 0; y < 5; y++) {
-            resourceValues[y].setText(String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
+            currentResourceValues[y].setText(String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
+            currentPlayerResNumber += game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y]);
         }
-        currentPlayerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
-        currentPlayerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
-        buyRoad.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
-        buySettlement.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
-        buyCity.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
+        CPResCardsCount.setText(String.valueOf(currentPlayerResNumber));
+        CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
+        CPIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
+        buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
+        buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
+        buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         players = game.getPlayers();
         nonActivePlayers = new ArrayList<>(players);
         nonActivePlayers.remove(game.getCurrentPlayer());
         for (int y = 0; y < players.size() - 1; y++) {
             playerIcons.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
             playerIconLabels.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
+            int altResNumber = 0;
+            for (int z=0; z < 5;z++){
+                altResNumber += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
+            }
+            resCardsCount[y].setText(String.valueOf(altResNumber));
         }
     }
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
@@ -407,14 +439,14 @@ public class GUI {
     }
 
     public void endTurnMenu(){
-        endTurnMenu.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
-        endTurnMenu.setVisible(true);
-        endTurnMenu.toFront();
-        nextTurn.setVisible(true);
-        nextTurn.toFront();
-        nextTurn.setOnMouseClicked(ee -> {
-            endTurnMenu.setVisible(false);
-            nextTurn.setVisible(false);
+        endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
+        endTurnPopUp.setVisible(true);
+        endTurnPopUp.toFront();
+        clickToContinueButton.setVisible(true);
+        clickToContinueButton.toFront();
+        clickToContinueButton.setOnMouseClicked(ee -> {
+            endTurnPopUp.setVisible(false);
+            clickToContinueButton.setVisible(false);
         });
     }
 
