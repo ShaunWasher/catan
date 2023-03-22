@@ -31,7 +31,14 @@ public class Settlement {
                     rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"settlement.png").toExternalForm())));
                     game.getGameBoard().getSettlementPermPane().getChildren().add(rectangle);
                     for(Settlement settlement:game.getGameBoard().getSettlementList()){
-                        settlement.getIcon().setVisible(true);
+                        for (Road road : settlement.getRoads()) {
+                            if (road.getNextSettlement(settlement).getOwner() != null) {
+                                settlement.getIcon().setVisible(false);
+                                break;
+                            } else {
+                                settlement.getIcon().setVisible(true);
+                            }
+                        }
                     }
                 }
             } else {

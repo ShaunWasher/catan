@@ -167,6 +167,16 @@ public class Game {
                     }
                 }
                 // auto shows the road pane as part of the starting phase
+                for (Road road : gameBoard.getRoadList()) {
+                    if (road.getSettlementA() == settlement || road.getSettlementB() == settlement) {
+                        road.getIcon().setVisible(true);
+                    } else {
+                        road.getIcon().setVisible(false);
+                    }
+                    if (road.getOwner() != null) {
+                        road.getIcon().setVisible(true);
+                    }
+                }
                 gameBoard.setRoadPane();
             }
             gui.refreshUI();

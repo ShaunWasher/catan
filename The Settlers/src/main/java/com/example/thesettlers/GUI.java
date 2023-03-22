@@ -263,7 +263,7 @@ public class GUI {
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoadButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
-                if (game.getCurrentPlayer().checkTooManyRoads()) {
+                if (!game.getCurrentPlayer().checkTooManyRoads()) {
                     if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
                         settlementPane.setVisible(false);
                         //make only places where you can place roads available
@@ -333,7 +333,7 @@ public class GUI {
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCityButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
-                if(game.getCurrentPlayer().checkTooManyCities()) {
+                if(!game.getCurrentPlayer().checkTooManyCities()) {
                     if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
                         roadPane.setVisible(false);
                     } else {
