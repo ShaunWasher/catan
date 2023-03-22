@@ -2,11 +2,8 @@ package com.example.thesettlers;
 
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
-import javafx.event.EventHandler;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -26,6 +23,7 @@ public class GUI {
     private Pane settlementPane;
     private Pane roadPane;
     private Pane permanentPane;
+    private Pane developmentCards;
     private Rectangle dice2;
     private Rectangle dice1;
     private Scene scene = new Scene(GUI);
@@ -54,6 +52,7 @@ public class GUI {
     private Rectangle cantPlaceSettlementError;
     private Rectangle rollDiceFirstError;
     private Rectangle winMessage;
+    private Rectangle developmentCardsUI;
     private boolean diceCanBeRolled;
     private Text CPResCardsCount;
     private Text CPLargestArmyValue;
@@ -73,6 +72,8 @@ public class GUI {
         roadPane = gameBoard.getRoadPane();
         roadPane.setVisible(false);
         permanentPane = new Pane();
+        developmentCards = new Pane();
+        developmentCards.setVisible(false);
         permanentPane.getChildren().addAll(gameBoard.getRoadPermPane(), gameBoard.getSettlementPermPane());
 
         Rectangle background = new Rectangle(0,0,1440,900);
@@ -126,6 +127,11 @@ public class GUI {
         Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
         CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
         GUI.getChildren().add(CPResourceUI);
+
+        Rectangle developmentCardsUI = new Rectangle(45, 610, 395, 140);
+        developmentCardsUI.setFill(new ImagePattern(new Image(this.getClass().getResource("dbox.png").toExternalForm())));
+        developmentCards.getChildren().add(developmentCardsUI);
+        GUI.getChildren().add(developmentCards);
 
         Rectangle diceUI = new Rectangle(774, 765, 140, 140);
         diceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box2.png").toExternalForm())));
@@ -198,7 +204,7 @@ public class GUI {
             playerResCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
             int resCount = 0;
             for (int z=0; z < 5;z++){
-                 resCount += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
+                resCount += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
             }
             Text resCardsCount = new Text(1105 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(resCount));
             resCardsCount.setFont(new Font(20));
@@ -245,19 +251,34 @@ public class GUI {
 
         currentResourceValues = new Text[5]; //stores text boxes for resource values in here
         for (int y = 0; y < 5; y++) {
+            Rectangle devCard = new Rectangle(72.5 + (70 * y), 610+25, 60, 84);
+            Rectangle devlabel = new Rectangle(90 + (70 * y), 705, 25, 25);
+
             Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
-            Rectangle label = new Rectangle(90 + (70 * y), 860, 25, 25);
+            Rectangle reslabel = new Rectangle(90 + (70 * y), 860, 25, 25);
+            devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
+            devlabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
             resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
-            label.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
+            reslabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
             Text text = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
             text.setFont(new Font(20));
-            GUI.getChildren().addAll(resCard, label, text);
+            developmentCards.getChildren().addAll(devCard,devlabel);
+            GUI.getChildren().addAll(resCard, reslabel, text);
             currentResourceValues[y] = text; // adding text to array
         }
 
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         GUI.getChildren().add(devCard);
+        devCard.setOnMouseClicked(e ->{
+            if (diceCanBeRolled == false) {
+                developmentCards.setVisible(!developmentCards.isVisible());
+            }
+            else{
+                rollDiceFirstError();
+                System.out.println("dice must be rolled first");
+            }
+        });
 
         buyRoadButton = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
@@ -356,7 +377,7 @@ public class GUI {
 
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
                     //TODO allow player to buy development card
-                    //TODO display development card
+                    developmentCards.setVisible(true);
                 } else {
                     notEnoughResourcesError();
                 }
@@ -384,17 +405,6 @@ public class GUI {
 
         Rectangle rollDiceButton = new Rectangle(800, 844.5 + 5, 90, 39.5);
         rollDiceButton.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
-        rollDiceButton.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                scene.setCursor(Cursor.HAND);
-            }
-        });
-        rollDiceButton.setOnMouseExited(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                scene.setCursor(Cursor.DEFAULT);
-            }
-        });
-
         rollDiceButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == true){
                 diceCanBeRolled = false;
