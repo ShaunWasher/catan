@@ -442,13 +442,10 @@ public class GUI {
         }
     }
 
-    public Pane getGUIPane() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
+    public Pane getGUI() {
         return GUI;
     }
 
-    public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
-        return scene;
-    }
     public void diceRollAnimation() {
         Thread thread = new Thread() {
             public void run() {

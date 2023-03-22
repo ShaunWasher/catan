@@ -19,16 +19,12 @@ public class GameFX extends Application {
         primaryStage.setFullScreen(true);
         Game game = new Game(2, 10); //TODO get number of players from setup screen
         GUI gui = new GUI(game);
-        game.setGUI(gui);
-        Scene content = gui.getGUI();
-        content.setFill(Color.web("3e91c4"));
-        content.getStylesheets().add(String.valueOf(this.getClass().getResource("sample.css")));
 
-        final int initWidth = 1400;      //initial width
+        final int initWidth = 1440;      //initial width
         final int initHeight = 900;    //initial height
         final Pane root = new Pane();   //necessary evil
 
-        Pane controller = gui.getGUIPane();   //initial view
+        Pane controller = gui.getGUI();   //initial view
         controller.setPrefWidth(initWidth);     //if not initialized
         controller.setPrefHeight(initHeight);   //if not initialized
         root.getChildren().add(controller);     //necessary evil
@@ -39,6 +35,8 @@ public class GameFX extends Application {
         root.getTransforms().add(scale);
 
         final Scene scene = new Scene(root, initWidth, initHeight);
+        scene.setFill(Color.web("3e91c4"));
+        scene.getStylesheets().add(String.valueOf(this.getClass().getResource("sample.css")));
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
