@@ -441,6 +441,11 @@ public class GUI {
             playerLargestArmyValue[y].setText(String.valueOf(nonActivePlayers.get(y).getArmySize()));
         }
     }
+
+    public Pane getGUIPane() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
+        return GUI;
+    }
+
     public Scene getGUI() { //TODO neaten up this whole thing the numbers are wack *** the numbers should be relative to the window shape
         return scene;
     }
