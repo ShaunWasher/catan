@@ -192,17 +192,17 @@ public class Player {
     }
 
     // returns true if the player has to many settlements
-    public boolean checkToManySettlements(){
+    public boolean checkTooManySettlements(){
         return (settlements.size() >= MAXSETTLEMENTS);
     }
 
     // returns true if the player has to many roads
-    public boolean checkToManyRoads(){
+    public boolean checkTooManyRoads(){
         return (roadCount >= MAXROADS);
     }
 
     // returns true if the player has to many cities
-    public boolean checkToManyCities() {
+    public boolean checkTooManyCities() {
         return (getNumberOfCities() >= MAXCITIES);
     }
 }

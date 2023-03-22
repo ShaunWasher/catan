@@ -263,23 +263,26 @@ public class GUI {
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoadButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
-                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
-                    settlementPane.setVisible(false);
-                    //make only places where you can place roads available
-                    for(Road road: gameBoard.getRoadList()) {
-                        if (road.getSettlementA().getOwner() != game.getCurrentPlayer() && road.getSettlementB().getOwner() != game.getCurrentPlayer() && !road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) && !road.getSettlementB().checkRoadConnection(game.getCurrentPlayer())) {
-                            road.getIcon().setVisible(false);
+                if (game.getCurrentPlayer().checkTooManyRoads()) {
+                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
+                        settlementPane.setVisible(false);
+                        //make only places where you can place roads available
+                        for (Road road : gameBoard.getRoadList()) {
+                            if (road.getSettlementA().getOwner() != game.getCurrentPlayer() && road.getSettlementB().getOwner() != game.getCurrentPlayer() && !road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) && !road.getSettlementB().checkRoadConnection(game.getCurrentPlayer())) {
+                                road.getIcon().setVisible(false);
+                            } else {
+                                road.getIcon().setVisible(true);
+                            }
+                            if (road.getOwner() != null) {
+                                road.getIcon().setVisible(true);
+                            }
                         }
-                        else{
-                            road.getIcon().setVisible(true);
-                        }
-                        if(road.getOwner() != null){
-                            road.getIcon().setVisible(true);
-                        }
+                        roadPane.setVisible(true);
+                    } else {
+                        notEnoughResourcesError();
                     }
-                    roadPane.setVisible(true);
                 } else {
-                    notEnoughResourcesError();
+                    //TODO too many roads error
                 }
             }
             else{
@@ -292,28 +295,32 @@ public class GUI {
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlementButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
-                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
-                    roadPane.setVisible(false);
-                    for(Settlement settlement: gameBoard.getSettlementList()) {
-                        if (settlement.checkRoadConnection(game.getCurrentPlayer())) {
-                            for (Road road : settlement.getRoads()) {
-                                if (road.getNextSettlement(settlement).getOwner() != null) {
-                                    settlement.getIcon().setVisible(false);
-                                    break;
-                                } else{
-                                    settlement.getIcon().setVisible(true);
+                if (!game.getCurrentPlayer().checkTooManySettlements()) {
+                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
+                        roadPane.setVisible(false);
+                        for (Settlement settlement : gameBoard.getSettlementList()) {
+                            if (settlement.checkRoadConnection(game.getCurrentPlayer())) {
+                                for (Road road : settlement.getRoads()) {
+                                    if (road.getNextSettlement(settlement).getOwner() != null) {
+                                        settlement.getIcon().setVisible(false);
+                                        break;
+                                    } else {
+                                        settlement.getIcon().setVisible(true);
+                                    }
                                 }
+                            } else {
+                                settlement.getIcon().setVisible(false);
                             }
-                        } else {
-                            settlement.getIcon().setVisible(false);
+                            if (settlement.getOwner() != null) {
+                                settlement.getIcon().setVisible(true);
+                            }
                         }
-                        if(settlement.getOwner() != null){
-                            settlement.getIcon().setVisible(true);
-                        }
+                        settlementPane.setVisible(true);
+                    } else {
+                        notEnoughResourcesError();
                     }
-                    settlementPane.setVisible(true);
                 } else {
-                    notEnoughResourcesError();
+                    //TODO too many settlements error
                 }
             }
             else{
@@ -326,11 +333,14 @@ public class GUI {
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCityButton.setOnMouseClicked(e -> {
             if (diceCanBeRolled == false) {
-                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
-                    roadPane.setVisible(false);
-                    settlementPane.setVisible(true);//TODO needs fixing due to pane changes
+                if(game.getCurrentPlayer().checkTooManyCities()) {
+                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
+                        roadPane.setVisible(false);
+                    } else {
+                        notEnoughResourcesError();
+                    }
                 } else {
-                    notEnoughResourcesError();
+                    // TODO too many Settlements error
                 }
             }
             else{
