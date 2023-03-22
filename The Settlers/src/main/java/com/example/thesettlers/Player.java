@@ -190,4 +190,19 @@ public class Player {
     public int getVictoryPoints() {
         return victoryPoints;
     }
+
+    // returns true if the player has to many settlements
+    public boolean checkToManySettlements(){
+        return (settlements.size() >= MAXSETTLEMENTS);
+    }
+
+    // returns true if the player has to many roads
+    public boolean checkToManyRoads(){
+        return (roadCount >= MAXROADS);
+    }
+
+    // returns true if the player has to many cities
+    public boolean checkToManyCities() {
+        return (getNumberOfCities() >= MAXCITIES);
+    }
 }
