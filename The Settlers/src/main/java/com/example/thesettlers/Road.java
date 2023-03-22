@@ -36,6 +36,7 @@ public class Road {
                 // moves to the next player as part of the starting phase of the game
                 if(game.gameState == GameState.START){
                     game.nextPlayer();
+                    game.gui.refreshUI();
                 }
             }
         });

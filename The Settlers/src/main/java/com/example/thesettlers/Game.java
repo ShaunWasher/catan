@@ -19,7 +19,7 @@ public class Game {
     private GameBoard gameBoard;
     private int turnCount;
     private Player currentPlayer;
-    private GUI gui;
+    public GUI gui;
     private int maxVPs;
     public Game(int numOfPlayers, int requiredVPs) throws URISyntaxException, IOException {
         maxVPs = requiredVPs;

@@ -19,6 +19,7 @@ public class GameFX extends Application {
         primaryStage.setFullScreen(true);
         Game game = new Game(2, 10); //TODO get number of players from setup screen
         GUI gui = new GUI(game);
+        game.setGUI(gui);
 
         final int initWidth = 1440;      //initial width
         final int initHeight = 900;    //initial height
