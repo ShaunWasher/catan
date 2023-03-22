@@ -202,6 +202,8 @@ public class GameBoard {
         return settlementList;
     }
 
+    public Road[] getRoadList(){return roadList;}
+
     public Pane getRoadPermPane() {
         return roadPermPane;
     }

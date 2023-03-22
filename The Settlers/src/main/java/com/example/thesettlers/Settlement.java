@@ -30,6 +30,9 @@ public class Settlement {
                     rectangle.setWidth(45);
                     rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"settlement.png").toExternalForm())));
                     game.getGameBoard().getSettlementPermPane().getChildren().add(rectangle);
+                    for(Settlement settlement:game.getGameBoard().getSettlementList()){
+                        settlement.getIcon().setVisible(true);
+                    }
                 }
             } else {
                 if(game.upgradeToCity(this)){

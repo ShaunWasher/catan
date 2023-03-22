@@ -30,6 +30,9 @@ public class Road {
                 rectangle.setWidth(61);
                 rectangle.setFill(new ImagePattern(getImage(version)));
                 game.getGameBoard().getRoadPermPane().getChildren().add(rectangle);
+                for(Road road:game.getGameBoard().getRoadList()){
+                    road.getIcon().setVisible(true);
+                }
                 // moves to the next player as part of the starting phase of the game
                 if(game.gameState == GameState.START){
                     game.nextPlayer();

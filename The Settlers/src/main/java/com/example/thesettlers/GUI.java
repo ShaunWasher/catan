@@ -265,7 +265,18 @@ public class GUI {
             if (diceCanBeRolled == false) {
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
                     settlementPane.setVisible(false);
-                    //TODO spaces only appear where roads can be placed
+                    //make only places where you can place roads available
+                    for(Road road: gameBoard.getRoadList()) {
+                        if (road.getSettlementA().getOwner() != game.getCurrentPlayer() && road.getSettlementB().getOwner() != game.getCurrentPlayer() && !road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) && !road.getSettlementB().checkRoadConnection(game.getCurrentPlayer())) {
+                            road.getIcon().setVisible(false);
+                        }
+                        else{
+                            road.getIcon().setVisible(true);
+                        }
+                        if(road.getOwner() != null){
+                            road.getIcon().setVisible(true);
+                        }
+                    }
                     roadPane.setVisible(true);
                 } else {
                     notEnoughResourcesError();
@@ -283,6 +294,23 @@ public class GUI {
             if (diceCanBeRolled == false) {
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
                     roadPane.setVisible(false);
+                    for(Settlement settlement: gameBoard.getSettlementList()) {
+                        if (settlement.checkRoadConnection(game.getCurrentPlayer())) {
+                            for (Road road : settlement.getRoads()) {
+                                if (road.getNextSettlement(settlement).getOwner() != null) {
+                                    settlement.getIcon().setVisible(false);
+                                    break;
+                                } else{
+                                    settlement.getIcon().setVisible(true);
+                                }
+                            }
+                        } else {
+                            settlement.getIcon().setVisible(false);
+                        }
+                        if(settlement.getOwner() != null){
+                            settlement.getIcon().setVisible(true);
+                        }
+                    }
                     settlementPane.setVisible(true);
                 } else {
                     notEnoughResourcesError();
@@ -300,7 +328,7 @@ public class GUI {
             if (diceCanBeRolled == false) {
                 if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
                     roadPane.setVisible(false);
-                    settlementPane.setVisible(true);
+                    settlementPane.setVisible(true);//TODO needs fixing due to pane changes
                 } else {
                     notEnoughResourcesError();
                 }
