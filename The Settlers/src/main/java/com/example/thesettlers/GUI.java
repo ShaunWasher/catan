@@ -1,5 +1,7 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.DevelopmentCardType;
+import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
@@ -256,7 +258,7 @@ public class GUI {
 
             Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
             Rectangle reslabel = new Rectangle(90 + (70 * y), 860, 25, 25);
-            devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
+            devCard.setFill(new ImagePattern(new Image(this.getClass().getResource(DevelopmentCardType.values()[y].label + "card.png").toExternalForm())));
             devlabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
             resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
             reslabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
@@ -271,147 +273,154 @@ public class GUI {
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         GUI.getChildren().add(devCard);
         devCard.setOnMouseClicked(e ->{
-            if (diceCanBeRolled == false) {
-                developmentCards.setVisible(!developmentCards.isVisible());
-            }
-            else{
-                rollDiceFirstError();
-                System.out.println("dice must be rolled first");
+            if (game.gameState == GameState.MAIN) {
+                if (diceCanBeRolled == false) {
+                    developmentCards.setVisible(!developmentCards.isVisible());
+                } else {
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
+                }
             }
         });
 
         buyRoadButton = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoadButton.setOnMouseClicked(e -> {
-            if (diceCanBeRolled == false) {
-                if (!game.getCurrentPlayer().checkTooManyRoads()) {
-                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
-                        settlementPane.setVisible(false);
-                        //make only places where you can place roads available
-                        for (Road road : gameBoard.getRoadList()) {
-                            if (road.getSettlementA().getOwner() != game.getCurrentPlayer() && road.getSettlementB().getOwner() != game.getCurrentPlayer() && !road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) && !road.getSettlementB().checkRoadConnection(game.getCurrentPlayer())) {
-                                road.getIcon().setVisible(false);
-                            } else {
-                                road.getIcon().setVisible(true);
+            if (game.gameState == GameState.MAIN) {
+                if (diceCanBeRolled == false) {
+                    if (!game.getCurrentPlayer().checkTooManyRoads()) {
+                        if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
+                            settlementPane.setVisible(false);
+                            //make only places where you can place roads available
+                            for (Road road : gameBoard.getRoadList()) {
+                                if (road.getSettlementA().getOwner() != game.getCurrentPlayer() && road.getSettlementB().getOwner() != game.getCurrentPlayer() && !road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) && !road.getSettlementB().checkRoadConnection(game.getCurrentPlayer())) {
+                                    road.getIcon().setVisible(false);
+                                } else {
+                                    road.getIcon().setVisible(true);
+                                }
+                                if (road.getOwner() != null) {
+                                    road.getIcon().setVisible(true);
+                                }
                             }
-                            if (road.getOwner() != null) {
-                                road.getIcon().setVisible(true);
-                            }
+                            roadPane.setVisible(true);
+                        } else {
+                            notEnoughResourcesError();
                         }
-                        roadPane.setVisible(true);
                     } else {
-                        notEnoughResourcesError();
+                        //TODO too many roads error
                     }
                 } else {
-                    //TODO too many roads error
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
                 }
-            }
-            else{
-                rollDiceFirstError();
-                System.out.println("dice must be rolled first");
             }
         });
 
         buySettlementButton = new Rectangle(602.5, 790, 60, 39.5);
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlementButton.setOnMouseClicked(e -> {
-            if (diceCanBeRolled == false) {
-                if (!game.getCurrentPlayer().checkTooManySettlements()) {
-                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
-                        roadPane.setVisible(false);
-                        for (Settlement settlement : gameBoard.getSettlementList()) {
-                            if (settlement.checkRoadConnection(game.getCurrentPlayer())) {
-                                for (Road road : settlement.getRoads()) {
-                                    if (road.getNextSettlement(settlement).getOwner() != null) {
-                                        settlement.getIcon().setVisible(false);
-                                        break;
-                                    } else {
-                                        settlement.getIcon().setVisible(true);
+            if (game.gameState == GameState.MAIN) {
+                if (diceCanBeRolled == false) {
+                    if (!game.getCurrentPlayer().checkTooManySettlements()) {
+                        if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
+                            roadPane.setVisible(false);
+                            for (Settlement settlement : gameBoard.getSettlementList()) {
+                                if (settlement.checkRoadConnection(game.getCurrentPlayer())) {
+                                    for (Road road : settlement.getRoads()) {
+                                        if (road.getNextSettlement(settlement).getOwner() != null) {
+                                            settlement.getIcon().setVisible(false);
+                                            break;
+                                        } else {
+                                            settlement.getIcon().setVisible(true);
+                                        }
                                     }
+                                } else {
+                                    settlement.getIcon().setVisible(false);
                                 }
-                            } else {
-                                settlement.getIcon().setVisible(false);
+                                if (settlement.getOwner() != null) {
+                                    settlement.getIcon().setVisible(true);
+                                }
                             }
-                            if (settlement.getOwner() != null) {
-                                settlement.getIcon().setVisible(true);
-                            }
+                            settlementPane.setVisible(true);
+                        } else {
+                            notEnoughResourcesError();
                         }
-                        settlementPane.setVisible(true);
                     } else {
-                        notEnoughResourcesError();
+                        //TODO too many settlements error
                     }
                 } else {
-                    //TODO too many settlements error
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
                 }
-            }
-            else{
-                rollDiceFirstError();
-                System.out.println("dice must be rolled first");
             }
         });
 
         buyCityButton = new Rectangle(672.5, 790, 60, 39.5);
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCityButton.setOnMouseClicked(e -> {
-            if (diceCanBeRolled == false) {
-                if(!game.getCurrentPlayer().checkTooManyCities()) {
-                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
-                        roadPane.setVisible(false);
+            if (game.gameState == GameState.MAIN) {
+                if (diceCanBeRolled == false) {
+                    if (!game.getCurrentPlayer().checkTooManyCities()) {
+                        if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
+                            roadPane.setVisible(false);
+                        } else {
+                            notEnoughResourcesError();
+                        }
                     } else {
-                        notEnoughResourcesError();
+                        // TODO too many Settlements error
                     }
                 } else {
-                    // TODO too many Settlements error
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
                 }
-            }
-            else{
-                rollDiceFirstError();
-                System.out.println("dice must be rolled first");
             }
         });
 
         Rectangle buyDevCardButton = new Rectangle(532.5, 839.5, 60, 39.5);
         buyDevCardButton.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
         buyDevCardButton.setOnMouseClicked(e -> {
-            if (diceCanBeRolled == false) {
+            if (game.gameState == GameState.MAIN) {
+                if (diceCanBeRolled == false) {
 
-                if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
-                    //TODO allow player to buy development card
-                    developmentCards.setVisible(true);
+                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
+                        //TODO allow player to buy development card
+                        developmentCards.setVisible(true);
+                    } else {
+                        notEnoughResourcesError();
+                    }
                 } else {
-                    notEnoughResourcesError();
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
                 }
-            }
-            else{
-                rollDiceFirstError();
-                System.out.println("dice must be rolled first");
             }
         });
 
         Rectangle endTurnButton = new Rectangle(602.5, 839.5, 130, 39.5);
         endTurnButton.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurnButton.setOnMouseClicked(e -> {
-            if (diceCanBeRolled == false){
-                settlementPane.setVisible(false);
-                roadPane.setVisible(false);
-                game.nextPlayer();
-                endTurnMenu();
-            }
-            else{
-                rollDiceFirstError();
-                System.out.println("dice must be rolled first");
+            if (game.gameState == GameState.MAIN) {
+                if (diceCanBeRolled == false) {
+                    settlementPane.setVisible(false);
+                    roadPane.setVisible(false);
+                    game.nextPlayer();
+                    endTurnMenu();
+                } else {
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
+                }
             }
         });
 
         Rectangle rollDiceButton = new Rectangle(800, 844.5 + 5, 90, 39.5);
         rollDiceButton.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
         rollDiceButton.setOnMouseClicked(e -> {
-            if (diceCanBeRolled == true){
-                diceCanBeRolled = false;
-                diceRollAnimation();
-            }
-            else{
-                System.out.println("dice can't be rolled");
+            if (game.gameState == GameState.MAIN) {
+                if (diceCanBeRolled == true) {
+                    diceCanBeRolled = false;
+                    diceRollAnimation();
+                } else {
+                    System.out.println("dice can't be rolled");
+                }
             }
         });
         GUI.getChildren().addAll(buyRoadButton, buySettlementButton, buyCityButton, buyDevCardButton, endTurnButton, rollDiceButton);
