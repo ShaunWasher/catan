@@ -12,8 +12,8 @@ public class Player {
     private int playerID;
     private ArrayList<Settlement> settlements;
     private int roadCount;
-     EnumMap<ResourceType,Integer> resourceCards;
-    private ArrayList<DevelopmentCard> developmentCards;
+    EnumMap<ResourceType,Integer> resourceCards;
+    private ArrayList<DevelopmentCard> developmentCards; //TODO need to be able to access each type of DevelopmentCard separately
     private int victoryPoints;
     private int longestRoadLength;
     private int armySize;

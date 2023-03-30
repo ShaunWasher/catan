@@ -1,10 +1,8 @@
 package com.example.thesettlers;
 
-import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
@@ -28,7 +26,6 @@ public class GUI {
     private Pane developmentCards;
     private Rectangle dice2;
     private Rectangle dice1;
-    private Scene scene = new Scene(GUI);
     private Game game;
     private GameBoard gameBoard;
     private ArrayList<Player> players;
@@ -39,6 +36,7 @@ public class GUI {
     private Text[] VPCount;
     private Text[] playerLargestArmyValue;
     private Text[] playerLongestRoadValue;
+    private Text[] currentDevCardValues;
     private Rectangle CPIcon;
     private Rectangle CPIconLabel;
     private String[] playerColours;
@@ -130,7 +128,7 @@ public class GUI {
         CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
         GUI.getChildren().add(CPResourceUI);
 
-        Rectangle developmentCardsUI = new Rectangle(45, 610, 395, 140);
+        developmentCardsUI = new Rectangle(45, 610, 395, 140);
         developmentCardsUI.setFill(new ImagePattern(new Image(this.getClass().getResource("dbox.png").toExternalForm())));
         developmentCards.getChildren().add(developmentCardsUI);
         GUI.getChildren().add(developmentCards);
@@ -251,22 +249,56 @@ public class GUI {
         dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d2.png").toExternalForm())));
         GUI.getChildren().add(dice2);
 
-        currentResourceValues = new Text[5]; //stores text boxes for resource values in here
-        for (int y = 0; y < 5; y++) {
-            Rectangle devCard = new Rectangle(72.5 + (70 * y), 610+25, 60, 84);
-            Rectangle devlabel = new Rectangle(90 + (70 * y), 705, 25, 25);
+        Rectangle knightCard = new Rectangle(72.5, 610+25, 60, 84);
+        knightCard.setFill(new ImagePattern(new Image(this.getClass().getResource("knightcard.png").toExternalForm())));
+        knightCard.setOnMouseClicked(e -> {
+            //TODO check if player has card and then use development card
+        });
 
+        Rectangle VPCard = new Rectangle(72.5+70, 610+25, 60, 84);
+        VPCard.setFill(new ImagePattern(new Image(this.getClass().getResource("vpcard.png").toExternalForm())));
+        VPCard.setOnMouseClicked(e -> {
+            //TODO check if player has card and then use development card
+        });
+
+        Rectangle roadBuildingCard = new Rectangle(72.5+(70 * 2), 610+25, 60, 84);
+        roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
+        roadBuildingCard.setOnMouseClicked(e -> {
+            //TODO check if player has card and then use development card
+        });
+
+
+        Rectangle yearOfPlentyCard = new Rectangle(72.5+(70 * 3), 610+25, 60, 84);
+        yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
+        yearOfPlentyCard.setOnMouseClicked(e -> {
+            //TODO check if player has card and then use development card
+        });
+
+        Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
+        monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
+        monopolyCard.setOnMouseClicked(e -> {
+            //TODO check if player has card and then use development card
+        });
+
+        developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);
+
+        currentResourceValues = new Text[5]; //stores text boxes for resource values in here
+        currentDevCardValues = new Text[5];
+        for (int y = 0; y < 5; y++) {
+            Rectangle devlabel = new Rectangle(90 + (70 * y), 705, 25, 25);
             Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
             Rectangle reslabel = new Rectangle(90 + (70 * y), 860, 25, 25);
-            devCard.setFill(new ImagePattern(new Image(this.getClass().getResource(DevelopmentCardType.values()[y].label + "card.png").toExternalForm())));
             devlabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
             resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
             reslabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
-            Text text = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
-            text.setFont(new Font(20));
-            developmentCards.getChildren().addAll(devCard,devlabel);
-            GUI.getChildren().addAll(resCard, reslabel, text);
-            currentResourceValues[y] = text; // adding text to array
+            Text resText = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
+            Text devText  = new Text(90 + 6.25 +(70 * y), 705 + 20, "n"); //TODO get number for card type
+            devText.setFont(new Font(20));
+            resText.setFont(new Font(20));
+            developmentCards.getChildren().addAll(devlabel,devText);
+            GUI.getChildren().addAll(resCard, reslabel, resText);
+            currentResourceValues[y] = resText; // adding text to array
+            currentDevCardValues[y] =  devText;
         }
 
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
@@ -432,6 +464,7 @@ public class GUI {
         for (int y = 0; y < 5; y++) {
             currentResourceValues[y].setText(String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
             currentPlayerResNumber += game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y]);
+            //TODO update currentDevCardValues[y] here
         }
         CPResCardsCount.setText(String.valueOf(currentPlayerResNumber));
         CPDevCardsCount.setText(String.valueOf(game.getCurrentPlayer().getDevelopmentCards().size()));
