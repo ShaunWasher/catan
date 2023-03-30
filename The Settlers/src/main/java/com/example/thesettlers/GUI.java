@@ -1,5 +1,6 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
@@ -190,7 +191,6 @@ public class GUI {
             Rectangle playerIcon = new Rectangle(1000, 315 + (165 * y) ,65, 65);
             playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
             playerIcons.add(playerIcon);
-
             Rectangle playerIconLabel = new Rectangle(1020, 365 + (165 * y) , 25, 25);
             playerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"playerlabel.png").toExternalForm())));
             playerIconLabels.add(playerIconLabel);
@@ -292,7 +292,7 @@ public class GUI {
             resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
             reslabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
             Text resText = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
-            Text devText  = new Text(90 + 6.25 +(70 * y), 705 + 20, "n"); //TODO get number for card type
+            Text devText  = new Text(90 + 6.25 +(70 * y), 705 + 20, "0"); //TODO get number for card type
             devText.setFont(new Font(20));
             resText.setFont(new Font(20));
             developmentCards.getChildren().addAll(devlabel,devText);
@@ -413,9 +413,13 @@ public class GUI {
         buyDevCardButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (diceCanBeRolled == false) {
-
                     if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
-                        //TODO allow player to buy development card
+                        try {
+                            game.getCurrentPlayer().buyDevCard();
+                            refreshUI();
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
                         developmentCards.setVisible(true);
                     } else {
                         notEnoughResourcesError();
