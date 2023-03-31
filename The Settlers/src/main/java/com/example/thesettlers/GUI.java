@@ -3,7 +3,10 @@ package com.example.thesettlers;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -53,6 +56,7 @@ public class GUI {
     private Rectangle tooManyRoadsError;
     private Rectangle tooManySettlementsError;
     private Rectangle rollDiceFirstError;
+    private Rectangle tooManyCitiesError;
     private Rectangle winMessage;
     private Rectangle developmentCardsUI;
     private boolean diceCanBeRolled;
@@ -137,6 +141,12 @@ public class GUI {
         tooManySettlementsError.setVisible(false);
         tooManySettlementsError.toFront();
         GUI.getChildren().add(tooManySettlementsError);
+
+        tooManyCitiesError = new Rectangle(712.5,712.5,201.5,42.5);
+        tooManyCitiesError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanycities.png").toExternalForm())));
+        tooManyCitiesError.setVisible(false);
+        tooManyCitiesError.toFront();
+        GUI.getChildren().add(tooManyCitiesError);
 
         Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
         CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
@@ -302,7 +312,7 @@ public class GUI {
             resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
             reslabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
             Text resText = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
-            Text devText  = new Text(90 + 6.25 +(70 * y), 705 + 20, "0"); //TODO get number for card type
+            Text devText  = new Text(90 + 6.25 +(70 * y), 705 + 20, "0");
             devText.setFont(new Font(20));
             resText.setFont(new Font(20));
             developmentCards.getChildren().addAll(devlabel,devText);
@@ -350,7 +360,6 @@ public class GUI {
                         }
                     } else {
                         tooManyRoadsError();
-                        //TODO too many roads error
                     }
                 } else {
                     rollDiceFirstError();
@@ -390,7 +399,6 @@ public class GUI {
                         }
                     } else {
                         tooManySettlementsError();
-                        //TODO too many settlements error
                     }
                 } else {
                     rollDiceFirstError();
@@ -411,7 +419,7 @@ public class GUI {
                             notEnoughResourcesError();
                         }
                     } else {
-                        // TODO too many Settlements error
+                        tooManyCitiesError();
                     }
                 } else {
                     rollDiceFirstError();
@@ -616,6 +624,19 @@ public class GUI {
         fade.setToValue(0);
         //setting Circle as the node onto which the transition will be applied
         fade.setNode(tooManySettlementsError);
+        //playing the transition
+        fade.play();
+    }
+    public void tooManyCitiesError(){
+        tooManyCitiesError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(tooManyCitiesError);
         //playing the transition
         fade.play();
     }
