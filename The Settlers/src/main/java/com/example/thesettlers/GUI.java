@@ -50,6 +50,8 @@ public class GUI {
     private Rectangle notEnoughResourcesError;
     private Rectangle cantPlaceRoadError;
     private Rectangle cantPlaceSettlementError;
+    private Rectangle tooManyRoadsError;
+    private Rectangle tooManySettlementsError;
     private Rectangle rollDiceFirstError;
     private Rectangle winMessage;
     private Rectangle developmentCardsUI;
@@ -123,6 +125,18 @@ public class GUI {
         rollDiceFirstError.setVisible(false);
         rollDiceFirstError.toFront();
         GUI.getChildren().add(rollDiceFirstError);
+
+        tooManyRoadsError = new Rectangle(712.5,712.5,201.5,42.5);
+        tooManyRoadsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanyroads.png").toExternalForm())));
+        tooManyRoadsError.setVisible(false);
+        tooManyRoadsError.toFront();
+        GUI.getChildren().add(tooManyRoadsError);
+
+        tooManySettlementsError = new Rectangle(652,712.5,262,42.5);
+        tooManySettlementsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanysettlements.png").toExternalForm())));
+        tooManySettlementsError.setVisible(false);
+        tooManySettlementsError.toFront();
+        GUI.getChildren().add(tooManySettlementsError);
 
         Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
         CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
@@ -335,6 +349,7 @@ public class GUI {
                             notEnoughResourcesError();
                         }
                     } else {
+                        tooManyRoadsError();
                         //TODO too many roads error
                     }
                 } else {
@@ -374,6 +389,7 @@ public class GUI {
                             notEnoughResourcesError();
                         }
                     } else {
+                        tooManySettlementsError();
                         //TODO too many settlements error
                     }
                 } else {
@@ -575,6 +591,35 @@ public class GUI {
         //playing the transition
         fade.play();
     }
+
+    public void tooManyRoadsError(){
+        tooManyRoadsError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(tooManyRoadsError);
+        //playing the transition
+        fade.play();
+    }
+
+    public void tooManySettlementsError(){
+        tooManySettlementsError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(tooManySettlementsError);
+        //playing the transition
+        fade.play();
+    }
+
 
     public void endTurnMenu(){
         endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
