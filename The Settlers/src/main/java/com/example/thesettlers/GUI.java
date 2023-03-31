@@ -1,6 +1,5 @@
 package com.example.thesettlers;
 
-import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
@@ -257,9 +256,6 @@ public class GUI {
 
         Rectangle VPCard = new Rectangle(72.5+70, 610+25, 60, 84);
         VPCard.setFill(new ImagePattern(new Image(this.getClass().getResource("vpcard.png").toExternalForm())));
-        VPCard.setOnMouseClicked(e -> {
-            //TODO check if player has card and then use development card
-        });
 
         Rectangle roadBuildingCard = new Rectangle(72.5+(70 * 2), 610+25, 60, 84);
         roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
@@ -298,7 +294,7 @@ public class GUI {
             developmentCards.getChildren().addAll(devlabel,devText);
             GUI.getChildren().addAll(resCard, reslabel, resText);
             currentResourceValues[y] = resText; // adding text to array
-            currentDevCardValues[y] =  devText;
+            currentDevCardValues[y] = devText;
         }
 
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
@@ -438,6 +434,7 @@ public class GUI {
                 if (diceCanBeRolled == false) {
                     settlementPane.setVisible(false);
                     roadPane.setVisible(false);
+                    developmentCards.setVisible(false);
                     game.nextPlayer();
                     endTurnMenu();
                 } else {
@@ -468,7 +465,7 @@ public class GUI {
         for (int y = 0; y < 5; y++) {
             currentResourceValues[y].setText(String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
             currentPlayerResNumber += game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y]);
-            //TODO update currentDevCardValues[y] here
+            currentDevCardValues[y].setText(String.valueOf(game.getCurrentPlayer().getDevelopmentCardCount()[y]));
         }
         CPResCardsCount.setText(String.valueOf(currentPlayerResNumber));
         CPDevCardsCount.setText(String.valueOf(game.getCurrentPlayer().getDevelopmentCards().size()));

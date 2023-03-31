@@ -12,6 +12,7 @@ public class Settlement {
     boolean isCity;
     private Rectangle rectangle;
     private Game game;
+
     public Settlement(double x, double y, Game game){
         this.game = game;
         this.roads = new ArrayList<>();

@@ -1,5 +1,7 @@
 package com.example.thesettlers;
 import com.example.thesettlers.enums.*;
+import javafx.scene.text.Text;
+
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.EnumMap;
@@ -18,6 +20,7 @@ public class Player {
     private int longestRoadLength;
     private int armySize;
     private Game game;
+    private int developmentCardCount[];
     public Player(int playerNumber, Game game){
         settlements = new ArrayList<>();
         roadCount = 0;
@@ -28,6 +31,7 @@ public class Player {
         resourceCards.put(ResourceType.WOOL, 0);
         resourceCards.put(ResourceType.GRAIN, 0);
         developmentCards = new ArrayList<>();
+        developmentCardCount = new int[5];
         victoryPoints = 0;
         longestRoadLength = 0;
         armySize = 0;
@@ -140,7 +144,23 @@ public class Player {
             resourceCards.merge(ResourceType.ORE, -1, Integer::sum);
             resourceCards.merge(ResourceType.WOOL, -1, Integer::sum);
             resourceCards.merge(ResourceType.GRAIN, -1, Integer::sum);
-            developmentCards.add(game.getDevCard()); // takes card off stack
+            DevelopmentCard devCard = game.getDevCard();  // takes card off stack
+            if (devCard.getCardType() == DevelopmentCardType.KNIGHT){
+                developmentCardCount[0]++;
+            }
+            if (devCard.getCardType() == DevelopmentCardType.VP){
+                developmentCardCount[1]++;
+            }
+            if (devCard.getCardType() == DevelopmentCardType.ROADBUILDING){
+                developmentCardCount[2]++;
+            }
+            if (devCard.getCardType() == DevelopmentCardType.YEAROFPLENTY){
+                developmentCardCount[3]++;
+            }
+            if (devCard.getCardType() == DevelopmentCardType.MONOPOLY){
+                developmentCardCount[4]++;
+            }
+            developmentCards.add(devCard);
         }
         else{
             throw new Exception("not enough resources");
@@ -204,5 +224,8 @@ public class Player {
     // returns true if the player has to many cities
     public boolean checkTooManyCities() {
         return (getNumberOfCities() >= MAXCITIES);
+    }
+    public int[] getDevelopmentCardCount() {
+        return developmentCardCount;
     }
 }
