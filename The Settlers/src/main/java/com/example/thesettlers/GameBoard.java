@@ -174,7 +174,6 @@ public class GameBoard {
         }
         gameBoard.getChildren().addAll(labelPane, tilePane);
         labelPane.toFront();
-
     }
 
     public Pane getGameBoard() {

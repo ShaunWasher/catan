@@ -7,7 +7,9 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -30,6 +32,7 @@ public class GUI {
     private Rectangle dice2;
     private Rectangle dice1;
     private Game game;
+    private Integer counter;
     private GameBoard gameBoard;
     private ArrayList<Player> players;
     private ArrayList<Player> nonActivePlayers;
@@ -260,9 +263,55 @@ public class GUI {
             playerUI.toBack();
         }
 
-        Rectangle tradeUI = new Rectangle(960, 765 - 165 - 165 - 165 - 220 - 25, 450, 220);
+        Rectangle tradeUI = new Rectangle(960, 25, 450, 220);
         tradeUI.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
         GUI.getChildren().add(tradeUI);
+
+        //TODO add trade with bank button and functionality
+        //TODO add trade with player button and functionality
+
+        Integer[] CPTradeValues = new Integer[5];
+
+        Rectangle CPbrickTrade = new Rectangle(960+(225/2),25+(95/2),40,57.5); //TODO align number
+        CPbrickTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("brick.png").toExternalForm())));
+        CPTradeValues[0] = 0;
+        Text CPbrickTradeText = new Text(960+(225/2), 25+(95/2), "0");
+        CPbrickTrade.setOnMouseClicked(event ->
+        {
+            if (event.getButton() == MouseButton.PRIMARY)
+            {
+                CPTradeValues[0]++;
+            } else if (event.getButton() == MouseButton.SECONDARY)
+            {
+                if (CPTradeValues[0] > 0) {
+                    CPTradeValues[0]--;
+                }
+            }
+            CPbrickTradeText.setText(String.valueOf(CPTradeValues[0]));
+        });
+
+
+        Rectangle CPlumberTrade = new Rectangle(960+(225/2)+46.25,25+(95/2),40,57.5);
+        CPlumberTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("lumber.png").toExternalForm())));
+        //TODO add click functionality
+
+
+        Rectangle CPoreTrade = new Rectangle(960+(225/2)+46.25+46.25,25+(95/2),40,57.5);
+        CPoreTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("ore.png").toExternalForm())));
+        //TODO add click functionality
+
+        Rectangle CPgrainTrade = new Rectangle(960+(225/2)+46.25+46.25+46.25,25+(95/2),40,57.5);
+        CPgrainTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("grain.png").toExternalForm())));
+        //TODO add click functionality
+
+        Rectangle CPwoolTrade = new Rectangle(960+(225/2)+46.25+46.25+46.25+46.25,25+(95/2),40,57.5);
+        CPwoolTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("wool.png").toExternalForm())));
+        //TODO add click functionality
+
+        GUI.getChildren().addAll(CPbrickTrade,CPlumberTrade,CPoreTrade,CPgrainTrade,CPwoolTrade);
+        GUI.getChildren().addAll(CPbrickTradeText);
+
+        //TODO add player/bank trade cards with counters
 
         dice1 = new Rectangle(790, 790, 50, 50);
         dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d6.png").toExternalForm())));
