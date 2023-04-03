@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GUI {
+    //region Variables
     Random random = new Random();
     private Pane GUI = new Pane();
     private Pane boardPane;
@@ -36,6 +37,12 @@ public class GUI {
     private GameBoard gameBoard;
     private ArrayList<Player> players;
     private ArrayList<Player> nonActivePlayers;
+    private Integer[] CPtradeSelectionValues;
+    private Text[] CPtradeSelectionTexts;
+    private Integer[] tradeSelectionValues;
+    private Text[] tradeSelectionTexts;
+    private Rectangle[] downArrows;
+    private Rectangle[] upArrows;
     private Text[] currentResourceValues;
     private Text[] resCardsCount;
     private Text[] devCardsCount;
@@ -68,11 +75,12 @@ public class GUI {
     private Text CPLongestRoadValue;
     private Text CPDevCardsCount;
     private Text CPVPCount;
+    private boolean resourceCheck;
+    //endregion
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
     public GUI(Game game) throws URISyntaxException, IOException {
         GUI.setId("GUI");
-
         this.game = game;
         gameBoard = game.getGameBoard();
         boardPane = gameBoard.getGameBoard();
@@ -84,7 +92,6 @@ public class GUI {
         developmentCards = new Pane();
         developmentCards.setVisible(false);
         permanentPane.getChildren().addAll(gameBoard.getRoadPermPane(), gameBoard.getSettlementPermPane());
-
         Rectangle background = new Rectangle(0,0,1440,900);
         background.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
 
@@ -267,51 +274,107 @@ public class GUI {
         tradeUI.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
         GUI.getChildren().add(tradeUI);
 
-        //TODO add trade with bank button and functionality
-        //TODO add trade with player button and functionality
-
-        Integer[] CPTradeValues = new Integer[5];
-
-        Rectangle CPbrickTrade = new Rectangle(960+(225/2),25+(95/2),40,57.5); //TODO align number
-        CPbrickTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("brick.png").toExternalForm())));
-        CPTradeValues[0] = 0;
-        Text CPbrickTradeText = new Text(960+(225/2), 25+(95/2), "0");
-        CPbrickTrade.setOnMouseClicked(event ->
-        {
-            if (event.getButton() == MouseButton.PRIMARY)
+        CPtradeSelectionValues = new Integer[5];
+        CPtradeSelectionTexts = new Text[5];
+        tradeSelectionValues = new Integer[5];
+        tradeSelectionTexts = new Text[5];
+        downArrows = new Rectangle[5];
+        upArrows = new Rectangle[5];
+        for (int y = 0; y < 5; y++) {
+            int i = y;
+            CPtradeSelectionValues[y] = 0;
+            Rectangle CPtradeResCard = new Rectangle(960+(225/2)+(46.25*y),25+(95/2),40,57.5);
+            CPtradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            Rectangle downArrow = new Rectangle(960+(225/2)+(46.25*y)+20-9.5 ,25+(95/2)+60,19,9);
+            downArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowdown.png").toExternalForm())));
+            downArrows[y] = downArrow;
+            Text CPtradeResText = (new Text(960+(225/2)+20-12.5+6.5+(46.25*y), 25+(95/2)+28.75-12.5+20,"0"));
+            CPtradeResText.setFont(new Font(20));
+            CPtradeResText.setFill(Color.WHITE);
+            CPtradeSelectionTexts[y] = CPtradeResText;
+            CPtradeResCard.setOnMouseClicked(event ->
             {
-                CPTradeValues[0]++;
-            } else if (event.getButton() == MouseButton.SECONDARY)
-            {
-                if (CPTradeValues[0] > 0) {
-                    CPTradeValues[0]--;
+                if (game.gameState == GameState.MAIN) {
+                    if (diceCanBeRolled == false) {
+                        if (event.getButton() == MouseButton.PRIMARY)
+                        {
+                            if (CPtradeSelectionValues[i] < game.getCurrentPlayer().resourceCards.get(ResourceType.values()[i])) {
+                                CPtradeSelectionValues[i]++;
+                                downArrows[i].setVisible(true);
+                            }
+                        } else if (event.getButton() == MouseButton.SECONDARY)
+                        {
+                            if (CPtradeSelectionValues[i] > 0) {
+                                CPtradeSelectionValues[i]--;
+                                if (CPtradeSelectionValues[i] == 0){
+                                    downArrows[i].setVisible(false);
+                                }
+                            }
+                        }
+                        CPtradeSelectionTexts[i].setText(String.valueOf(CPtradeSelectionValues[i]));
+                    } else {
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
+                    }
                 }
-            }
-            CPbrickTradeText.setText(String.valueOf(CPTradeValues[0]));
+            });
+            tradeSelectionValues[y] = 0;
+            Rectangle tradeResCard = new Rectangle(960+(225/2)+(46.25*y),197.5-40+10,40,57.5);
+            tradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            Rectangle upArrow = new Rectangle(960+(225/2)+(46.25*y)+20-9.5,197.5-40+10-9-2.5,19,9);
+            upArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowup.png").toExternalForm())));
+            upArrows[y] = upArrow;
+            Text tradeResText = (new Text(960+(225/2)+20-12.5+6.5+(46.25*y), 197.5-40+28.75-12.5+20+10,"0"));
+            tradeResText.setFont(new Font(20));
+            tradeResText.setFill(Color.WHITE);
+            tradeSelectionTexts[y] = tradeResText;
+            tradeResCard.setOnMouseClicked(event ->
+            {
+                if (game.gameState == GameState.MAIN) {
+                    if (diceCanBeRolled == false) {
+                        if (event.getButton() == MouseButton.PRIMARY)
+                        {
+                            tradeSelectionValues[i]++;
+                            upArrows[i].setVisible(true);
+                        } else if (event.getButton() == MouseButton.SECONDARY)
+                        {
+                            if (tradeSelectionValues[i] > 0) {
+                                tradeSelectionValues[i]--;
+                                if (tradeSelectionValues[i] == 0){
+                                    upArrows[i].setVisible(false);
+                                }
+                            }
+                        }
+                        tradeSelectionTexts[i].setText(String.valueOf(tradeSelectionValues[i]));
+                    } else {
+                        rollDiceFirstError();
+                        System.out.println("dice must be rolled first");
+                    }
+                }
+            });
+            upArrow.setVisible(false);
+            downArrow.setVisible(false);
+            GUI.getChildren().addAll(CPtradeResCard,CPtradeResText,tradeResCard,tradeResText,downArrow,upArrow);
+        }
+
+        Rectangle playerTradeButton = new Rectangle(960+16.75,270/2 + 27,79,27);
+        playerTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
+        playerTradeButton.setOnMouseClicked(event ->
+        {
+            //TODO player trade functionality - uses CPtradeSelectionValues and tradeSelectionValues
+            //TODO pop up for players to accept/decline trade
         });
 
+        GUI.getChildren().addAll(playerTradeButton);
 
-        Rectangle CPlumberTrade = new Rectangle(960+(225/2)+46.25,25+(95/2),40,57.5);
-        CPlumberTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("lumber.png").toExternalForm())));
-        //TODO add click functionality
-
-
-        Rectangle CPoreTrade = new Rectangle(960+(225/2)+46.25+46.25,25+(95/2),40,57.5);
-        CPoreTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("ore.png").toExternalForm())));
-        //TODO add click functionality
-
-        Rectangle CPgrainTrade = new Rectangle(960+(225/2)+46.25+46.25+46.25,25+(95/2),40,57.5);
-        CPgrainTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("grain.png").toExternalForm())));
-        //TODO add click functionality
-
-        Rectangle CPwoolTrade = new Rectangle(960+(225/2)+46.25+46.25+46.25+46.25,25+(95/2),40,57.5);
-        CPwoolTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("wool.png").toExternalForm())));
-        //TODO add click functionality
-
-        GUI.getChildren().addAll(CPbrickTrade,CPlumberTrade,CPoreTrade,CPgrainTrade,CPwoolTrade);
-        GUI.getChildren().addAll(CPbrickTradeText);
-
-        //TODO add player/bank trade cards with counters
+        Rectangle bankTradeButton = new Rectangle(960+(225/2)+(46.25*4)+40+16.75,270/2 + 27,79,27);
+        bankTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
+        bankTradeButton.setOnMouseClicked(event ->
+        {
+            //TODO functionality
+            //TODO uses CPtradeSelectionValues
+        });
+        GUI.getChildren().add(bankTradeButton);
 
         dice1 = new Rectangle(790, 790, 50, 50);
         dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d6.png").toExternalForm())));
@@ -692,6 +755,14 @@ public class GUI {
 
 
     public void endTurnMenu(){
+        for (int y = 0; y < 5; y++) {
+            CPtradeSelectionValues[y] = 0;
+            CPtradeSelectionTexts[y].setText("0");
+            tradeSelectionValues[y] = 0;
+            tradeSelectionTexts[y].setText("0");
+            downArrows[y].setVisible(false);
+            upArrows[y].setVisible(false);
+        }
         endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
         endTurnPopUp.setVisible(true);
         endTurnPopUp.toFront();
@@ -712,4 +783,5 @@ public class GUI {
     public void setDiceCanBeRolledTrue(){
         diceCanBeRolled = true;
     }
+
 }
