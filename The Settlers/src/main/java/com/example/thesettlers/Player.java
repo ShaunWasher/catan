@@ -1,11 +1,8 @@
 package com.example.thesettlers;
-import com.example.thesettlers.enums.*;
-import javafx.scene.text.Text;
 
+import com.example.thesettlers.enums.*;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.EnumMap;
-import java.util.Enumeration;
 
 public class Player {
     private final int MAXSETTLEMENTS = 5;
@@ -150,6 +147,7 @@ public class Player {
             }
             if (devCard.getCardType() == DevelopmentCardType.VP){
                 developmentCardCount[1]++;
+                addVP();
             }
             if (devCard.getCardType() == DevelopmentCardType.ROADBUILDING){
                 developmentCardCount[2]++;

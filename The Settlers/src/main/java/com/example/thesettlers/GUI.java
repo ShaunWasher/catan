@@ -517,7 +517,7 @@ public class GUI {
         GUI.getChildren().add(devCard);
         devCard.setOnMouseClicked(e ->{
             if (game.gameState == GameState.MAIN) {
-                if (diceCanBeRolled == false) {
+                if (!diceCanBeRolled) {
                     developmentCards.setVisible(!developmentCards.isVisible());
                 } else {
                     rollDiceFirstError();
@@ -530,7 +530,7 @@ public class GUI {
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buyRoadButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
-                if (diceCanBeRolled == false) {
+                if (!diceCanBeRolled) {
                     if (!game.getCurrentPlayer().checkTooManyRoads()) {
                         if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
                             settlementPane.setVisible(false);
@@ -563,7 +563,7 @@ public class GUI {
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buySettlementButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
-                if (diceCanBeRolled == false) {
+                if (!diceCanBeRolled) {
                     if (!game.getCurrentPlayer().checkTooManySettlements()) {
                         if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
                             roadPane.setVisible(false);
@@ -602,7 +602,7 @@ public class GUI {
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
         buyCityButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
-                if (diceCanBeRolled == false) {
+                if (!diceCanBeRolled) {
                     if (!game.getCurrentPlayer().checkTooManyCities()) {
                         if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
                             roadPane.setVisible(false);
@@ -623,7 +623,7 @@ public class GUI {
         buyDevCardButton.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
         buyDevCardButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
-                if (diceCanBeRolled == false) {
+                if (!diceCanBeRolled) {
                     if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
                         try {
                             game.getCurrentPlayer().buyDevCard();
@@ -646,7 +646,7 @@ public class GUI {
         endTurnButton.setFill(new ImagePattern(new Image(this.getClass().getResource("endturn.png").toExternalForm())));
         endTurnButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
-                if (diceCanBeRolled == false) {
+                if (!diceCanBeRolled) {
                     settlementPane.setVisible(false);
                     roadPane.setVisible(false);
                     developmentCards.setVisible(false);
@@ -663,7 +663,7 @@ public class GUI {
         rollDiceButton.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
         rollDiceButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
-                if (diceCanBeRolled == true) {
+                if (diceCanBeRolled) {
                     diceCanBeRolled = false;
                     diceRollAnimation();
                 } else {
