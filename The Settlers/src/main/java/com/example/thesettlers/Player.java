@@ -17,18 +17,13 @@ public class Player {
     private int longestRoadLength;
     private int armySize;
     private Game game;
-    private int developmentCardCount[];
+    private EnumMap<DevelopmentCardType,Integer> developmentCardCount;
     public Player(int playerNumber, Game game){
         settlements = new ArrayList<>();
         roadCount = 0;
         resourceCards = new EnumMap<>(ResourceType.class);
-        resourceCards.put(ResourceType.BRICK, 0);
-        resourceCards.put(ResourceType.LUMBER, 0);
-        resourceCards.put(ResourceType.ORE, 0);
-        resourceCards.put(ResourceType.WOOL, 0);
-        resourceCards.put(ResourceType.GRAIN, 0);
         developmentCards = new ArrayList<>();
-        developmentCardCount = new int[5];
+        developmentCardCount = new EnumMap<>(DevelopmentCardType.class);
         victoryPoints = 0;
         longestRoadLength = 0;
         armySize = 0;
@@ -142,21 +137,9 @@ public class Player {
             resourceCards.merge(ResourceType.WOOL, -1, Integer::sum);
             resourceCards.merge(ResourceType.GRAIN, -1, Integer::sum);
             DevelopmentCard devCard = game.getDevCard();  // takes card off stack
-            if (devCard.getCardType() == DevelopmentCardType.KNIGHT){
-                developmentCardCount[0]++;
-            }
+            developmentCardCount.put(devCard.getCardType(),developmentCardCount.get(devCard.getCardType())+1);
             if (devCard.getCardType() == DevelopmentCardType.VP){
-                developmentCardCount[1]++;
                 addVP();
-            }
-            if (devCard.getCardType() == DevelopmentCardType.ROADBUILDING){
-                developmentCardCount[2]++;
-            }
-            if (devCard.getCardType() == DevelopmentCardType.YEAROFPLENTY){
-                developmentCardCount[3]++;
-            }
-            if (devCard.getCardType() == DevelopmentCardType.MONOPOLY){
-                developmentCardCount[4]++;
             }
             developmentCards.add(devCard);
         }
@@ -165,7 +148,19 @@ public class Player {
         }
     }
 
-    //TODO use dev card
+    public boolean useDevCard(DevelopmentCardType type){
+        if (developmentCardCount.get(type) != 0) {
+            developmentCardCount.put(type, developmentCardCount.get(type) - 1);
+            for(DevelopmentCard card: developmentCards){
+                if(card.getCardType() == type){
+                    developmentCards.remove(card);
+                    game.returnDevCard(card);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public void giveResource(ResourceType resourceType, int amount) {
         if (resourceType != null) {
@@ -173,12 +168,11 @@ public class Player {
         }
     }
 
-    public boolean addVP(){
+    public void addVP(){
         victoryPoints++;
         if(victoryPoints >= game.getMaxVPs()){
-            return true;
+            game.winGame();
         }
-        return false;
     }
 
     public int getArmySize() {
@@ -191,10 +185,6 @@ public class Player {
 
     public int getPlayerID() {
         return playerID;
-    }
-
-    public ArrayList<Settlement> getSettlements() {
-        return settlements;
     }
 
     public EnumMap<ResourceType, Integer> getResourceCards() {
@@ -223,7 +213,9 @@ public class Player {
     public boolean checkTooManyCities() {
         return (getNumberOfCities() >= MAXCITIES);
     }
+
+    // returns get dev cards as an int array
     public int[] getDevelopmentCardCount() {
-        return developmentCardCount;
+        return new int[]{developmentCardCount.get(DevelopmentCardType.KNIGHT),developmentCardCount.get(DevelopmentCardType.VP),developmentCardCount.get(DevelopmentCardType.ROADBUILDING),developmentCardCount.get(DevelopmentCardType.YEAROFPLENTY),developmentCardCount.get(DevelopmentCardType.MONOPOLY)};
     }
 }

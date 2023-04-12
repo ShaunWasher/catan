@@ -155,9 +155,7 @@ public class Game {
     public boolean buySettlement(Settlement settlement){
         try {// attempts to buy a settlement
             getCurrentPlayer().placeSettlement(settlement);
-            if(getCurrentPlayer().addVP()){
-                winGame();
-            }
+            getCurrentPlayer().addVP();
             gameBoard.setSettlementPane();
             if(gameState == GameState.START){
                 // if its the second round of placement you get the resources on the settlement
@@ -204,9 +202,7 @@ public class Game {
     public boolean upgradeToCity(Settlement settlement){
         try {
             getCurrentPlayer().upgradeToCity(settlement);
-            if(getCurrentPlayer().addVP()){
-                winGame();
-            }
+            getCurrentPlayer().addVP();
             gameBoard.setSettlementPane();
             gui.refreshUI();
             return true;
@@ -217,7 +213,7 @@ public class Game {
         return false;
     }
 
-    private void winGame(){
+    public void winGame(){
         gui.winMessage();
         //TODO send data to UI to show scores
     }

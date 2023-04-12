@@ -1,5 +1,6 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
@@ -466,7 +467,9 @@ public class GUI {
         Rectangle knightCard = new Rectangle(72.5, 610+25, 60, 84);
         knightCard.setFill(new ImagePattern(new Image(this.getClass().getResource("knightcard.png").toExternalForm())));
         knightCard.setOnMouseClicked(e -> {
-            //TODO check if player has card and then use development card
+            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
+                //TODO add card functionality
+            }
         });
 
         Rectangle VPCard = new Rectangle(72.5+70, 610+25, 60, 84);
@@ -475,20 +478,26 @@ public class GUI {
         Rectangle roadBuildingCard = new Rectangle(72.5+(70 * 2), 610+25, 60, 84);
         roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
         roadBuildingCard.setOnMouseClicked(e -> {
-            //TODO check if player has card and then use development card
+            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.ROADBUILDING)){
+                //TODO add card functionality
+            }
         });
 
 
         Rectangle yearOfPlentyCard = new Rectangle(72.5+(70 * 3), 610+25, 60, 84);
         yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
         yearOfPlentyCard.setOnMouseClicked(e -> {
-            //TODO check if player has card and then use development card
+            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.YEAROFPLENTY)){
+                //TODO add card functionality
+            }
         });
 
         Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
         monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
         monopolyCard.setOnMouseClicked(e -> {
-            //TODO check if player has card and then use development card
+            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.MONOPOLY)){
+                //TODO add card functionality
+            }
         });
 
         developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);

@@ -3,7 +3,7 @@ package com.example.thesettlers;
 import com.example.thesettlers.enums.DevelopmentCardType;
 
 public class DevelopmentCard {
-    DevelopmentCardType cardType;
+    private DevelopmentCardType cardType;
     public DevelopmentCard(DevelopmentCardType type){
         cardType = type;
     }
