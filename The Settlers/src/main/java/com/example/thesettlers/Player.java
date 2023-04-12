@@ -22,8 +22,18 @@ public class Player {
         settlements = new ArrayList<>();
         roadCount = 0;
         resourceCards = new EnumMap<>(ResourceType.class);
+        resourceCards.put(ResourceType.WOOL,0);
+        resourceCards.put(ResourceType.ORE,0);
+        resourceCards.put(ResourceType.BRICK,0);
+        resourceCards.put(ResourceType.LUMBER,0);
+        resourceCards.put(ResourceType.GRAIN,0);
         developmentCards = new ArrayList<>();
         developmentCardCount = new EnumMap<>(DevelopmentCardType.class);
+        developmentCardCount.put(DevelopmentCardType.KNIGHT,0);
+        developmentCardCount.put(DevelopmentCardType.VP,0);
+        developmentCardCount.put(DevelopmentCardType.ROADBUILDING,0);
+        developmentCardCount.put(DevelopmentCardType.YEAROFPLENTY,0);
+        developmentCardCount.put(DevelopmentCardType.MONOPOLY,0);
         victoryPoints = 0;
         longestRoadLength = 0;
         armySize = 0;
