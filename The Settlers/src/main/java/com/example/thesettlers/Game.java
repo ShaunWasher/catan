@@ -1,9 +1,6 @@
 package com.example.thesettlers;
 
-import com.example.thesettlers.enums.DevelopmentCardType;
-import com.example.thesettlers.enums.GameState;
-import com.example.thesettlers.enums.ResourceType;
-import com.example.thesettlers.enums.TerrainType;
+import com.example.thesettlers.enums.*;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -15,13 +12,15 @@ public class Game {
     private ArrayList<Player> players;
     private int longestRoad;
     private int largestArmy;
+    private MapType mapType;
     private LinkedList<DevelopmentCard> developmentCards;
     private GameBoard gameBoard;
     private int turnCount;
     private Player currentPlayer;
     public GUI gui;
     private int maxVPs;
-    public Game(int numOfPlayers, int requiredVPs) throws URISyntaxException, IOException {
+    public Game(MapType mapType, int numOfPlayers, int requiredVPs) throws URISyntaxException, IOException {
+        this.mapType = mapType;
         maxVPs = requiredVPs;
         gui = null;
         this.gameBoard = new GameBoard(this);
@@ -216,5 +215,9 @@ public class Game {
     public void winGame(){
         gui.winMessage();
         //TODO send data to UI to show scores
+    }
+
+    public MapType getMapType() {
+        return mapType;
     }
 }

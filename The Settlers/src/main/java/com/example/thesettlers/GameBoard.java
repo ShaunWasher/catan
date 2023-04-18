@@ -1,13 +1,17 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.MapType;
 import javafx.scene.layout.Pane;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.io. * ;
+import java.util.Random;
+
 import static java.lang.Math.sqrt;
 
 public class GameBoard {
@@ -18,11 +22,15 @@ public class GameBoard {
     private Pane labelPane = new Pane();;
     private Pane settlementPane = new Pane();;
     private Pane roadPane = new Pane();;
-    private String mapType;
+    private List<String> startingTerrainList;
+    private List<String> randomTerrainList;
     private List<String> terrainList;
+    private List<Integer> randomValueList;
+    private List<Integer> startingValueList;
     private List<Integer> valueList;
     private Integer[][] tileSettlementData;
     private Integer[][] roadSettlementData;
+    private Integer[][] portSettlementData;
     Settlement[] settlementList;
     private Road[] roadList;
     private Tile[] tileList;
@@ -34,11 +42,11 @@ public class GameBoard {
 
     public GameBoard(Game game) throws URISyntaxException, IOException {
         this.game = game;
-        this.mapType = mapType;
-        terrainList = new ArrayList<>();
-        valueList = new ArrayList<>();
+        startingTerrainList = new ArrayList<>();
+        startingValueList = new ArrayList<>();
         tileSettlementData = new Integer[19][6];
         roadSettlementData = new Integer[72][2];
+        portSettlementData = new Integer[54][2];
         settlementList = new Settlement[54];
         tileList = new Tile[19];
         roadList = new Road[72];
@@ -51,9 +59,30 @@ public class GameBoard {
         BufferedReader brSM = new BufferedReader(frSM);
         while ((line = brSM.readLine()) != null) {
             String[] data = line.split(splitBy);
-            terrainList.add(data[0]);
-            valueList.add(Integer.parseInt(data[1]));
+            startingTerrainList.add(data[0]);
+            startingValueList.add(Integer.parseInt(data[1]));
         }
+
+        randomTerrainList = new ArrayList<>(startingTerrainList);
+        randomValueList = new ArrayList<>(startingValueList);
+        int desertIndex = randomTerrainList.indexOf("DESERT");
+        randomTerrainList.remove(desertIndex);
+        randomValueList.remove(desertIndex);
+        Collections.shuffle(randomTerrainList);
+        Collections.shuffle(randomValueList);
+        int randomIndex = new Random().nextInt(randomTerrainList.size() + 1);
+        randomTerrainList.add(randomIndex, "DESERT");
+        randomValueList.add(randomIndex, 0);
+
+        if (game.getMapType() == MapType.STARTING){
+            terrainList = startingTerrainList;
+            valueList = startingValueList;
+        }
+        else {
+            terrainList = randomTerrainList;
+            valueList = randomValueList;
+        }
+
 
         URL fileUrlTS = getClass().getResource("tilesettlementdata.csv");
         File fileTS = new File(fileUrlTS.toURI());
@@ -82,6 +111,22 @@ public class GameBoard {
             }
             i++;
         }
+
+        URL fileUrlPS = getClass().getResource("portsettlementdata.csv");
+        File filePS = new File(fileUrlRS.toURI());
+        FileReader frPS = new FileReader(fileRS);
+        BufferedReader brPS = new BufferedReader(frRS);
+        i = 0;
+        while ((line = brPS.readLine()) != null) {
+            String[] data = line.split(splitBy);
+            for (int j = 0; j < 2; j++) {
+                Integer d = Integer.parseInt(data[j]);
+                portSettlementData[i][j]=d;
+            }
+            i++;
+        }
+
+        //TODO SHOW PORTS AND ADD TO LIST OF PORTS
 
         int[] tilesPerRowValues = {3, 4, 5, 4, 3};
         double[] tilesxStartOffsetValue = {(xOff + (2 * n)), xOff, xOff, xOff, (xOff + (2 * n))};
