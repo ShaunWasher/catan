@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class GUI {
@@ -83,8 +84,9 @@ public class GUI {
     private Text CPVPCount;
     private Text[] popUpTradeSelectionTexts;
     private Rectangle[] popUpDownArrows;
+    private Rectangle selectTradePopUp;
     private Rectangle[] popUpUpArrows;
-    private boolean[] acceptedTrades;
+    private ArrayList<Player> acceptedTrades;
     private boolean diceCanBeRolled;
     //endregion
     //TODO NEATEN THIS CLASS
@@ -114,7 +116,7 @@ public class GUI {
         nonActivePlayers.remove(game.getCurrentPlayer());
         playerIcons = new ArrayList<>();
         playerIconLabels = new ArrayList<>();
-        acceptedTrades = new boolean[players.size()-1];
+        acceptedTrades = new ArrayList<>();
 
         winMessage = new Rectangle(0,0,1440,900);
         winMessage.setVisible(false);
@@ -127,6 +129,9 @@ public class GUI {
         clickToContinueButton.setVisible(false);
         GUI.getChildren().addAll(endTurnPopUp, clickToContinueButton);
 
+        selectTradePopUp = new Rectangle(0,0,1440,900);
+        selectTradePopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("selecttradepopup.png").toExternalForm())));
+        selectTradePopUp.setVisible(false);
         tradePopUp = new Rectangle(0,0,1440,900);
         tradePopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("tradepopup.png").toExternalForm())));
         tradePopUp.setVisible(false);
@@ -134,7 +139,7 @@ public class GUI {
         popUpCPtradeIcon.setVisible(false);
         popUpPlayerTradeIcon = new Rectangle(1045/2,486.25-(25/2),50,50);
         popUpPlayerTradeIcon.setVisible(false);
-        GUI.getChildren().addAll(tradePopUp,popUpCPtradeIcon, popUpPlayerTradeIcon);
+        GUI.getChildren().addAll(tradePopUp,popUpCPtradeIcon, popUpPlayerTradeIcon,selectTradePopUp);
 
         acceptTrade = new Rectangle(792.5+42.5+(25/2),450-13.5-25,79,27);
         acceptTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("accept.png").toExternalForm())));
@@ -936,7 +941,7 @@ public class GUI {
                     }
                 }
                 if (resourceCheck){
-                    acceptedTrades[tradeCount] = true;
+                    acceptedTrades.add(nonActivePlayers.get(tradeCount));
                     popUpCPtradeIcon.setVisible(false);
                     popUpPlayerTradeIcon.setVisible(false);
                     acceptTrade.setVisible(false);
@@ -955,22 +960,83 @@ public class GUI {
                         playerTrade();
                     }
                     else {
-                        //FIXME
-                        tradePopUp.setVisible(true);
-                        for (int y = 0; y < players.size()-1; y++) {
-                            if (acceptedTrades[y] == true){
-                                Rectangle chooseTrade = new Rectangle(1045/2+(75*y),391.25-(25/2),50,50);
-                                chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
-                                GUI.getChildren().add(chooseTrade);
+                        endTurnPopUp.setVisible(true);
+                        endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
+                        endTurnPopUp.toFront();
+                        clickToContinueButton.setVisible(true);
+                        clickToContinueButton.toFront();
+                        clickToContinueButton.setOnMouseClicked(eee -> {
+                            endTurnPopUp.setVisible(false);
+                            clickToContinueButton.setVisible(false);
+                            Rectangle[] tradeOptions = new Rectangle[acceptedTrades.size()];
+                            if (acceptedTrades.size() > 1){
+                                selectTradePopUp.setVisible(true);
+                                selectTradePopUp.toFront();
+                                int offset = 0;
+                                for (int y = 0; y < acceptedTrades.size(); y++) {
+                                    int i = y;
+                                    if (acceptedTrades.size() == 2 ){
+                                        offset = 595;} else if (acceptedTrades.size() == 3) {
+                                        offset = 545;
+                                    }
+                                    Rectangle chooseTrade = new Rectangle(offset+(125*y), 425, 100, 100);
+                                    chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+                                    tradeOptions[y] = chooseTrade;
+                                    GUI.getChildren().add(chooseTrade);
+                                    chooseTrade.setOnMouseClicked(ct -> {
+                                        for (int z = 0; z < 5; z++) {
+                                            game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),-CPtradeSelectionValues[z],Integer::sum);
+                                            game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),tradeSelectionValues[z],Integer::sum);
+                                            acceptedTrades.get(i).getResourceCards().merge(ResourceType.getByIndex(z),-tradeSelectionValues[z],Integer::sum);
+                                            acceptedTrades.get(i).getResourceCards().merge(ResourceType.getByIndex(z),CPtradeSelectionValues[z],Integer::sum);
+                                        }
+                                        for (int z = 0; z < acceptedTrades.size(); z++) {
+                                            tradeOptions[z].setVisible(false);
+                                        }
+                                        Arrays.fill(tradeOptions,null);
+                                        selectTradePopUp.setVisible(false);
+                                        acceptedTrades.clear();
+                                        for (int f = 0; f < 5; f++) {
+                                            CPtradeSelectionValues[f] = 0;
+                                            CPtradeSelectionTexts[f].setText("0");
+                                            tradeSelectionValues[f] = 0;
+                                            tradeSelectionTexts[f].setText("0");
+                                            downArrows[f].setVisible(false);
+                                            upArrows[f].setVisible(false);
+                                        }
+                                        refreshUI();
+                                    });
+                                }
+
                             }
-                        }
+                            
+                            else{
+                                if (acceptedTrades.size() == 1){
+                                    for (int z = 0; z < 5; z++) {
+                                        game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),-CPtradeSelectionValues[z],Integer::sum);
+                                        game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),tradeSelectionValues[z],Integer::sum);
+                                        acceptedTrades.get(0).getResourceCards().merge(ResourceType.getByIndex(z),-tradeSelectionValues[z],Integer::sum);
+                                        acceptedTrades.get(0).getResourceCards().merge(ResourceType.getByIndex(z),CPtradeSelectionValues[z],Integer::sum);
+                                    }
+                                    acceptedTrades.clear();
+                                    for (int y = 0; y < 5; y++) {
+                                        CPtradeSelectionValues[y] = 0;
+                                        CPtradeSelectionTexts[y].setText("0");
+                                        tradeSelectionValues[y] = 0;
+                                        tradeSelectionTexts[y].setText("0");
+                                        downArrows[y].setVisible(false);
+                                        upArrows[y].setVisible(false);
+                                    }
+                                    refreshUI();
+                                }
+                            }
+                        });
                     }
                 }
 
             });
 
             declineTrade.setOnMouseClicked(ee -> {
-                acceptedTrades[tradeCount] = false;
                 popUpCPtradeIcon.setVisible(false);
                 popUpPlayerTradeIcon.setVisible(false);
                 acceptTrade.setVisible(false);
@@ -989,14 +1055,77 @@ public class GUI {
                     playerTrade();
                 }
                 else {
-                    tradePopUp.setVisible(true);
-                    for (int y = 0; y < players.size()-1; y++) {
-                        if (acceptedTrades[y] == true){
-                            Rectangle chooseTrade = new Rectangle(1045/2+(75*y),391.25-(25/2),50,50);
-                            chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
-                            GUI.getChildren().add(chooseTrade);
+                    endTurnPopUp.setVisible(true);
+                    endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
+                    endTurnPopUp.toFront();
+                    clickToContinueButton.setVisible(true);
+                    clickToContinueButton.toFront();
+                    clickToContinueButton.setOnMouseClicked(eee -> {
+                        endTurnPopUp.setVisible(false);
+                        clickToContinueButton.setVisible(false);
+                        Rectangle[] tradeOptions = new Rectangle[acceptedTrades.size()];
+                        if (acceptedTrades.size() > 1){
+                            selectTradePopUp.setVisible(true);
+                            selectTradePopUp.toFront();
+                            int offset = 0;
+                            for (int y = 0; y < acceptedTrades.size(); y++) {
+                                int i = y;
+                                if (acceptedTrades.size() == 2 ){
+                                    offset = 595;} else if (acceptedTrades.size() == 3) {
+                                    offset = 545;
+                                }
+                                Rectangle chooseTrade = new Rectangle(offset+(125*y), 425, 100, 100);
+                                chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+                                tradeOptions[y] = chooseTrade;
+                                GUI.getChildren().add(chooseTrade);
+                                chooseTrade.setOnMouseClicked(ct -> {
+                                    for (int z = 0; z < 5; z++) {
+                                        game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),-CPtradeSelectionValues[z],Integer::sum);
+                                        game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),tradeSelectionValues[z],Integer::sum);
+                                        acceptedTrades.get(i).getResourceCards().merge(ResourceType.getByIndex(z),-tradeSelectionValues[z],Integer::sum);
+                                        acceptedTrades.get(i).getResourceCards().merge(ResourceType.getByIndex(z),CPtradeSelectionValues[z],Integer::sum);
+                                    }
+                                    for (int z = 0; z < acceptedTrades.size(); z++) {
+                                        tradeOptions[z].setVisible(false);
+                                    }
+                                    Arrays.fill(tradeOptions,null);
+                                    selectTradePopUp.setVisible(false);
+                                    acceptedTrades.clear();
+                                    for (int f = 0; f < 5; f++) {
+                                        CPtradeSelectionValues[f] = 0;
+                                        CPtradeSelectionTexts[f].setText("0");
+                                        tradeSelectionValues[f] = 0;
+                                        tradeSelectionTexts[f].setText("0");
+                                        downArrows[f].setVisible(false);
+                                        upArrows[f].setVisible(false);
+                                    }
+                                    refreshUI();
+                                });
+                            }
+
                         }
-                    }
+
+                        else{
+                            if (acceptedTrades.size() == 1){
+                                for (int z = 0; z < 5; z++) {
+                                    game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),-CPtradeSelectionValues[z],Integer::sum);
+                                    game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),tradeSelectionValues[z],Integer::sum);
+                                    acceptedTrades.get(0).getResourceCards().merge(ResourceType.getByIndex(z),-tradeSelectionValues[z],Integer::sum);
+                                    acceptedTrades.get(0).getResourceCards().merge(ResourceType.getByIndex(z),CPtradeSelectionValues[z],Integer::sum);
+                                }
+                                acceptedTrades.clear();
+                                for (int y = 0; y < 5; y++) {
+                                    CPtradeSelectionValues[y] = 0;
+                                    CPtradeSelectionTexts[y].setText("0");
+                                    tradeSelectionValues[y] = 0;
+                                    tradeSelectionTexts[y].setText("0");
+                                    downArrows[y].setVisible(false);
+                                    upArrows[y].setVisible(false);
+                                }
+                                refreshUI();
+                            }
+                        }
+                    });
                 }
             });
         });

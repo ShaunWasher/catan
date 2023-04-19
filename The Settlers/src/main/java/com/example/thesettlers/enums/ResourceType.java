@@ -12,4 +12,8 @@ public enum ResourceType {
     private ResourceType(String label) {
         this.label = label;
     }
+
+    public static ResourceType getByIndex(int index) {
+        return ResourceType.values()[index];
+    }
 }

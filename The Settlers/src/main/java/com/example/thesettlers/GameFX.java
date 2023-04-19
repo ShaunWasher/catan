@@ -18,7 +18,7 @@ public class GameFX extends Application {
 
         primaryStage.setTitle("The Settlers");
         primaryStage.setFullScreen(true);
-        Game game = new Game(MapType.RANDOM, 2,10); //TODO get number of players from setup screen
+        Game game = new Game(MapType.RANDOM, 3,10); //TODO get number of players from setup screen
         GUI gui = new GUI(game);
         game.setGUI(gui);
 
