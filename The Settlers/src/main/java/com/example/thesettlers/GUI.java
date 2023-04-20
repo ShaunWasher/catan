@@ -13,7 +13,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -443,7 +442,7 @@ public class GUI {
         playerTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
         playerTradeButton.setOnMouseClicked(event ->
         {
-            if (!containsAllZeros(CPtradeSelectionValues) && !containsAllZeros(tradeSelectionValues))
+            if (containsAllZeros(CPtradeSelectionValues) && containsAllZeros(tradeSelectionValues))
             {
                 tradeCount = 0;
                 playerTrade();
@@ -721,7 +720,16 @@ public class GUI {
             }
             resCardsCount[y].setText(String.valueOf(altResNumber));
             devCardsCount[y].setText(String.valueOf(nonActivePlayers.get(y).getDevelopmentCards().size()));
-            VPCount[y].setText(String.valueOf(nonActivePlayers.get(y).getVictoryPoints()));
+
+            //TODO TEST THIS
+            int VP = nonActivePlayers.get(y).getVictoryPoints();
+            for (DevelopmentCard card : nonActivePlayers.get(y).getDevelopmentCards()) {
+                if (card.getCardType() == DevelopmentCardType.VP) {
+                    VP = VP-1;
+                }
+            }
+            VPCount[y].setText(String.valueOf(VP));
+
             playerLongestRoadValue[y].setText(String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
             playerLargestArmyValue[y].setText(String.valueOf(nonActivePlayers.get(y).getArmySize()));
         }
@@ -887,7 +895,7 @@ public class GUI {
                 break;
             }
         }
-        return allZeros;
+        return !allZeros;
     }
 
     public void playerTrade(){

@@ -52,7 +52,7 @@ public class Game {
         developmentCards = new LinkedList<>();
         Random rand = new Random();
         for(int i = 0;i<25;i++) {
-            developmentCards.addFirst(cards.get(rand.nextInt(25-i)));
+            developmentCards.addFirst(cards.remove(rand.nextInt(25-i)));
         }
     }
 
