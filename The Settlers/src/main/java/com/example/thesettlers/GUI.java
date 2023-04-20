@@ -4,7 +4,9 @@ import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -470,8 +472,15 @@ public class GUI {
         dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d2.png").toExternalForm())));
         GUI.getChildren().add(dice2);
 
+        Tooltip clickToUse = new Tooltip();
+        ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clickToUse.png").toExternalForm()));
+        clickToUseImg.setPreserveRatio(true);
+        clickToUseImg.setFitHeight(12.5);
+        clickToUse.setGraphic(clickToUseImg);
+
         Rectangle knightCard = new Rectangle(72.5, 610+25, 60, 84);
         knightCard.setFill(new ImagePattern(new Image(this.getClass().getResource("knightcard.png").toExternalForm())));
+        Tooltip.install(knightCard,clickToUse);
         knightCard.setOnMouseClicked(e -> {
             if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
                 //TODO add card functionality
@@ -483,6 +492,7 @@ public class GUI {
 
         Rectangle roadBuildingCard = new Rectangle(72.5+(70 * 2), 610+25, 60, 84);
         roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
+        Tooltip.install(roadBuildingCard,clickToUse);
         roadBuildingCard.setOnMouseClicked(e -> {
             if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.ROADBUILDING)){
                 //TODO add card functionality
@@ -492,6 +502,7 @@ public class GUI {
 
         Rectangle yearOfPlentyCard = new Rectangle(72.5+(70 * 3), 610+25, 60, 84);
         yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
+        Tooltip.install(yearOfPlentyCard,clickToUse);
         yearOfPlentyCard.setOnMouseClicked(e -> {
             if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.YEAROFPLENTY)){
                 //TODO add card functionality
@@ -500,6 +511,7 @@ public class GUI {
 
         Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
         monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
+        Tooltip.install(monopolyCard,clickToUse);
         monopolyCard.setOnMouseClicked(e -> {
             if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.MONOPOLY)){
                 //TODO add card functionality
@@ -530,6 +542,13 @@ public class GUI {
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         GUI.getChildren().add(devCard);
+        Tooltip clickToOpen = new Tooltip();
+        ImageView clickToOpenImg = new ImageView(new Image(this.getClass().getResource("clickToOpen.png").toExternalForm()));
+        clickToOpenImg.setPreserveRatio(true);
+        clickToOpenImg.setFitHeight(16);
+        clickToOpen.setGraphic(clickToOpenImg);
+        Tooltip.install(devCard,clickToOpen);
+
         devCard.setOnMouseClicked(e ->{
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
@@ -543,6 +562,12 @@ public class GUI {
 
         buyRoadButton = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
+        Tooltip roadCost = new Tooltip();
+        ImageView roadCostImg = new ImageView(new Image(this.getClass().getResource("roadcost.png").toExternalForm()));
+        roadCostImg.setPreserveRatio(true);
+        roadCostImg.setFitHeight(50);
+        roadCost.setGraphic(roadCostImg);
+        Tooltip.install(buyRoadButton,roadCost);
         buyRoadButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
@@ -576,6 +601,12 @@ public class GUI {
 
         buySettlementButton = new Rectangle(602.5, 790, 60, 39.5);
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
+        Tooltip settlementCost = new Tooltip();
+        ImageView settlementCostImg = new ImageView(new Image(this.getClass().getResource("settlementcost.png").toExternalForm()));
+        settlementCostImg.setPreserveRatio(true);
+        settlementCostImg.setFitHeight(50);
+        settlementCost.setGraphic(settlementCostImg);
+        Tooltip.install(buySettlementButton,settlementCost);
         buySettlementButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
@@ -615,6 +646,12 @@ public class GUI {
 
         buyCityButton = new Rectangle(672.5, 790, 60, 39.5);
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
+        Tooltip cityCost = new Tooltip();
+        ImageView cityCostImg = new ImageView(new Image(this.getClass().getResource("citycost.png").toExternalForm()));
+        cityCostImg.setPreserveRatio(true);
+        cityCostImg.setFitHeight(66);
+        cityCost.setGraphic(cityCostImg);
+        Tooltip.install(buyCityButton,cityCost);
         buyCityButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
@@ -636,6 +673,12 @@ public class GUI {
 
         Rectangle buyDevCardButton = new Rectangle(532.5, 839.5, 60, 39.5);
         buyDevCardButton.setFill(new ImagePattern(new Image(this.getClass().getResource("buydev.png").toExternalForm())));
+        Tooltip devCardCost = new Tooltip();
+        ImageView devCardCostImg = new ImageView(new Image(this.getClass().getResource("devcardcost.png").toExternalForm()));
+        devCardCostImg.setPreserveRatio(true);
+        devCardCostImg.setFitHeight(50);
+        devCardCost.setGraphic(devCardCostImg);
+        Tooltip.install(buyDevCardButton,devCardCost);
         buyDevCardButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
