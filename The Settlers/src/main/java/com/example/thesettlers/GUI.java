@@ -69,6 +69,7 @@ public class GUI {
     private Rectangle tooManySettlementsError;
     private Rectangle rollDiceFirstError;
     private Rectangle tooManyCitiesError;
+    private Rectangle unfairTradeError;
     private Rectangle winMessage;
     private Rectangle tradePopUp;
     private Rectangle developmentCardsUI;
@@ -185,6 +186,12 @@ public class GUI {
         tooManySettlementsError.setVisible(false);
         tooManySettlementsError.toFront();
         GUI.getChildren().add(tooManySettlementsError);
+
+        unfairTradeError = new Rectangle(743.5,712.5,170.5,42.5);
+        unfairTradeError.setFill(new ImagePattern(new Image(this.getClass().getResource("unfairtrade.png").toExternalForm())));
+        unfairTradeError.setVisible(false);
+        unfairTradeError.toFront();
+        GUI.getChildren().add(unfairTradeError);
 
         tooManyCitiesError = new Rectangle(712.5,712.5,201.5,42.5);
         tooManyCitiesError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanycities.png").toExternalForm())));
@@ -444,12 +451,19 @@ public class GUI {
         playerTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
         playerTradeButton.setOnMouseClicked(event ->
         {
-            if (containsAllZeros(CPtradeSelectionValues) && containsAllZeros(tradeSelectionValues))
-            {
-                tradeCount = 0;
-                playerTrade();
-            } else {
-                System.out.println("Unfair Trade");
+            if (game.gameState == GameState.MAIN) {
+                if (!diceCanBeRolled) {
+                    if (containsAllZeros(CPtradeSelectionValues) && containsAllZeros(tradeSelectionValues))
+                    {
+                        tradeCount = 0;
+                        playerTrade();
+                    } else {
+                        unfairTradeError();
+                    }
+                } else {
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
+                }
             }
         });
 
@@ -813,6 +827,20 @@ public class GUI {
         fade.setToValue(0);
         //setting Circle as the node onto which the transition will be applied
         fade.setNode(notEnoughResourcesError);
+        //playing the transition
+        fade.play();
+    }
+
+    public void unfairTradeError(){
+        unfairTradeError.setVisible(true);
+        FadeTransition fade = new FadeTransition();
+        //setting the duration for the Fade transition
+        fade.setDuration(Duration.millis(3500));
+        //setting the initial and the target opacity value for the transition
+        fade.setFromValue(10);
+        fade.setToValue(0);
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(unfairTradeError);
         //playing the transition
         fade.play();
     }
