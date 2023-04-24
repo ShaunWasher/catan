@@ -1,6 +1,6 @@
 package com.example.thesettlers;
 
-import com.example.thesettlers.enums.MapType;
+import com.example.thesettlers.enums.BoardType;
 import javafx.scene.layout.Pane;
 import java.io.FileReader;
 import java.io.IOException;
@@ -74,7 +74,7 @@ public class GameBoard {
         randomTerrainList.add(randomIndex, "DESERT");
         randomValueList.add(randomIndex, 0);
 
-        if (game.getMapType() == MapType.STARTING){
+        if (game.getMapType() == BoardType.STARTING){
             terrainList = startingTerrainList;
             valueList = startingValueList;
         }

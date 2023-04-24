@@ -4,6 +4,7 @@ import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
+import javafx.scene.Scene;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +25,7 @@ import java.util.Random;
 public class GUI {
     //region Variables
     Random random = new Random();
+    private Scene GUIScene;
     private Pane GUI = new Pane();
     private Pane boardPane;
     private Pane settlementPane;
@@ -790,6 +792,11 @@ public class GUI {
             playerLongestRoadValue[y].setText(String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
             playerLargestArmyValue[y].setText(String.valueOf(nonActivePlayers.get(y).getArmySize()));
         }
+        GUIScene = new Scene(GUI);
+    }
+
+    public Scene getGUIScene() {
+        return GUIScene;
     }
 
     public Pane getGUI() {

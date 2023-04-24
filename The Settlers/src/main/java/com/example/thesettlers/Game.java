@@ -1,7 +1,6 @@
 package com.example.thesettlers;
 
 import com.example.thesettlers.enums.*;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,16 +11,20 @@ public class Game {
     private ArrayList<Player> players;
     private int longestRoad;
     private int largestArmy;
-    private MapType mapType;
+    private GameVersion gameVersion;
+    private BoardType boardType;
     private LinkedList<DevelopmentCard> developmentCards;
     private GameBoard gameBoard;
     private int turnCount;
     private Player currentPlayer;
     public GUI gui;
     private int maxVPs;
-    public Game(MapType mapType, int numOfPlayers, int requiredVPs) throws URISyntaxException, IOException {
-        this.mapType = mapType;
-        maxVPs = requiredVPs;
+
+    //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
+    public Game(GameVersion gameVersion, BoardType boardType, int numOfPlayers, int numOfAgents) throws URISyntaxException, IOException {
+        this.gameVersion = gameVersion;
+        this.boardType = boardType;
+        maxVPs = 10; //I SUPPOSE
         gui = null;
         this.gameBoard = new GameBoard(this);
         gameState = GameState.START;
@@ -217,7 +220,7 @@ public class Game {
         //TODO send data to UI to show scores
     }
 
-    public MapType getMapType() {
-        return mapType;
+    public BoardType getMapType() {
+        return boardType;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.thesettlers;
 
-import com.example.thesettlers.enums.MapType;
+import com.example.thesettlers.enums.BoardType;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,22 +11,29 @@ import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-public class GameFX extends Application {
+public class GameFX extends Application implements SceneChanger {
 
+    private Pane root;
+    @Override
+    public void changeScene(Pane newScenePane) {
+        root.getChildren().clear();
+        newScenePane.setPrefWidth(root.getPrefWidth());
+        newScenePane.setPrefHeight(root.getPrefHeight());
+        root.getChildren().add(newScenePane);
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         primaryStage.setTitle("The Settlers");
         primaryStage.setFullScreen(true);
-        Game game = new Game(MapType.RANDOM, 2,10); //TODO get number of players from setup screen
-        GUI gui = new GUI(game);
-        game.setGUI(gui);
+
+        Menu menu = new Menu();
+        menu.setSceneChanger(this);
 
         final int initWidth = 1440;      //initial width
         final int initHeight = 900;    //initial height
-        final Pane root = new Pane();   //necessary evil
+        root = new Pane();   //necessary evil
 
-        Pane controller = gui.getGUI();   //initial view
+        Pane controller = menu.getMenuPane();   //initial view
         controller.setPrefWidth(initWidth);     //if not initialized
         controller.setPrefHeight(initHeight);   //if not initialized
         root.getChildren().add(controller);     //necessary evil
@@ -55,6 +62,7 @@ public class GameFX extends Application {
                 scene.rootProperty().addListener(this);
             }
         });}
+
     public static void main(String args[]) {
         launch(args);
     }
