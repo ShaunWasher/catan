@@ -129,7 +129,11 @@ public class GUI {
         Rectangle testBox = new Rectangle(100,100,100,100);
         GUI.getChildren().add(testBox);
         testBox.setOnMouseClicked(e -> {
-
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.BRICK, 100, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.LUMBER, 100, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.GRAIN, 100, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.WOOL, 100, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.ORE, 100, Integer::sum);
         });
 
         //FIXME
@@ -590,7 +594,6 @@ public class GUI {
                 if (!diceCanBeRolled) {
                     if (!game.getCurrentPlayer().checkTooManyRoads()) {
                         if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
-                            settlementPane.setVisible(false);
                             //make only places where you can place roads available
                             showRoads();
                         } else {
@@ -741,6 +744,7 @@ public class GUI {
     }
 
     public void showRoads(){
+        settlementPane.setVisible(false);
         for (Road road : gameBoard.getRoadList()) {
             road.getIcon().setVisible(road.getSettlementA().getOwner() == game.getCurrentPlayer() || road.getSettlementB().getOwner() == game.getCurrentPlayer() || road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) || road.getSettlementB().checkRoadConnection(game.getCurrentPlayer()));
             if (road.getOwner() != null) {

@@ -106,7 +106,6 @@ public class Player {
             if(game.roadBuilding > 0){
                 road.setOwner(this);
                 roadCount++;
-                game.useRoadBuildingCard();
             }
             //spend resources on road
             else if(resourceCards.get(ResourceType.BRICK) > 0 && resourceCards.get(ResourceType.LUMBER) > 0){

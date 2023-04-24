@@ -38,6 +38,9 @@ public class Road {
                     game.nextPlayer();
                     game.gui.refreshUI();
                 }
+                if(game.roadBuilding > 0){
+                    game.useRoadBuildingCard();
+                }
             }
         });
     }
