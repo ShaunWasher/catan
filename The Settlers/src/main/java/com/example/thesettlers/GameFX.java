@@ -6,6 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
@@ -48,6 +49,7 @@ public class GameFX extends Application implements SceneChanger {
         scene.getStylesheets().add(String.valueOf(this.getClass().getResource("sample.css")));
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
+        primaryStage.getIcons().add(new Image(this.getClass().getResource("thesettlers.png").toExternalForm()));
         primaryStage.show();
 
         //add listener for the use of scene.setRoot()

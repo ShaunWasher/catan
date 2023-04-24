@@ -25,7 +25,6 @@ import java.util.Random;
 public class GUI {
     //region Variables
     Random random = new Random();
-    private Scene GUIScene;
     private Pane GUI = new Pane();
     private Pane boardPane;
     private Pane settlementPane;
@@ -125,6 +124,16 @@ public class GUI {
         winMessage = new Rectangle(0,0,1440,900);
         winMessage.setVisible(false);
         GUI.getChildren().add(winMessage);
+
+        //FIXME
+        Rectangle testBox = new Rectangle(100,100,100,100);
+        GUI.getChildren().add(testBox);
+        testBox.setOnMouseClicked(e -> {
+
+        });
+
+        //FIXME
+
 
         endTurnPopUp = new Rectangle(0,0,1440,900);
         endTurnPopUp.setVisible(false);
@@ -779,8 +788,6 @@ public class GUI {
             }
             resCardsCount[y].setText(String.valueOf(altResNumber));
             devCardsCount[y].setText(String.valueOf(nonActivePlayers.get(y).getDevelopmentCards().size()));
-
-            //TODO TEST THIS
             int VP = nonActivePlayers.get(y).getVictoryPoints();
             for (DevelopmentCard card : nonActivePlayers.get(y).getDevelopmentCards()) {
                 if (card.getCardType() == DevelopmentCardType.VP) {
@@ -792,11 +799,6 @@ public class GUI {
             playerLongestRoadValue[y].setText(String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
             playerLargestArmyValue[y].setText(String.valueOf(nonActivePlayers.get(y).getArmySize()));
         }
-        GUIScene = new Scene(GUI);
-    }
-
-    public Scene getGUIScene() {
-        return GUIScene;
     }
 
     public Pane getGUI() {
@@ -977,7 +979,6 @@ public class GUI {
     }
 
     public void playerTrade(){
-        boolean tradeAccepted = false;
         endTurnPopUp.setVisible(true);
         endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(nonActivePlayers.get(tradeCount).getPlayerID())+"endturn.png").toExternalForm())));
         endTurnPopUp.toFront();
