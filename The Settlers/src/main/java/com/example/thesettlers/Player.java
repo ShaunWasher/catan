@@ -102,8 +102,14 @@ public class Player {
         else{
             //check if over road limit
             if(roadCount >= MAXROADS) throw new Exception("too many roads");
+            //place road if using roadbuilding card
+            if(game.roadBuilding > 0){
+                road.setOwner(this);
+                roadCount++;
+                game.useRoadBuildingCard();
+            }
             //spend resources on road
-            if(resourceCards.get(ResourceType.BRICK) > 0 && resourceCards.get(ResourceType.LUMBER) > 0){
+            else if(resourceCards.get(ResourceType.BRICK) > 0 && resourceCards.get(ResourceType.LUMBER) > 0){
                 resourceCards.merge(ResourceType.BRICK, -1, Integer::sum);
                 resourceCards.merge(ResourceType.LUMBER, -1, Integer::sum);
                 road.setOwner(this);

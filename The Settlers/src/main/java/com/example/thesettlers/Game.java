@@ -19,9 +19,11 @@ public class Game {
     private Player currentPlayer;
     public GUI gui;
     private int maxVPs;
+    public int roadBuilding;
 
     //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
     public Game(GameVersion gameVersion, BoardType boardType, int numOfPlayers, int numOfAgents) throws URISyntaxException, IOException {
+        roadBuilding = 0;
         this.gameVersion = gameVersion;
         this.boardType = boardType;
         maxVPs = 10; //I SUPPOSE
@@ -154,6 +156,41 @@ public class Game {
         return maxVPs;
     }
 
+    public boolean useKnightCard(){
+        if(getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
+            //TODO add card functionality
+        }
+        return false;
+    }
+
+    public boolean useRoadBuildingCard(){
+        if(getCurrentPlayer().useDevCard(DevelopmentCardType.ROADBUILDING) && roadBuilding == 0){
+            roadBuilding = 1;
+            gui.showRoads();
+        }
+        else if(roadBuilding == 1){
+            gui.showRoads();
+            roadBuilding++;
+        } else{
+            roadBuilding = 0;
+        }
+        return false;
+    }
+
+    public boolean useYearOfPlentyCard(){
+        if(getCurrentPlayer().useDevCard(DevelopmentCardType.YEAROFPLENTY)){
+            //TODO add card functionality
+        }
+        return false;
+    }
+
+    public boolean useMonopolyCard(){
+        if(getCurrentPlayer().useDevCard(DevelopmentCardType.MONOPOLY)){
+            //TODO add card functionality
+        }
+        return false;
+    }
+
     public boolean buySettlement(Settlement settlement){
         try {// attempts to buy a settlement
             getCurrentPlayer().placeSettlement(settlement);
@@ -223,4 +260,5 @@ public class Game {
     public BoardType getMapType() {
         return boardType;
     }
+
 }
