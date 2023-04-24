@@ -164,7 +164,7 @@ public class Game {
     }
 
     public boolean useRoadBuildingCard(){
-        if(getCurrentPlayer().useDevCard(DevelopmentCardType.ROADBUILDING) && roadBuilding == 0){
+        if(roadBuilding == 0 && getCurrentPlayer().useDevCard(DevelopmentCardType.ROADBUILDING)){
             roadBuilding = 1;
             gui.showRoads();
         }
