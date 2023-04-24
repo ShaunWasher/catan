@@ -129,7 +129,15 @@ public class GUI {
         Rectangle testBox = new Rectangle(100,100,100,100);
         GUI.getChildren().add(testBox);
         testBox.setOnMouseClicked(e -> {
-
+            System.out.println(gameBoard.getPorts()[0]);
+            System.out.println(gameBoard.getPorts()[1]);
+            System.out.println(gameBoard.getPorts()[2]);
+            System.out.println(gameBoard.getPorts()[3]);
+            System.out.println(gameBoard.getPorts()[4]);
+            System.out.println(gameBoard.getPorts()[5]);
+            System.out.println(gameBoard.getPorts()[6]);
+            System.out.println(gameBoard.getPorts()[7]);
+            System.out.println(gameBoard.getPorts()[8]);
         });
 
         //FIXME

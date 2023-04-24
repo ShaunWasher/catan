@@ -1,5 +1,6 @@
 package com.example.thesettlers;
 
+import com.example.thesettlers.enums.PortType;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -12,6 +13,7 @@ public class Settlement {
     boolean isCity;
     private Rectangle rectangle;
     private Game game;
+    private PortType port;
 
     public Settlement(double x, double y, Game game){
         this.game = game;
@@ -23,6 +25,7 @@ public class Settlement {
         rectangle = new Rectangle(x,y,35,35);
         rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("placementcircle.png").toExternalForm())));
         rectangle.setOnMouseClicked(e -> {
+            System.out.println(port);
             if(owner == null) {
                 if (game.buySettlement(this)) {
                     rectangle.setX(x - 5);
@@ -94,4 +97,7 @@ public class Settlement {
         return rectangle;
     }
 
+    public void setPort(PortType port) {
+        this.port = port;
+    }
 }

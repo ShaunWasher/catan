@@ -1,20 +1,23 @@
 package com.example.thesettlers;
 
 import com.example.thesettlers.enums.BoardType;
+import com.example.thesettlers.enums.PortType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.io. * ;
-import java.util.Random;
 
 import static java.lang.Math.sqrt;
 
 public class GameBoard {
+    String[] ports;
     private Pane settlementPermPane = new Pane();
     private Pane roadPermPane = new Pane();
     private Pane gameBoard = new Pane();
@@ -22,6 +25,7 @@ public class GameBoard {
     private Pane labelPane = new Pane();;
     private Pane settlementPane = new Pane();;
     private Pane roadPane = new Pane();;
+    private Pane portsPane = new Pane();
     private List<String> startingTerrainList;
     private List<String> randomTerrainList;
     private List<String> terrainList;
@@ -46,7 +50,7 @@ public class GameBoard {
         startingValueList = new ArrayList<>();
         tileSettlementData = new Integer[19][6];
         roadSettlementData = new Integer[72][2];
-        portSettlementData = new Integer[54][2];
+        portSettlementData = new Integer[9][2];
         settlementList = new Settlement[54];
         tileList = new Tile[19];
         roadList = new Road[72];
@@ -112,10 +116,11 @@ public class GameBoard {
             i++;
         }
 
+        ports = new String[9];
         URL fileUrlPS = getClass().getResource("portsettlementdata.csv");
-        File filePS = new File(fileUrlRS.toURI());
-        FileReader frPS = new FileReader(fileRS);
-        BufferedReader brPS = new BufferedReader(frRS);
+        File filePS = new File(fileUrlPS.toURI());
+        FileReader frPS = new FileReader(filePS);
+        BufferedReader brPS = new BufferedReader(frPS);
         i = 0;
         while ((line = brPS.readLine()) != null) {
             String[] data = line.split(splitBy);
@@ -123,10 +128,42 @@ public class GameBoard {
                 Integer d = Integer.parseInt(data[j]);
                 portSettlementData[i][j]=d;
             }
+            ports[i] = data[2];
             i++;
         }
 
-        //TODO SHOW PORTS AND ADD TO LIST OF PORTS
+        if (game.getMapType() == BoardType.RANDOM){
+            Collections.shuffle(Arrays.asList(ports));
+        }
+
+        Rectangle port1 = new Rectangle((2*n)+93,10,74,74);
+        port1.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[0]+"port.png").toExternalForm())));
+
+        Rectangle port2 = new Rectangle((6*n)+108,10,74,74);
+        port2.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[1]+"port.png").toExternalForm())));
+
+        Rectangle port3 = new Rectangle((9*n)+118,-(0.5*r)+155,74,74);
+        port3.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[2]+"port.png").toExternalForm())));
+
+        Rectangle port4 = new Rectangle((11*n)+118,(2.5*r)+165,74,74);
+        port4.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[3]+"port.png").toExternalForm())));
+
+        Rectangle port5 = new Rectangle((9*n)+118,(5.5*r)+190,74,74);
+        port5.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[4]+"port.png").toExternalForm())));
+
+        Rectangle port6 = new Rectangle((6*n)+108,(5*r)+330,74,74);
+        port6.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[5]+"port.png").toExternalForm())));
+
+        Rectangle port7 = new Rectangle((2*n)+93,(5*r)+330,74,74);
+        port7.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[6]+"port.png").toExternalForm())));
+
+        Rectangle port8 = new Rectangle(150-r,(2*r)+320,74,74);
+        port8.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[7]+"port.png").toExternalForm())));
+
+        Rectangle port9 = new Rectangle(150-r,315-r,74,74);
+        port9.setFill(new ImagePattern(new Image(this.getClass().getResource(ports[8]+"port.png").toExternalForm())));
+
+        portsPane.getChildren().addAll(port1,port2,port3,port4,port5,port6,port7,port8,port9);
 
         int[] tilesPerRowValues = {3, 4, 5, 4, 3};
         double[] tilesxStartOffsetValue = {(xOff + (2 * n)), xOff, xOff, xOff, (xOff + (2 * n))};
@@ -211,13 +248,19 @@ public class GameBoard {
             }
         }
 
+        for (int q = 0; q < 9; q++){
+            for (int s = 0; s < 2; s++) {
+                settlementList[portSettlementData[q][s]].setPort(PortType.fromString(ports[q]));
+            }
+        }
+
         for (int r = 0; r < 72; r++){
             for (int s = 0; s < 2; s++) {
                 settlementList[roadSettlementData[r][s]].addRoad(roadList[r]);
             }
             roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
-        gameBoard.getChildren().addAll(labelPane, tilePane);
+        gameBoard.getChildren().addAll(labelPane, tilePane,portsPane);
         labelPane.toFront();
     }
 
@@ -254,5 +297,9 @@ public class GameBoard {
 
     public Pane getSettlementPermPane() {
         return settlementPermPane;
+    }
+
+    public String[] getPorts() {
+        return ports;
     }
 }
