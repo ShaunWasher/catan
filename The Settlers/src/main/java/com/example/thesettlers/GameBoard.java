@@ -26,6 +26,7 @@ public class GameBoard {
     private Pane settlementPane = new Pane();;
     private Pane roadPane = new Pane();;
     private Pane portsPane = new Pane();
+    private Pane robberPane = new Pane();
     private List<String> startingTerrainList;
     private List<String> randomTerrainList;
     private List<String> terrainList;
@@ -261,6 +262,9 @@ public class GameBoard {
             roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
         gameBoard.getChildren().addAll(labelPane, tilePane,portsPane);
+        roadPane.setPickOnBounds(false);
+        settlementPane.setPickOnBounds(false);
+        labelPane.setPickOnBounds(false);
         labelPane.toFront();
     }
 
@@ -302,4 +306,6 @@ public class GameBoard {
     public String[] getPorts() {
         return ports;
     }
+
 }
+
