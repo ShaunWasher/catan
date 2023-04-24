@@ -129,15 +129,7 @@ public class GUI {
         Rectangle testBox = new Rectangle(100,100,100,100);
         GUI.getChildren().add(testBox);
         testBox.setOnMouseClicked(e -> {
-            System.out.println(gameBoard.getPorts()[0]);
-            System.out.println(gameBoard.getPorts()[1]);
-            System.out.println(gameBoard.getPorts()[2]);
-            System.out.println(gameBoard.getPorts()[3]);
-            System.out.println(gameBoard.getPorts()[4]);
-            System.out.println(gameBoard.getPorts()[5]);
-            System.out.println(gameBoard.getPorts()[6]);
-            System.out.println(gameBoard.getPorts()[7]);
-            System.out.println(gameBoard.getPorts()[8]);
+
         });
 
         //FIXME
@@ -515,9 +507,7 @@ public class GUI {
         knightCard.setFill(new ImagePattern(new Image(this.getClass().getResource("knightcard.png").toExternalForm())));
         Tooltip.install(knightCard,clickToUse);
         knightCard.setOnMouseClicked(e -> {
-            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
-                //TODO add card functionality
-            }
+            game.useKnightCard();
         });
 
         Rectangle VPCard = new Rectangle(72.5+70, 610+25, 60, 84);
@@ -527,9 +517,7 @@ public class GUI {
         roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
         Tooltip.install(roadBuildingCard,clickToUse);
         roadBuildingCard.setOnMouseClicked(e -> {
-            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.ROADBUILDING)){
-                //TODO add card functionality
-            }
+            game.useRoadBuildingCard();
         });
 
 
@@ -537,18 +525,14 @@ public class GUI {
         yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
         Tooltip.install(yearOfPlentyCard,clickToUse);
         yearOfPlentyCard.setOnMouseClicked(e -> {
-            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.YEAROFPLENTY)){
-                //TODO add card functionality
-            }
+            game.useYearOfPlentyCard();
         });
 
         Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
         monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
         Tooltip.install(monopolyCard,clickToUse);
         monopolyCard.setOnMouseClicked(e -> {
-            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.MONOPOLY)){
-                //TODO add card functionality
-            }
+            game.useMonopolyCard();
         });
 
         developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);
@@ -608,17 +592,7 @@ public class GUI {
                         if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
                             settlementPane.setVisible(false);
                             //make only places where you can place roads available
-                            for (Road road : gameBoard.getRoadList()) {
-                                if (road.getSettlementA().getOwner() != game.getCurrentPlayer() && road.getSettlementB().getOwner() != game.getCurrentPlayer() && !road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) && !road.getSettlementB().checkRoadConnection(game.getCurrentPlayer())) {
-                                    road.getIcon().setVisible(false);
-                                } else {
-                                    road.getIcon().setVisible(true);
-                                }
-                                if (road.getOwner() != null) {
-                                    road.getIcon().setVisible(true);
-                                }
-                            }
-                            roadPane.setVisible(true);
+                            showRoads();
                         } else {
                             notEnoughResourcesError();
                         }
@@ -764,6 +738,16 @@ public class GUI {
         });
         GUI.getChildren().addAll(buyRoadButton, buySettlementButton, buyCityButton, buyDevCardButton, endTurnButton, rollDiceButton);
         background.toBack();
+    }
+
+    public void showRoads(){
+        for (Road road : gameBoard.getRoadList()) {
+            road.getIcon().setVisible(road.getSettlementA().getOwner() == game.getCurrentPlayer() || road.getSettlementB().getOwner() == game.getCurrentPlayer() || road.getSettlementA().checkRoadConnection(game.getCurrentPlayer()) || road.getSettlementB().checkRoadConnection(game.getCurrentPlayer()));
+            if (road.getOwner() != null) {
+                road.getIcon().setVisible(true);
+            }
+        }
+        roadPane.setVisible(true);
     }
 
     public void refreshUI() {
