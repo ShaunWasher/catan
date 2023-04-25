@@ -286,33 +286,34 @@ public class Game {
 
     public int findLongestRoad(Player player) {
         int longestRoad = 0;
-        for (Settlement settlement : gameBoard.settlementList) {
-            if (settlement.getOwner() == player) {
-                Set<Settlement> visitedSettlements = new HashSet<>();
-                int roadLength = findLongestRoadRecursively(player, settlement, visitedSettlements);
-                longestRoad = Math.max(longestRoad, roadLength);
+        for (Road road : gameBoard.getRoadList()) {
+            if (road.getOwner() == player) {
+                for (Settlement settlement : Arrays.asList(road.getSettlementA(), road.getSettlementB())) {
+                    Set<Road> visitedRoads = new HashSet<>();
+                    int roadLength = findLongestRoadRecursively(player, settlement, visitedRoads);
+                    longestRoad = Math.max(longestRoad, roadLength);
+                }
             }
         }
-        return longestRoad - 1; // Subtract 1 to exclude the starting settlement
+        return longestRoad;
     }
 
 
-    private int findLongestRoadRecursively(Player player, Settlement currentSettlement, Set<Settlement> visitedSettlements) {
-        visitedSettlements.add(currentSettlement);
 
+    private int findLongestRoadRecursively(Player player, Settlement currentSettlement, Set<Road> visitedRoads) {
         int maxLength = 0;
-        for (Road road : getConnectedRoads(currentSettlement, player)) {
-            Settlement nextSettlement = road.getOtherSettlement(currentSettlement);
-            if (!visitedSettlements.contains(nextSettlement)) {
-                Set<Settlement> visitedSettlementsCopy = new HashSet<>(visitedSettlements);
-                int newLength = findLongestRoadRecursively(player, nextSettlement, visitedSettlementsCopy);
-                maxLength = Math.max(maxLength, newLength);
+        for (Road connectedRoad : getConnectedRoads(currentSettlement, player)) {
+            if (!visitedRoads.contains(connectedRoad)) {
+                visitedRoads.add(connectedRoad);
+                Settlement nextSettlement = connectedRoad.getOtherSettlement(currentSettlement);
+                int roadLength = 1 + findLongestRoadRecursively(player, nextSettlement, visitedRoads);
+                maxLength = Math.max(maxLength, roadLength);
+                visitedRoads.remove(connectedRoad);
             }
         }
-
-        visitedSettlements.remove(currentSettlement);
-        return 1 + maxLength;
+        return maxLength;
     }
+
 
     private List<Road> getConnectedRoads(Settlement settlement, Player player) {
         List<Road> connectedRoads = new ArrayList<>();
