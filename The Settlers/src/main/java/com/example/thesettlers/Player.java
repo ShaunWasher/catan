@@ -248,4 +248,8 @@ public class Player {
     public ArrayList<Settlement> getSettlements() {
         return settlements;
     }
+
+    public void setLongestRoadLength(int longestRoadLength) {
+        this.longestRoadLength = longestRoadLength;
+    }
 }

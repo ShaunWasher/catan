@@ -247,9 +247,9 @@ public class Game {
         try {
             getCurrentPlayer().placeRoad(road);
             gameBoard.setRoadPane();
-
+            getCurrentPlayer().setLongestRoadLength(findLongestRoad(getCurrentPlayer()));
             //TODO find if longest road has changed
-
+            System.out.println(getCurrentPlayer().getLongestRoadLength());
             gui.refreshUI();
             return true;
         } catch (Exception exception){
@@ -288,4 +288,60 @@ public class Game {
     public Tile getRobber() {
         return robber;
     }
+
+    public int findLongestRoad(Player player) {
+        int longestRoad = 0;
+
+        for (Settlement settlement : gameBoard.settlementList) {
+            if (settlement.getOwner() == player) {
+                for (Road road : gameBoard.getRoadList()) {
+                    if (road.getOwner() == player && (road.getSettlementA() == settlement || road.getSettlementB() == settlement)) {
+                        int currentLength = findLongestRoadRecursively(player, road, new HashSet<>(), 0);
+                        longestRoad = Math.max(longestRoad, currentLength);
+                    }
+                }
+            }
+        }
+
+        return longestRoad;
+    }
+
+    private int findLongestRoadRecursively(Player player, Road currentRoad, Set<Road> visitedRoads, int roadLength) {
+        if (visitedRoads.contains(currentRoad)) {
+            return 0;
+        }
+
+        visitedRoads.add(currentRoad);
+        roadLength++;
+
+        int maxLength = 0;
+        for (Road adjacentRoad : getAdjacentRoads(currentRoad, player)) {
+            int newLength = findLongestRoadRecursively(player, adjacentRoad, visitedRoads, 0);
+            maxLength = Math.max(maxLength, newLength);
+        }
+
+        visitedRoads.remove(currentRoad);
+        return roadLength + maxLength;
+    }
+
+
+
+    private List<Road> getAdjacentRoads(Road road, Player player) {
+        List<Road> adjacentRoads = new ArrayList<>();
+
+        for (Road otherRoad : gameBoard.getRoadList()) {
+            if (otherRoad.getOwner() == player && areRoadsAdjacent(road, otherRoad)) {
+                adjacentRoads.add(otherRoad);
+            }
+        }
+
+        return adjacentRoads;
+    }
+
+    private boolean areRoadsAdjacent(Road roadA, Road roadB) {
+        return roadA.getSettlementA() == roadB.getSettlementA() || roadA.getSettlementA() == roadB.getSettlementB() ||
+                roadA.getSettlementB() == roadB.getSettlementA() || roadA.getSettlementB() == roadB.getSettlementB();
+    }
+
+
 }
