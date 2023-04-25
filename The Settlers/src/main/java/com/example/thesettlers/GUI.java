@@ -2,10 +2,8 @@ package com.example.thesettlers;
 
 import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
-import com.example.thesettlers.enums.PortType;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
-import javafx.scene.Scene;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -90,16 +88,16 @@ public class GUI {
     private Rectangle[] popUpDownArrows;
     private Rectangle selectTradePopUp;
     private Rectangle[] popUpUpArrows;
+    private Rectangle[] popUpTradeResCardLabels;
+    private Text[]  popUpTradeResCardCounts;
     private ArrayList<Player> acceptedTrades;
     private boolean diceCanBeRolled;
-    private Color red;
     //endregion
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
     public GUI(Game game) throws URISyntaxException, IOException {
         GUI.setId("GUI");
         this.game = game;
-        red = Color.rgb(171, 0, 0);
         gameBoard = game.getGameBoard();
         boardPane = gameBoard.getGameBoard();
         settlementPane = gameBoard.getSettlementPane();
@@ -349,6 +347,8 @@ public class GUI {
         popUpUpArrows = new Rectangle[5];
         popUpCPtradeResCards = new Rectangle[5];
         popUPtradeResCards = new Rectangle[5];
+        popUpTradeResCardLabels = new Rectangle[5];
+        popUpTradeResCardCounts = new Text[5];
         int OFF = 25/2;
         for (int y = 0; y < 5; y++) {
             int i = y;
@@ -437,9 +437,17 @@ public class GUI {
                     }
                 }
             });
-            Rectangle popUpTradeResCard = new Rectangle(495+(225/2)+(46.25*y),340+(95/2)+95-OFF,40,57.5);
+            Rectangle popUpTradeResCard = new Rectangle(607.5+(46.25*y),482.5-OFF,40,57.5);
             popUpTradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
             popUPtradeResCards[y] = popUpTradeResCard;
+
+            Rectangle popUpTradeResCardLabel = new Rectangle(607.5+(11.67)+(46.25*y),482.5+(46.67)-OFF,16.67,16.67);
+            popUpTradeResCardLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + "label.png").toExternalForm())));
+            popUpTradeResCardLabels[y] = popUpTradeResCardLabel;
+
+            Text popUpTradeResCardCount = (new Text(607.5+(11.67)+(46.25*y)+2.08, 482.5+(46.67)-OFF+13.33,"0"));
+            popUpTradeResCardCount.setFont(new Font(13.33));
+            popUpTradeResCardCounts[y] = popUpTradeResCardCount;
 
             Rectangle popUpUpArrow = new Rectangle(495+(225/2)+(46.25*y)+20-9.5,340+(95/2)+95-11.5-OFF,19,9);
             popUpUpArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowup.png").toExternalForm())));
@@ -454,14 +462,16 @@ public class GUI {
             downArrow.setVisible(false);
 
             popUpCPtradeResCard.setVisible(false);
+            popUpTradeResCardCount.setVisible(false);
             popUpCPtradeResText.setVisible(false);
             popUpTradeResCard.setVisible(false);
+            popUpTradeResCardLabel.setVisible(false);
             popUpTradeResText.setVisible(false);
             popUpDownArrow.setVisible(false);
             popUpUpArrow.setVisible(false);
 
             GUI.getChildren().addAll(CPtradeResCard,CPtradeResText,tradeResCard,tradeResText,downArrow,upArrow);
-            GUI.getChildren().addAll(popUpCPtradeResCard,popUpCPtradeResText,popUpTradeResCard,popUpTradeResText,popUpDownArrow,popUpUpArrow);
+            GUI.getChildren().addAll(popUpCPtradeResCard,popUpCPtradeResText,popUpTradeResCard,popUpTradeResText,popUpDownArrow,popUpUpArrow,popUpTradeResCardLabel,popUpTradeResCardCount);
         }
 
         Rectangle playerTradeButton = new Rectangle(960+(225/2)+(46.25*4)+40+16.75+12.5,72.5+57.5-17.5,51.2,17.5);
@@ -782,7 +792,7 @@ public class GUI {
         CPLargestArmyValue.setText(String.valueOf(game.getCurrentPlayer().getArmySize()));
         CPLongestRoadValue.setText(String.valueOf(game.getCurrentPlayer().getLongestRoadLength()));
         if (game.getCurrentPlayer().getHasLongestRoad()){
-            CPLongestRoadValue.setFill(red);
+            CPLongestRoadValue.setFill(Color.web("ab0000"));
         }
         else{
             CPLongestRoadValue.setFill(Color.BLACK);
@@ -812,7 +822,7 @@ public class GUI {
             VPCount[y].setText(String.valueOf(VP));
             playerLongestRoadValue[y].setText(String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
             if (nonActivePlayers.get(y).getHasLongestRoad()){
-                playerLongestRoadValue[y].setFill(red);
+                playerLongestRoadValue[y].setFill(Color.web("ab0000"));
             }
             else{
                 playerLongestRoadValue[y].setFill(Color.BLACK);
@@ -998,68 +1008,9 @@ public class GUI {
         return !allZeros;
     }
 
-    public void bankTrade() {
-        int[] exchangeRates = {4, 4, 4, 4, 4}; // Default 4:1 exchange rate for each resource
+    public void bankTrade(){
 
-        ArrayList<Settlement> settlements = game.getCurrentPlayer().getSettlements();
-        for (Settlement settlement : settlements) {
-            PortType port = settlement.getPort();
-            if (port != null) {
-                switch (port) {
-                    case ANY -> {
-                        for (int i = 0; i < exchangeRates.length; i++) {
-                            exchangeRates[i] = Math.min(exchangeRates[i], 3);
-                        }
-                    }
-                    case BRICK -> exchangeRates[0] = 2;
-                    case LUMBER -> exchangeRates[1] = 2;
-                    case ORE -> exchangeRates[2] = 2;
-                    case GRAIN -> exchangeRates[3] = 2;
-                    case WOOL -> exchangeRates[4] = 2;
-                }
-            }
-        }
-
-        boolean isValidTrade = true;
-        for (int i = 0; i < CPtradeSelectionValues.length; i++) {
-            if (CPtradeSelectionValues[i] % exchangeRates[i] != 0) {
-                isValidTrade = false;
-                break;
-            }
-        }
-
-        if (isValidTrade) {
-            for (int i = 0; i < CPtradeSelectionValues.length; i++) {
-                int receivedAmount = CPtradeSelectionValues[i] / exchangeRates[i];
-                if (tradeSelectionValues[i] != receivedAmount) {
-                    isValidTrade = false;
-                    break;
-                }
-            }
-        }
-
-        if (isValidTrade){
-            for (int z = 0; z < 5; z++) {
-                game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),-CPtradeSelectionValues[z],Integer::sum);
-                game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),tradeSelectionValues[z],Integer::sum);
-            }
-            for (int y = 0; y < 5; y++) {
-                CPtradeSelectionValues[y] = 0;
-                CPtradeSelectionTexts[y].setText("0");
-                tradeSelectionValues[y] = 0;
-                tradeSelectionTexts[y].setText("0");
-                downArrows[y].setVisible(false);
-                upArrows[y].setVisible(false);
-            }
-            refreshUI();
-        }
-        else {
-            unfairTradeError();
-        }
     }
-
-
-
 
     public void playerTrade(){
         endTurnPopUp.setVisible(true);
@@ -1094,6 +1045,11 @@ public class GUI {
                 popUpCPtradeSelectionTexts[y].toFront();
                 popUPtradeResCards[y].setVisible(true);
                 popUPtradeResCards[y].toFront();
+                popUpTradeResCardLabels[y].setVisible(true);
+                popUpTradeResCardLabels[y].toFront();
+                popUpTradeResCardCounts[y].setVisible(true);
+                popUpTradeResCardCounts[y].toFront();
+                popUpTradeResCardCounts[y].setText(String.valueOf(nonActivePlayers.get(tradeCount).resourceCards.get(ResourceType.values()[y])));
                 if (upArrows[y].isVisible()){
                     popUpUpArrows[y].setVisible(true);
                     popUpUpArrows[y].toFront();
@@ -1123,6 +1079,8 @@ public class GUI {
                         popUpDownArrows[y].setVisible(false);
                         popUpUpArrows[y].setVisible(false);
                         popUpTradeSelectionTexts[y].setVisible(false);
+                        popUpTradeResCardLabels[y].setVisible(false);
+                        popUpTradeResCardCounts[y].setVisible(false);
                     }
                     tradePopUp.setVisible(false);
                     tradeCount++;
@@ -1218,6 +1176,8 @@ public class GUI {
                     popUpDownArrows[y].setVisible(false);
                     popUpUpArrows[y].setVisible(false);
                     popUpTradeSelectionTexts[y].setVisible(false);
+                    popUpTradeResCardLabels[y].setVisible(false);
+                    popUpTradeResCardCounts[y].setVisible(false);
                 }
                 tradePopUp.setVisible(false);
                 tradeCount++;

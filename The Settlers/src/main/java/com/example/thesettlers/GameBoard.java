@@ -4,6 +4,7 @@ import com.example.thesettlers.enums.BoardType;
 import com.example.thesettlers.enums.PortType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
@@ -311,6 +312,17 @@ public class GameBoard {
 
 
     public void transparency(Boolean bool){
+        for (Tile tile : tileList){
+            if (bool){
+                if (!tile.isRobber()){
+                    tile.getValueLabel().setStroke(Color.BLACK);
+                    tile.getValueLabel().setStrokeWidth(2);
+                }
+            }
+            else{
+                tile.getValueLabel().setStroke(Color.TRANSPARENT);
+            }
+        }
         tilePane.setMouseTransparent(!bool);
         settlementPermPane.setMouseTransparent(bool);
         roadPermPane.setMouseTransparent(bool);

@@ -13,30 +13,33 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 public class Menu {
     private SceneChanger sceneChanger;
     private GameFX fx;
     private Stage primaryStage;
-    private Game game;
     private Pane menu = new Pane();
     private Scene scene = new Scene(menu);
     private GameVersion gameversion;
     private BoardType boardtype;
-    private int players;
-    private int agents;
+    private int playerCount;
+    private int agentCount;
     private String[] playerColours;
     private Rectangle[] playerIcons;
     private Rectangle[] AIIcons;
     private Rectangle[] addPlayerButtons;
     private Rectangle[] addAIButtons;
     private Rectangle[] crosses;
+    private String[] order;
+    private Game game;
     public Menu(){
         gameversion = GameVersion.VP;
         boardtype = BoardType.STARTING;
-        players = 1;
-        agents = 0;
+        playerCount = 1;
+        agentCount = 0;
         playerColours = new String[]{"blue", "gold", "white"};
+        order = new String[]{"player",null,null,null};
 
         menu.setId("MAINMENU");
         Rectangle startGame = new Rectangle(362.5, 280,715,100);
@@ -112,7 +115,7 @@ public class Menu {
         });
 
         play.setOnMouseClicked(e -> {
-            if (players+agents > 1 ){
+            if (playerCount + agentCount > 1 ){
                 startGame();
             }
             else {
@@ -162,11 +165,13 @@ public class Menu {
             cross.setVisible(false);
             cross.setOnMouseClicked(event -> {
                 if (playerIcons[i].isVisible()){
-                    players = players -1;
+                    playerCount = playerCount -1;
+                    order[i+1] = null;
                     playerIcons[i].setVisible(false);
                 }
                 if (AIIcons[i].isVisible()){
-                    agents = agents -1;
+                    agentCount = agentCount -1;
+                    order[i+1] = null;
                     AIIcons[i].setVisible(false);
                 }
                 addPlayerButtons[i].setVisible(true);
@@ -187,7 +192,8 @@ public class Menu {
             addPlayer.setFill(new ImagePattern(new Image(this.getClass().getResource("addplayer.png").toExternalForm())));
             addPlayer.setVisible(false);
             addPlayer.setOnMouseClicked(event -> {
-                players = players + 1;
+                order[i+1] = "player";
+                playerCount = playerCount + 1;
                 addPlayerButtons[i].setVisible(false);
                 addAIButtons[i].setVisible(false);
                 playerIcons[i].setVisible(true);
@@ -207,7 +213,8 @@ public class Menu {
             addAI.setFill(new ImagePattern(new Image(this.getClass().getResource("addai.png").toExternalForm())));
             addAI.setVisible(false);
             addAI.setOnMouseClicked(event -> {
-                agents = agents + 1;
+                order[i+1] = "ai";
+                agentCount = agentCount + 1;
                 addPlayerButtons[i].setVisible(false);
                 addAIButtons[i].setVisible(false);
                 AIIcons[i].setVisible(true);
@@ -284,9 +291,10 @@ public class Menu {
     }
 
     public void startGame(){
+        System.out.println(Arrays.toString(order));
         Game game = null; //TODO get number of players from setup screen
         try {
-            game = new Game(gameversion,boardtype, players,agents); //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
+            game = new Game(gameversion,boardtype, playerCount, agentCount); //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
         } catch (URISyntaxException | IOException ex) {
             throw new RuntimeException(ex);
         }
