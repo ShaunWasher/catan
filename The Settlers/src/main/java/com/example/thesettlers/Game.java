@@ -128,7 +128,7 @@ public class Game {
             if((settlement.getOwner() != null)){ // *owned settlements
                 // give players resources based on dice roll
                 for(Tile tile: settlement.getTiles()){
-                    if(tile.getValue() == die1+die2) {
+                    if(tile.getValue() == die1+die2 && !tile.isRobber()) {
                         settlement.getOwner().giveResource(terrainToResource(tile.getTileType()), 1);
                     }
                 }
@@ -167,6 +167,7 @@ public class Game {
 
     public void useKnightCard(){
         if(getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
+            gameBoard.transparency(true);
             //TODO take card from player
             getCurrentPlayer().increaseArmySize();
             if(largestArmy == null){

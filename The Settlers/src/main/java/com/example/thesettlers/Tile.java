@@ -76,6 +76,10 @@ public class Tile extends Polygon {
         }
     }
 
+    public boolean isRobber(){
+        return robber;
+    }
+
     public Circle getRobberImage() {
         return robberImage;
     }
