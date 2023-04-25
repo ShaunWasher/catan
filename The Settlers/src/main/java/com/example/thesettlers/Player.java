@@ -233,4 +233,8 @@ public class Player {
     public int[] getDevelopmentCardCount() {
         return new int[]{developmentCardCount.get(DevelopmentCardType.KNIGHT),developmentCardCount.get(DevelopmentCardType.VP),developmentCardCount.get(DevelopmentCardType.ROADBUILDING),developmentCardCount.get(DevelopmentCardType.YEAROFPLENTY),developmentCardCount.get(DevelopmentCardType.MONOPOLY)};
     }
+
+    public ArrayList<Settlement> getSettlements() {
+        return settlements;
+    }
 }

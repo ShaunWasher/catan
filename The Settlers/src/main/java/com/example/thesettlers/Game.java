@@ -20,9 +20,11 @@ public class Game {
     public GUI gui;
     private int maxVPs;
     public int roadBuilding;
+    private boolean placeRobber;
 
     //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
     public Game(GameVersion gameVersion, BoardType boardType, int numOfPlayers, int numOfAgents) throws URISyntaxException, IOException {
+        placeRobber = false;
         roadBuilding = 0;
         this.gameVersion = gameVersion;
         this.boardType = boardType;
@@ -85,6 +87,11 @@ public class Game {
         return currentPlayer;
     }
 
+    public void bankTrade(){
+
+    }
+
+
     public Player nextPlayer(){
         turnCount++;
         // first round of settlement placement
@@ -112,7 +119,8 @@ public class Game {
 
     public void rollDice(int die1, int die2){
         if(die1+die2 == 7){
-            //TODO deal with robber
+            gameBoard.getRobberPane().setVisible(true);
+
         }
         //for all settlements
         for(Settlement settlement: gameBoard.settlementList){
@@ -261,4 +269,13 @@ public class Game {
         return boardType;
     }
 
+    public boolean getPlaceRobber() {
+        return placeRobber;
+    }
+
+    public void setAllRobbersInactive() {
+        for (Robber robber : gameBoard.getRobbers()) {
+            robber.setActive(false);
+        }
+    }
 }

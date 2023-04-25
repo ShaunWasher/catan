@@ -19,7 +19,6 @@ public class Tile extends Polygon {
     private int value;
     private boolean robber;
     private ValueLabel valueLabel;
-    private Polygon robberImg;
     public Tile(double x, double y, String type, int value) {
         this.value = value;
         robber = false;
@@ -51,17 +50,6 @@ public class Tile extends Polygon {
         setOnMouseClicked(e -> System.out.println("Clicked: " + this));
         valueLabel = new ValueLabel(x, y, value);
 
-        robberImg = new Polygon();
-        robberImg.getPoints().addAll(
-                x, y,
-                x, y + r,
-                x + n, y + r * 1.5,
-                x + (2*n), y + r,
-                x + (2*n), y,
-                x + n, y - r * 0.5
-        );
-        robberImg.setFill(new ImagePattern(new Image(this.getClass().getResource("outline.png").toExternalForm())));
-
     }
 
     public Circle getValueLabel(){
@@ -74,10 +62,6 @@ public class Tile extends Polygon {
 
     public boolean getRobber() {
         return robber;
-    }
-
-    public Polygon getRobberImg() {
-        return robberImg;
     }
 
     public int getValue() {

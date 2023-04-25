@@ -100,4 +100,8 @@ public class Settlement {
     public void setPort(PortType port) {
         this.port = port;
     }
+
+    public PortType getPort() {
+        return port;
+    }
 }

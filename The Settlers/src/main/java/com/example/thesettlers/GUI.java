@@ -2,6 +2,7 @@ package com.example.thesettlers;
 
 import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
+import com.example.thesettlers.enums.PortType;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
@@ -488,6 +489,14 @@ public class GUI {
         bankTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
         bankTradeButton.setOnMouseClicked(event ->
         {
+            if (game.gameState == GameState.MAIN) {
+                if (!diceCanBeRolled) {
+                    bankTrade();
+                } else {
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
+                }
+            }
             //TODO functionality
             //TODO uses CPtradeSelectionValues
         });
@@ -973,6 +982,69 @@ public class GUI {
         }
         return !allZeros;
     }
+
+    public void bankTrade() {
+        int[] exchangeRates = {4, 4, 4, 4, 4}; // Default 4:1 exchange rate for each resource
+
+        ArrayList<Settlement> settlements = game.getCurrentPlayer().getSettlements();
+        for (Settlement settlement : settlements) {
+            PortType port = settlement.getPort();
+            if (port != null) {
+                switch (port) {
+                    case ANY -> {
+                        for (int i = 0; i < exchangeRates.length; i++) {
+                            exchangeRates[i] = Math.min(exchangeRates[i], 3);
+                        }
+                    }
+                    case BRICK -> exchangeRates[0] = 2;
+                    case LUMBER -> exchangeRates[1] = 2;
+                    case ORE -> exchangeRates[2] = 2;
+                    case GRAIN -> exchangeRates[3] = 2;
+                    case WOOL -> exchangeRates[4] = 2;
+                }
+            }
+        }
+
+        boolean isValidTrade = true;
+        for (int i = 0; i < CPtradeSelectionValues.length; i++) {
+            if (CPtradeSelectionValues[i] % exchangeRates[i] != 0) {
+                isValidTrade = false;
+                break;
+            }
+        }
+
+        if (isValidTrade) {
+            for (int i = 0; i < CPtradeSelectionValues.length; i++) {
+                int receivedAmount = CPtradeSelectionValues[i] / exchangeRates[i];
+                if (tradeSelectionValues[i] != receivedAmount) {
+                    isValidTrade = false;
+                    break;
+                }
+            }
+        }
+
+        if (isValidTrade){
+            for (int z = 0; z < 5; z++) {
+                game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),-CPtradeSelectionValues[z],Integer::sum);
+                game.getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(z),tradeSelectionValues[z],Integer::sum);
+            }
+            for (int y = 0; y < 5; y++) {
+                CPtradeSelectionValues[y] = 0;
+                CPtradeSelectionTexts[y].setText("0");
+                tradeSelectionValues[y] = 0;
+                tradeSelectionTexts[y].setText("0");
+                downArrows[y].setVisible(false);
+                upArrows[y].setVisible(false);
+            }
+            refreshUI();
+        }
+        else {
+            unfairTradeError();
+        }
+    }
+
+
+
 
     public void playerTrade(){
         endTurnPopUp.setVisible(true);
