@@ -130,6 +130,7 @@ public class GUI {
         Rectangle testBox = new Rectangle(100,100,100,100);
         GUI.getChildren().add(testBox);
         testBox.setOnMouseClicked(e -> {
+            gameBoard.transparency(true);
             game.getCurrentPlayer().resourceCards.merge(ResourceType.BRICK, 100, Integer::sum);
             game.getCurrentPlayer().resourceCards.merge(ResourceType.LUMBER, 100, Integer::sum);
             game.getCurrentPlayer().resourceCards.merge(ResourceType.GRAIN, 100, Integer::sum);

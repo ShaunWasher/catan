@@ -19,8 +19,11 @@ public class Tile extends Polygon {
     private int value;
     private boolean robber;
     private ValueLabel valueLabel;
-    public Tile(double x, double y, String type, int value) {
+    private Circle robberImage;
+    public Tile(double x, double y, String type, int value,Game game) {
         this.value = value;
+        robberImage = new Circle((x + ((sqrt(3) / 2) * 70)),(y+35),35);
+        robberImage.setFill(new ImagePattern(new Image(this.getClass().getResource("robber.png").toExternalForm())));
         robber = false;
         if (Objects.equals(type, "HILLS")) {
             tileType = TerrainType.HILLS;
@@ -47,7 +50,14 @@ public class Tile extends Polygon {
         setFill(new ImagePattern(getImage(tileType)));
         setStrokeWidth(6);
         setStroke(Color.web("f9c872"));
-        setOnMouseClicked(e -> System.out.println("Clicked: " + this));
+        setOnMouseClicked(e -> {
+            System.out.println("Clicked: " + this);
+            game.getGameBoard().transparency(false);
+            game.getRobber().setRobber(false);
+            setRobber(true);
+            game.setRobber(this);
+        });
+
         valueLabel = new ValueLabel(x, y, value);
 
     }
@@ -58,10 +68,16 @@ public class Tile extends Polygon {
 
     public void setRobber(boolean robber) {
         this.robber = robber;
+        if(robber){
+            robberImage.setVisible(true);
+        }
+        else{
+            robberImage.setVisible(false);
+        }
     }
 
-    public boolean getRobber() {
-        return robber;
+    public Circle getRobberImage() {
+        return robberImage;
     }
 
     public int getValue() {

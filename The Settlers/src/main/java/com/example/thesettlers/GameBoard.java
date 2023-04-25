@@ -26,8 +26,6 @@ public class GameBoard {
     private Pane settlementPane = new Pane();;
     private Pane roadPane = new Pane();;
     private Pane portsPane = new Pane();
-    private Pane robberPane = new Pane();
-    private Pane activeRobber = new Pane();
     private List<String> startingTerrainList;
     private List<String> randomTerrainList;
     private List<String> terrainList;
@@ -38,7 +36,6 @@ public class GameBoard {
     private Integer[][] roadSettlementData;
     private Integer[][] portSettlementData;
     Settlement[] settlementList;
-    private Robber[] robbers;
     private Road[] roadList;
     private Tile[] tileList;
     private double yStartOffset = 155;
@@ -56,7 +53,6 @@ public class GameBoard {
         portSettlementData = new Integer[9][2];
         settlementList = new Settlement[54];
         tileList = new Tile[19];
-        robbers = new Robber[19];
         roadList = new Road[72];
 
         String line = "";
@@ -179,20 +175,18 @@ public class GameBoard {
             for (int x = 0; x < tilesPerRow; x++) {
                 double xCoord = (x * (n * 2) + (y % 2) * n) + tilesxStartOffset;
                 double yCoord = (y * (r * 2) * 0.75) + yStartOffset;
-                Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count));
-                Robber robber = new Robber(xCoord,yCoord,tile,game);
-                robbers[count] = robber;
-                if (valueList.get(count) == 0){
-                    robber.setActive(true);
-                    activeRobber.getChildren().add(robber);
-                }
-                else{
-                    robberPane.getChildren().add(robber);
-                }
+                Tile tile = new Tile(xCoord, yCoord, terrainList.get(count), valueList.get(count),game);
+
                 tileList[count] = tile;
                 tilePane.getChildren().add(tile);
                 labelPane.getChildren().add(tile.getValueLabel());
+                tile.getRobberImage().setVisible(false);
+                labelPane.getChildren().add(tile.getRobberImage());
 
+                if (valueList.get(count) == 0){
+                    game.setRobber(tile);
+                    tile.setRobber(true);
+                }
                 count++;
             }
         }
@@ -274,20 +268,13 @@ public class GameBoard {
             }
             roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
-        gameBoard.getChildren().addAll(labelPane, tilePane,portsPane,robberPane,activeRobber);
-        robberPane.setVisible(false);
-        settlementPermPane.setPickOnBounds(false);
-        roadPermPane.setPickOnBounds(false);
-        labelPane.setPickOnBounds(false);
-        settlementPane.setPickOnBounds(false);
-        roadPane.setPickOnBounds(false);
-        portsPane.setPickOnBounds(false);
-        robberPane.setPickOnBounds(false);
-        activeRobber.setPickOnBounds(false);
-
+        gameBoard.getChildren().addAll(labelPane, tilePane,portsPane);
         labelPane.toFront();
-        activeRobber.toFront();
-        robberPane.toFront();
+
+        portsPane.setMouseTransparent(true);
+        labelPane.setMouseTransparent(true);
+        //tilePane.setMouseTransparent(true);
+
     }
 
     public Pane getGameBoard() {
@@ -329,16 +316,18 @@ public class GameBoard {
         return ports;
     }
 
-    public Robber[] getRobbers() {
-        return robbers;
+    public Pane getTilePane() {
+        return labelPane;
     }
 
-    public Pane getRobberPane() {
-        return robberPane;
+    public void transparency(Boolean bool){
+        tilePane.setMouseTransparent(!bool);
+        settlementPermPane.setMouseTransparent(bool);
+        roadPermPane.setMouseTransparent(bool);
+        settlementPane.setMouseTransparent(bool);
+        roadPane.setMouseTransparent(bool);
+
     }
 
-    public Pane getActiveRobber() {
-        return activeRobber;
-    }
 }
 

@@ -12,7 +12,6 @@ public class ValueLabel {
     ValueLabel(double x, double y, int value) {
         circle = new Circle((x + ((sqrt(3) / 2) * 70)),(y+35),20);
         circle.setFill(new ImagePattern(getImage(value)));
-        circle.setOnMouseClicked(e -> System.out.println("Clicked: " + this));
     }
 
     public Circle getCircle() {

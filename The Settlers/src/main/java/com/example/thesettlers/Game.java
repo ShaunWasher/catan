@@ -21,6 +21,7 @@ public class Game {
     private int maxVPs;
     public int roadBuilding;
     private boolean placeRobber;
+    private Tile robber;
 
     //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
     public Game(GameVersion gameVersion, BoardType boardType, int numOfPlayers, int numOfAgents) throws URISyntaxException, IOException {
@@ -119,7 +120,7 @@ public class Game {
 
     public void rollDice(int die1, int die2){
         if(die1+die2 == 7){
-            gameBoard.getRobberPane().setVisible(true);
+            gameBoard.transparency(true);
             //TODO take card from player
         }
         //for all settlements
@@ -166,7 +167,6 @@ public class Game {
 
     public void useKnightCard(){
         if(getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
-            gameBoard.getRobberPane().setVisible(true);
             //TODO take card from player
             getCurrentPlayer().increaseArmySize();
             if(largestArmy == null){
@@ -280,13 +280,11 @@ public class Game {
         return boardType;
     }
 
-    public boolean getPlaceRobber() {
-        return placeRobber;
+    public void setRobber(Tile robber) {
+        this.robber = robber;
     }
 
-    public void setAllRobbersInactive() {
-        for (Robber robber : gameBoard.getRobbers()) {
-            robber.setActive(false);
-        }
+    public Tile getRobber() {
+        return robber;
     }
 }
