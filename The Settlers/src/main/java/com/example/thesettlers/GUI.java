@@ -92,12 +92,14 @@ public class GUI {
     private Rectangle[] popUpUpArrows;
     private ArrayList<Player> acceptedTrades;
     private boolean diceCanBeRolled;
+    private Color red;
     //endregion
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
     public GUI(Game game) throws URISyntaxException, IOException {
         GUI.setId("GUI");
         this.game = game;
+        red = Color.rgb(171, 0, 0);
         gameBoard = game.getGameBoard();
         boardPane = gameBoard.getGameBoard();
         settlementPane = gameBoard.getSettlementPane();
@@ -779,6 +781,12 @@ public class GUI {
         CPVPCount.setText(String.valueOf(game.getCurrentPlayer().getVictoryPoints()));
         CPLargestArmyValue.setText(String.valueOf(game.getCurrentPlayer().getArmySize()));
         CPLongestRoadValue.setText(String.valueOf(game.getCurrentPlayer().getLongestRoadLength()));
+        if (game.getCurrentPlayer().getHasLongestRoad()){
+            CPLongestRoadValue.setFill(red);
+        }
+        else{
+            CPLongestRoadValue.setFill(Color.BLACK);
+        }
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
@@ -802,8 +810,13 @@ public class GUI {
                 }
             }
             VPCount[y].setText(String.valueOf(VP));
-
             playerLongestRoadValue[y].setText(String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
+            if (nonActivePlayers.get(y).getHasLongestRoad()){
+                playerLongestRoadValue[y].setFill(red);
+            }
+            else{
+                playerLongestRoadValue[y].setFill(Color.BLACK);
+            }
             playerLargestArmyValue[y].setText(String.valueOf(nonActivePlayers.get(y).getArmySize()));
         }
     }

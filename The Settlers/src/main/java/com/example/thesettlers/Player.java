@@ -9,6 +9,7 @@ public class Player {
     private final int MAXCITIES = 4;
     private final int MAXROADS = 15;
     private int playerID;
+    private boolean hasLongestRoad;
     private ArrayList<Settlement> settlements;
     private int roadCount;
     EnumMap<ResourceType,Integer> resourceCards;
@@ -252,4 +253,14 @@ public class Player {
     public void setLongestRoadLength(int longestRoadLength) {
         this.longestRoadLength = longestRoadLength;
     }
+
+
+    public void setHasLongestRoad(boolean hasLongestRoad) {
+        this.hasLongestRoad = hasLongestRoad;
+    }
+
+    public boolean getHasLongestRoad() {
+        return hasLongestRoad;
+    }
 }
+

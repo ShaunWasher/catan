@@ -243,8 +243,8 @@ public class Game {
             getCurrentPlayer().placeRoad(road);
             gameBoard.setRoadPane();
             getCurrentPlayer().setLongestRoadLength(findLongestRoad(getCurrentPlayer()));
+            updateLongestRoad();
             //TODO find if longest road has changed
-            System.out.println(getCurrentPlayer().getLongestRoadLength());
             gui.refreshUI();
             return true;
         } catch (Exception exception){
@@ -298,8 +298,6 @@ public class Game {
         return longestRoad;
     }
 
-
-
     private int findLongestRoadRecursively(Player player, Settlement currentSettlement, Set<Road> visitedRoads) {
         int maxLength = 0;
         for (Road connectedRoad : getConnectedRoads(currentSettlement, player)) {
@@ -325,5 +323,36 @@ public class Game {
         return connectedRoads;
     }
 
+    public void updateLongestRoad() {
+        int minLongestRoadLength = 5;
+        Player currentLongestRoadHolder = null;
+        int currentLongestRoadLength = 0;
+
+        // Find the current longest road holder and length
+        for (Player player : players) {
+            if (player.getHasLongestRoad()) {
+                currentLongestRoadHolder = player;
+                currentLongestRoadLength = findLongestRoad(player);
+                break;
+            }
+        }
+
+        // Check if any other player has a longer road
+        for (Player player : players) {
+            if (player != currentLongestRoadHolder) {
+                int roadLength = findLongestRoad(player);
+                if (roadLength >= minLongestRoadLength && roadLength > currentLongestRoadLength) {
+                    if (currentLongestRoadHolder != null) {
+                        currentLongestRoadHolder.setHasLongestRoad(false);
+                        currentLongestRoadHolder.addVP(-2); // Remove 2 victory points from the previous holder
+                    }
+                    currentLongestRoadHolder = player;
+                    currentLongestRoadLength = roadLength;
+                    currentLongestRoadHolder.setHasLongestRoad(true);
+                    currentLongestRoadHolder.addVP(2); // Add 2 victory points to the new holder
+                }
+            }
+        }
+    }
 
 }
