@@ -600,7 +600,10 @@ public class GUI {
         Tooltip.install(buyRoadButton,roadCost);
         buyRoadButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
-                if (!diceCanBeRolled) {
+                if(roadPane.isVisible()){
+                    roadPane.setVisible(false);
+                }
+                else if (!diceCanBeRolled) {
                     if (!game.getCurrentPlayer().checkTooManyRoads()) {
                         if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
                             //make only places where you can place roads available
@@ -649,7 +652,7 @@ public class GUI {
                                     settlement.getIcon().setVisible(true);
                                 }
                             }
-                            settlementPane.setVisible(true);
+                            settlementPane.setVisible(!settlementPane.isVisible());
                         } else {
                             notEnoughResourcesError();
                         }

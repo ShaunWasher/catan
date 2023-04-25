@@ -10,7 +10,7 @@ public class Game {
     public GameState gameState;
     private ArrayList<Player> players;
     private int longestRoad;
-    private int largestArmy;
+    private Player largestArmy;
     private GameVersion gameVersion;
     private BoardType boardType;
     private LinkedList<DevelopmentCard> developmentCards;
@@ -33,7 +33,7 @@ public class Game {
         this.gameBoard = new GameBoard(this);
         gameState = GameState.START;
         longestRoad = 0;
-        largestArmy = 0;
+        largestArmy = null;
         players = new ArrayList<>();
         for(int i = 0;i<numOfPlayers;i++) {
             players.add(new Player(i + 1, this));
@@ -120,7 +120,7 @@ public class Game {
     public void rollDice(int die1, int die2){
         if(die1+die2 == 7){
             gameBoard.getRobberPane().setVisible(true);
-
+            //TODO take card from player
         }
         //for all settlements
         for(Settlement settlement: gameBoard.settlementList){
@@ -164,14 +164,24 @@ public class Game {
         return maxVPs;
     }
 
-    public boolean useKnightCard(){
+    public void useKnightCard(){
         if(getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
-            //TODO add card functionality
+            gameBoard.getRobberPane().setVisible(true);
+            //TODO take card from player
+            getCurrentPlayer().increaseArmySize();
+            if(largestArmy == null){
+                largestArmy = getCurrentPlayer();
+                largestArmy.addVP(2);
+            }
+            else if(getCurrentPlayer().getArmySize()>largestArmy.getArmySize()){
+                largestArmy.addVP(-2);
+                largestArmy = getCurrentPlayer();
+                largestArmy.addVP(2);
+            }
         }
-        return false;
     }
 
-    public boolean useRoadBuildingCard(){
+    public void useRoadBuildingCard(){
         if(roadBuilding == 0 && getCurrentPlayer().useDevCard(DevelopmentCardType.ROADBUILDING)){
             roadBuilding = 1;
             gui.showRoads();
@@ -179,10 +189,9 @@ public class Game {
         else if(roadBuilding == 1){
             gui.showRoads();
             roadBuilding++;
-        } else{
+        } else {
             roadBuilding = 0;
         }
-        return false;
     }
 
     public boolean useYearOfPlentyCard(){
@@ -237,6 +246,9 @@ public class Game {
         try {
             getCurrentPlayer().placeRoad(road);
             gameBoard.setRoadPane();
+
+            //TODO find if longest road has changed
+
             gui.refreshUI();
             return true;
         } catch (Exception exception){
@@ -250,7 +262,6 @@ public class Game {
         try {
             getCurrentPlayer().upgradeToCity(settlement);
             getCurrentPlayer().addVP();
-            gameBoard.setSettlementPane();
             gui.refreshUI();
             return true;
         } catch (Exception exception){

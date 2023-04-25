@@ -190,8 +190,19 @@ public class Player {
         }
     }
 
+    public void addVP(int quantity){
+        victoryPoints += quantity;
+        if(victoryPoints >= game.getMaxVPs()){
+            game.winGame();
+        }
+    }
+
     public int getArmySize() {
         return armySize;
+    }
+
+    public void increaseArmySize(){
+        armySize++;
     }
 
     public int getLongestRoadLength() {
