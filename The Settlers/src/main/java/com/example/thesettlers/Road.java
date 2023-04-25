@@ -90,4 +90,14 @@ public class Road {
         return this.image;
     }
 
+    public Settlement getOtherSettlement(Settlement settlement) {
+        if (settlementA == settlement) {
+            return settlementB;
+        } else if (settlementB == settlement) {
+            return settlementA;
+        } else {
+            throw new IllegalArgumentException("The given settlement is not connected to this road.");
+        }
+    }
+
 }

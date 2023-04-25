@@ -88,11 +88,6 @@ public class Game {
         return currentPlayer;
     }
 
-    public void bankTrade(){
-
-    }
-
-
     public Player nextPlayer(){
         turnCount++;
         // first round of settlement placement
@@ -291,56 +286,42 @@ public class Game {
 
     public int findLongestRoad(Player player) {
         int longestRoad = 0;
-
         for (Settlement settlement : gameBoard.settlementList) {
             if (settlement.getOwner() == player) {
-                for (Road road : gameBoard.getRoadList()) {
-                    if (road.getOwner() == player && (road.getSettlementA() == settlement || road.getSettlementB() == settlement)) {
-                        int currentLength = findLongestRoadRecursively(player, road, new HashSet<>(), 0);
-                        longestRoad = Math.max(longestRoad, currentLength);
-                    }
-                }
+                Set<Settlement> visitedSettlements = new HashSet<>();
+                int roadLength = findLongestRoadRecursively(player, settlement, visitedSettlements);
+                longestRoad = Math.max(longestRoad, roadLength);
             }
         }
-
-        return longestRoad;
+        return longestRoad - 1; // Subtract 1 to exclude the starting settlement
     }
 
-    private int findLongestRoadRecursively(Player player, Road currentRoad, Set<Road> visitedRoads, int roadLength) {
-        if (visitedRoads.contains(currentRoad)) {
-            return 0;
-        }
 
-        visitedRoads.add(currentRoad);
-        roadLength++;
+    private int findLongestRoadRecursively(Player player, Settlement currentSettlement, Set<Settlement> visitedSettlements) {
+        visitedSettlements.add(currentSettlement);
 
         int maxLength = 0;
-        for (Road adjacentRoad : getAdjacentRoads(currentRoad, player)) {
-            int newLength = findLongestRoadRecursively(player, adjacentRoad, visitedRoads, 0);
-            maxLength = Math.max(maxLength, newLength);
-        }
-
-        visitedRoads.remove(currentRoad);
-        return roadLength + maxLength;
-    }
-
-
-
-    private List<Road> getAdjacentRoads(Road road, Player player) {
-        List<Road> adjacentRoads = new ArrayList<>();
-
-        for (Road otherRoad : gameBoard.getRoadList()) {
-            if (otherRoad.getOwner() == player && areRoadsAdjacent(road, otherRoad)) {
-                adjacentRoads.add(otherRoad);
+        for (Road road : getConnectedRoads(currentSettlement, player)) {
+            Settlement nextSettlement = road.getOtherSettlement(currentSettlement);
+            if (!visitedSettlements.contains(nextSettlement)) {
+                Set<Settlement> visitedSettlementsCopy = new HashSet<>(visitedSettlements);
+                int newLength = findLongestRoadRecursively(player, nextSettlement, visitedSettlementsCopy);
+                maxLength = Math.max(maxLength, newLength);
             }
         }
 
-        return adjacentRoads;
+        visitedSettlements.remove(currentSettlement);
+        return 1 + maxLength;
     }
 
-    private boolean areRoadsAdjacent(Road roadA, Road roadB) {
-        return roadA.getSettlementA() == roadB.getSettlementA() || roadA.getSettlementA() == roadB.getSettlementB() ||
-                roadA.getSettlementB() == roadB.getSettlementA() || roadA.getSettlementB() == roadB.getSettlementB();
+    private List<Road> getConnectedRoads(Settlement settlement, Player player) {
+        List<Road> connectedRoads = new ArrayList<>();
+        for (Road road : gameBoard.getRoadList()) {
+            if (road.getOwner() == player && (road.getSettlementA() == settlement || road.getSettlementB() == settlement)) {
+                connectedRoads.add(road);
+            }
+        }
+        return connectedRoads;
     }
 
 
