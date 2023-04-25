@@ -180,8 +180,8 @@ public class GameBoard {
                 tileList[count] = tile;
                 tilePane.getChildren().add(tile);
                 labelPane.getChildren().add(tile.getValueLabel());
-                tile.getRobberImage().setVisible(false);
                 labelPane.getChildren().add(tile.getRobberImage());
+                tile.getRobberImage().setVisible(false);
 
                 if (valueList.get(count) == 0){
                     game.setRobber(tile);
@@ -268,13 +268,10 @@ public class GameBoard {
             }
             roadList[r].addSettlements(settlementList[roadSettlementData[r][0]],settlementList[roadSettlementData[r][1]]);
         }
-        gameBoard.getChildren().addAll(labelPane, tilePane,portsPane);
-        labelPane.toFront();
-
         portsPane.setMouseTransparent(true);
         labelPane.setMouseTransparent(true);
-        //tilePane.setMouseTransparent(true);
-
+        gameBoard.getChildren().addAll(labelPane, tilePane,portsPane);
+        labelPane.toFront();
     }
 
     public Pane getGameBoard() {
@@ -312,21 +309,14 @@ public class GameBoard {
         return settlementPermPane;
     }
 
-    public String[] getPorts() {
-        return ports;
-    }
-
-    public Pane getTilePane() {
-        return labelPane;
-    }
 
     public void transparency(Boolean bool){
         tilePane.setMouseTransparent(!bool);
         settlementPermPane.setMouseTransparent(bool);
         roadPermPane.setMouseTransparent(bool);
+        game.gui.getPermanentPane().setMouseTransparent(bool);
         settlementPane.setMouseTransparent(bool);
         roadPane.setMouseTransparent(bool);
-
     }
 
 }

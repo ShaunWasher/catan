@@ -137,9 +137,7 @@ public class GUI {
             game.getCurrentPlayer().resourceCards.merge(ResourceType.WOOL, 100, Integer::sum);
             game.getCurrentPlayer().resourceCards.merge(ResourceType.ORE, 100, Integer::sum);
         });
-
         //FIXME
-
 
         endTurnPopUp = new Rectangle(0,0,1440,900);
         endTurnPopUp.setVisible(false);
@@ -1289,5 +1287,11 @@ public class GUI {
             });
         });
 
+
+
+    }
+
+    public Pane getPermanentPane() {
+        return permanentPane;
     }
 }
