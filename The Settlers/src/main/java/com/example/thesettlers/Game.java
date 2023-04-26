@@ -12,6 +12,7 @@ public class Game {
     private int longestRoad;
     private Player largestArmy;
     private GameVersion gameVersion;
+    private long endTime;
     private BoardType boardType;
     private LinkedList<DevelopmentCard> developmentCards;
     private GameBoard gameBoard;
@@ -29,7 +30,12 @@ public class Game {
         roadBuilding = 0;
         this.gameVersion = gameVersion;
         this.boardType = boardType;
-        maxVPs = 10; //I SUPPOSE
+        if(gameVersion == GameVersion.VP) {
+            maxVPs = 10;
+        } else {
+            maxVPs = 100;
+            endTime = System.currentTimeMillis() + 60000; //TODO + Length of game
+        }
         gui = null;
         this.gameBoard = new GameBoard(this);
         gameState = GameState.START;
@@ -111,6 +117,11 @@ public class Game {
         currentPlayer = players.get(turnCount%players.size());
         gui.refreshUI();
         gui.setDiceCanBeRolledTrue();
+        if(gameVersion == GameVersion.TIMED){
+            if(System.currentTimeMillis() > endTime && currentPlayer.getPlayerID() == 1){
+                winGame();
+            }
+        }
         return currentPlayer;
     }
 
