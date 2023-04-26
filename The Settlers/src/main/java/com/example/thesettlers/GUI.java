@@ -222,7 +222,10 @@ public class GUI {
         devCard.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    developmentCards.setVisible(!developmentCards.isVisible());
+                    if(!game.getPlaceRobber()){
+                        developmentCards.setVisible(!developmentCards.isVisible());
+                    };
+
                 } else {
                     showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
@@ -412,15 +415,17 @@ public class GUI {
                     roadPane.setVisible(false);
                 }
                 else if (!diceCanBeRolled) {
-                    if (!game.getCurrentPlayer().checkTooManyRoads()) {
-                        if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
-                            //make only places where you can place roads available
-                            showRoads();
+                    if(!game.getPlaceRobber()) {
+                        if (!game.getCurrentPlayer().checkTooManyRoads()) {
+                            if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0) {
+                                //make only places where you can place roads available
+                                showRoads();
+                            } else {
+                                showError(notEnoughResourcesError);
+                            }
                         } else {
-                            showError(notEnoughResourcesError);
+                            showError(tooManyRoadsError);
                         }
-                    } else {
-                        showError(tooManyRoadsError);
                     }
                 } else {
                     showError(rollDiceFirstError);
@@ -440,32 +445,34 @@ public class GUI {
         buySettlementButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    if (!game.getCurrentPlayer().checkTooManySettlements()) {
-                        if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
-                            roadPane.setVisible(false);
-                            for (Settlement settlement : gameBoard.getSettlementList()) {
-                                if (settlement.checkRoadConnection(game.getCurrentPlayer())) {
-                                    for (Road road : settlement.getRoads()) {
-                                        if (road.getNextSettlement(settlement).getOwner() != null) {
-                                            settlement.getIcon().setVisible(false);
-                                            break;
-                                        } else {
-                                            settlement.getIcon().setVisible(true);
+                    if(!game.getPlaceRobber()) {
+                        if (!game.getCurrentPlayer().checkTooManySettlements()) {
+                            if (game.getCurrentPlayer().getResourceCards().get(ResourceType.BRICK) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.LUMBER) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0) {
+                                roadPane.setVisible(false);
+                                for (Settlement settlement : gameBoard.getSettlementList()) {
+                                    if (settlement.checkRoadConnection(game.getCurrentPlayer())) {
+                                        for (Road road : settlement.getRoads()) {
+                                            if (road.getNextSettlement(settlement).getOwner() != null) {
+                                                settlement.getIcon().setVisible(false);
+                                                break;
+                                            } else {
+                                                settlement.getIcon().setVisible(true);
+                                            }
                                         }
+                                    } else {
+                                        settlement.getIcon().setVisible(false);
                                     }
-                                } else {
-                                    settlement.getIcon().setVisible(false);
+                                    if (settlement.getOwner() != null) {
+                                        settlement.getIcon().setVisible(true);
+                                    }
                                 }
-                                if (settlement.getOwner() != null) {
-                                    settlement.getIcon().setVisible(true);
-                                }
+                                settlementPane.setVisible(!settlementPane.isVisible());
+                            } else {
+                                showError(notEnoughResourcesError);
                             }
-                            settlementPane.setVisible(!settlementPane.isVisible());
                         } else {
-                            showError(notEnoughResourcesError);
+                            showError(tooManySettlementsError);
                         }
-                    } else {
-                        showError(tooManySettlementsError);
                     }
                 } else {
                     showError(rollDiceFirstError);
@@ -485,14 +492,16 @@ public class GUI {
         buyCityButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    if (!game.getCurrentPlayer().checkTooManyCities()) {
-                        if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
-                            roadPane.setVisible(false);
+                    if(!game.getPlaceRobber()) {
+                        if (!game.getCurrentPlayer().checkTooManyCities()) {
+                            if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
+                                roadPane.setVisible(false);
+                            } else {
+                                showError(notEnoughResourcesError);
+                            }
                         } else {
-                            showError(notEnoughResourcesError);
+                            showError(tooManyCitiesError);
                         }
-                    } else {
-                        showError(tooManyCitiesError);
                     }
                 } else {
                     showError(rollDiceFirstError);
@@ -512,16 +521,18 @@ public class GUI {
         buyDevCardButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
-                        try {
-                            game.getCurrentPlayer().buyDevCard();
-                            refreshUI();
-                        } catch (Exception ex) {
-                            throw new RuntimeException(ex);
+                    if(!game.getPlaceRobber()) {
+                        if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.WOOL) > 0 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 0) {
+                            try {
+                                game.getCurrentPlayer().buyDevCard();
+                                refreshUI();
+                            } catch (Exception ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            developmentCards.setVisible(true);
+                        } else {
+                            showError(notEnoughResourcesError);
                         }
-                        developmentCards.setVisible(true);
-                    } else {
-                        showError(notEnoughResourcesError);
                     }
                 } else {
                     showError(rollDiceFirstError);
@@ -535,11 +546,13 @@ public class GUI {
         endTurnButton.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    settlementPane.setVisible(false);
-                    roadPane.setVisible(false);
-                    developmentCards.setVisible(false);
-                    game.nextPlayer();
-                    endTurnMenu();
+                    if(!game.getPlaceRobber()) {
+                        settlementPane.setVisible(false);
+                        roadPane.setVisible(false);
+                        developmentCards.setVisible(false);
+                        game.nextPlayer();
+                        endTurnMenu();
+                    }
                 } else {
                     showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
@@ -674,22 +687,22 @@ public class GUI {
             {
                 if (game.gameState == GameState.MAIN) {
                     if (diceCanBeRolled == false) {
-                        if (event.getButton() == MouseButton.PRIMARY)
-                        {
-                            if ((CPtradeSelectionValues[i] < game.getCurrentPlayer().resourceCards.get(ResourceType.values()[i])) && tradeSelectionValues[i] == 0) {
-                                CPtradeSelectionValues[i]++;
-                                downArrows[i].setVisible(true);
-                            }
-                        } else if (event.getButton() == MouseButton.SECONDARY)
-                        {
-                            if (CPtradeSelectionValues[i] > 0) {
-                                CPtradeSelectionValues[i]--;
-                                if (CPtradeSelectionValues[i] == 0){
-                                    downArrows[i].setVisible(false);
+                        if(!game.getPlaceRobber()) {
+                            if (event.getButton() == MouseButton.PRIMARY) {
+                                if ((CPtradeSelectionValues[i] < game.getCurrentPlayer().resourceCards.get(ResourceType.values()[i])) && tradeSelectionValues[i] == 0) {
+                                    CPtradeSelectionValues[i]++;
+                                    downArrows[i].setVisible(true);
+                                }
+                            } else if (event.getButton() == MouseButton.SECONDARY) {
+                                if (CPtradeSelectionValues[i] > 0) {
+                                    CPtradeSelectionValues[i]--;
+                                    if (CPtradeSelectionValues[i] == 0) {
+                                        downArrows[i].setVisible(false);
+                                    }
                                 }
                             }
+                            CPtradeSelectionTexts[i].setText(String.valueOf(CPtradeSelectionValues[i]));
                         }
-                        CPtradeSelectionTexts[i].setText(String.valueOf(CPtradeSelectionValues[i]));
                     } else {
                         showError(rollDiceFirstError);
                         System.out.println("dice must be rolled first");
@@ -723,22 +736,22 @@ public class GUI {
             {
                 if (game.gameState == GameState.MAIN) {
                     if (diceCanBeRolled == false) {
-                        if (event.getButton() == MouseButton.PRIMARY)
-                        {
-                            if (CPtradeSelectionValues[i] == 0) {
-                                tradeSelectionValues[i]++;
-                                upArrows[i].setVisible(true);
-                            }
-                        } else if (event.getButton() == MouseButton.SECONDARY)
-                        {
-                            if (tradeSelectionValues[i] > 0) {
-                                tradeSelectionValues[i]--;
-                                if (tradeSelectionValues[i] == 0){
-                                    upArrows[i].setVisible(false);
+                        if(!game.getPlaceRobber()) {
+                            if (event.getButton() == MouseButton.PRIMARY) {
+                                if (CPtradeSelectionValues[i] == 0) {
+                                    tradeSelectionValues[i]++;
+                                    upArrows[i].setVisible(true);
+                                }
+                            } else if (event.getButton() == MouseButton.SECONDARY) {
+                                if (tradeSelectionValues[i] > 0) {
+                                    tradeSelectionValues[i]--;
+                                    if (tradeSelectionValues[i] == 0) {
+                                        upArrows[i].setVisible(false);
+                                    }
                                 }
                             }
+                            tradeSelectionTexts[i].setText(String.valueOf(tradeSelectionValues[i]));
                         }
-                        tradeSelectionTexts[i].setText(String.valueOf(tradeSelectionValues[i]));
                     } else {
                         showError(rollDiceFirstError);
                         System.out.println("dice must be rolled first");
@@ -788,12 +801,13 @@ public class GUI {
         {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    if (containsAllZeros(CPtradeSelectionValues) && containsAllZeros(tradeSelectionValues))
-                    {
-                        tradeCount = 0;
-                        playerTrade();
-                    } else {
-                        showError(unfairTradeError);
+                    if(!game.getPlaceRobber()) {
+                        if (containsAllZeros(CPtradeSelectionValues) && containsAllZeros(tradeSelectionValues)) {
+                            tradeCount = 0;
+                            playerTrade();
+                        } else {
+                            showError(unfairTradeError);
+                        }
                     }
                 } else {
                     showError(rollDiceFirstError);
@@ -810,16 +824,18 @@ public class GUI {
         {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    if(game.bankTrade(CPtradeSelectionValues, tradeSelectionValues)){
-                        for (int y = 0; y < 5; y++) {
-                            CPtradeSelectionValues[y] = 0;
-                            CPtradeSelectionTexts[y].setText("0");
-                            tradeSelectionValues[y] = 0;
-                            tradeSelectionTexts[y].setText("0");
-                            downArrows[y].setVisible(false);
-                            upArrows[y].setVisible(false);
+                    if(!game.getPlaceRobber()) {
+                        if (game.bankTrade(CPtradeSelectionValues, tradeSelectionValues)) {
+                            for (int y = 0; y < 5; y++) {
+                                CPtradeSelectionValues[y] = 0;
+                                CPtradeSelectionTexts[y].setText("0");
+                                tradeSelectionValues[y] = 0;
+                                tradeSelectionTexts[y].setText("0");
+                                downArrows[y].setVisible(false);
+                                upArrows[y].setVisible(false);
+                            }
+                            refreshUI();
                         }
-                        refreshUI();
                     }
                 } else {
                     showError(rollDiceFirstError);

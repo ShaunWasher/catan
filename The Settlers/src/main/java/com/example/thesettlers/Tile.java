@@ -54,6 +54,7 @@ public class Tile extends Polygon {
             System.out.println("Clicked: " + this);
             game.getGameBoard().transparency(false);
             game.getRobber().setRobber(false);
+            game.setPlaceRobber(false);
             setRobber(true);
             game.setRobber(this);
         });

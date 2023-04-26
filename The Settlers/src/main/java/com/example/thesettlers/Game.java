@@ -129,6 +129,7 @@ public class Game {
     public void rollDice(int die1, int die2){
         if(die1+die2 == 7){
             gameBoard.transparency(true);
+            placeRobber = true;
             Platform.runLater(() -> {
                 if (getCurrentPlayer().getResourceCount() > 7){
                     gui.throwAway();
@@ -182,6 +183,7 @@ public class Game {
     public void useKnightCard(){
         if(getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
             gameBoard.transparency(true);
+            placeRobber = true;
             //TODO take card from player
             getCurrentPlayer().increaseArmySize();
             if(largestArmy == null && getCurrentPlayer().getArmySize() >= 3){
@@ -464,5 +466,11 @@ public class Game {
         }
     }
 
+    public boolean getPlaceRobber() {
+        return placeRobber;
+    }
 
+    public void setPlaceRobber(boolean placeRobber) {
+        this.placeRobber = placeRobber;
+    }
 }
