@@ -198,14 +198,14 @@ public class Player {
     public void addVP(){
         victoryPoints++;
         if(victoryPoints >= game.getMaxVPs()){
-            game.winGame();
+            game.winGame(this);
         }
     }
 
     public void addVP(int quantity){
         victoryPoints += quantity;
         if(victoryPoints >= game.getMaxVPs()){
-            game.winGame();
+            game.winGame(this);
         }
     }
 

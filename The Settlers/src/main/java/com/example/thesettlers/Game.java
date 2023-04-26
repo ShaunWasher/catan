@@ -32,7 +32,7 @@ public class Game {
         this.gameVersion = gameVersion;
         this.boardType = boardType;
         if(gameVersion == GameVersion.VP) {
-            maxVPs = 10;
+            maxVPs = 3;
         } else {
             maxVPs = 100;
             endTime = System.currentTimeMillis() + 60000; //TODO + Length of game
@@ -120,7 +120,15 @@ public class Game {
         gui.setDiceCanBeRolledTrue();
         if(gameVersion == GameVersion.TIMED){
             if(System.currentTimeMillis() > endTime && currentPlayer.getPlayerID() == 1){
-                winGame();
+                Player winner = null;
+                int maxVictoryPoints = Integer.MIN_VALUE;
+                for (Player player : players) {
+                    if (player.getVictoryPoints() > maxVictoryPoints) {
+                        maxVictoryPoints = player.getVictoryPoints();
+                        winner = player;
+                    }
+                }
+                winGame(winner);
             }
         }
         return currentPlayer;
@@ -361,8 +369,8 @@ public class Game {
         return true;
     }
 
-    public void winGame(){
-        gui.winMessage();
+    public void winGame(Player player){
+        gui.winMessage(player);
         //TODO send data to UI to show scores
     }
 
@@ -473,4 +481,5 @@ public class Game {
     public void setPlaceRobber(boolean placeRobber) {
         this.placeRobber = placeRobber;
     }
+
 }

@@ -17,23 +17,19 @@ import java.util.Arrays;
 
 public class Menu {
     private SceneChanger sceneChanger;
-    private GameFX fx;
-    private Stage primaryStage;
     private Pane menu = new Pane();
-    private Scene scene = new Scene(menu);
     private GameVersion gameversion;
     private BoardType boardtype;
     private int playerCount;
     private int agentCount;
     private String[] playerColours;
-    private Rectangle[] playerIcons;
-    private Rectangle[] AIIcons;
-    private Rectangle[] addPlayerButtons;
-    private Rectangle[] addAIButtons;
-    private Rectangle[] crosses;
     private String[] order;
-    private Game game;
     public Menu(){
+        Rectangle background = new Rectangle(0, 0, 1440, 900);
+        background.setFill(new ImagePattern(new Image(this.getClass().getResource("menubg.png").toExternalForm())));
+        menu.getChildren().add(background);
+        background.toBack();
+
         gameversion = GameVersion.VP;
         boardtype = BoardType.STARTING;
         playerCount = 1;
@@ -41,7 +37,6 @@ public class Menu {
         playerColours = new String[]{"blue", "gold", "white"};
         order = new String[]{"player",null,null,null};
 
-        menu.setId("MAINMENU");
         Rectangle startGame = new Rectangle(362.5, 280,715,100);
         startGame.setFill(new ImagePattern(new Image(this.getClass().getResource("startgame.png").toExternalForm())));
 
@@ -109,7 +104,7 @@ public class Menu {
         Group startGameMenu = new Group(gameVersionBox,boardTypeBox,vpBased,timeBased,starting,random,back,play);
 
         back.setOnMouseClicked(e -> {
-            menu.setId("MAINMENU");
+            background.setFill(new ImagePattern(new Image(this.getClass().getResource("menubg.png").toExternalForm())));
             startGameMenu.setVisible(false);
             menuOptions.setVisible(true);
         });
@@ -236,21 +231,14 @@ public class Menu {
         addPlayerButtons[0].setVisible(true);
         addAIButtons[0].setVisible(true);
 
-
-
         menu.getChildren().add(startGameMenu);
         startGameMenu.setVisible(false);
 
         startGame.setOnMouseClicked(e -> {
-            menu.setId("STARTGAMEMENU");
+            background.setFill(new ImagePattern(new Image(this.getClass().getResource("startgamemenu.png").toExternalForm())));
             menuOptions.setVisible(false);
             startGameMenu.setVisible(true);
         });
-
-
-
-
-
 
         Rectangle exitform = new Rectangle(0,0,1440,900);
         exitform.setFill(new ImagePattern(new Image(this.getClass().getResource("exitform.png").toExternalForm())));
@@ -283,9 +271,6 @@ public class Menu {
         this.sceneChanger = sceneChanger;
     }
 
-    public Scene getMenu() {
-        return scene;
-    }
     public Pane getMenuPane() {
         return menu;
     }
@@ -304,6 +289,7 @@ public class Menu {
         } catch (URISyntaxException | IOException ex) {
             throw new RuntimeException(ex);
         }
+        gui.setSceneChanger(sceneChanger);
         game.setGUI(gui);
         Pane newScenePane = gui.getGUI();
         sceneChanger.changeScene(newScenePane);

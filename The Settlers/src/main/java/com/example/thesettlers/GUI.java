@@ -4,6 +4,7 @@ import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
@@ -27,6 +28,7 @@ public class GUI {
     //region Variables
     Random random = new Random();
     private Pane GUI = new Pane();
+    private SceneChanger sceneChanger;
     private Pane boardPane;
     private Rectangle takeCardsButton;
     private Pane settlementPane;
@@ -46,6 +48,7 @@ public class GUI {
     private Text[] tradeSelectionTexts;
     private Rectangle[] downArrows;
     private Rectangle[] upArrows;
+    private Rectangle winnerIcon;
     private Rectangle[] popUpCPtradeResCards;
     private Rectangle[] popUPtradeResCards;
     private Text[] currentResourceValues;
@@ -74,7 +77,7 @@ public class GUI {
     private Rectangle rollDiceFirstError;
     private Rectangle tooManyCitiesError;
     private Rectangle unfairTradeError;
-    private Rectangle winMessage;
+    private Group winMessage;
     private Text discardCount;
     private Rectangle tradePopUp;
     private Rectangle developmentCardsUI;
@@ -927,7 +930,27 @@ public class GUI {
 
         //---------------------WIN POP-UP---------------------
 
-        winMessage = new Rectangle(0,0,1440,900);
+        Rectangle winPopUp = new Rectangle(0,0,1440,900);
+        winPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("winpopup.png").toExternalForm())));
+
+        winnerIcon = new Rectangle(1045/2,391.25-(25/2),80,80);
+
+        Rectangle exitButton = new Rectangle(521.5,485,153.5,50.5);
+        exitButton.setFill(new ImagePattern(new Image(this.getClass().getResource("exitbutton.png").toExternalForm())));
+        exitButton.setOnMouseClicked(i -> {
+            Platform.exit();
+        });
+
+        Rectangle menuButton = new Rectangle(755.5,485,153.5,50.5);
+        menuButton.setFill(new ImagePattern(new Image(this.getClass().getResource("menubutton.png").toExternalForm())));
+        menuButton.setOnMouseClicked(i -> {
+            Menu menu = new Menu();
+            menu.setSceneChanger(sceneChanger);
+            Pane newScenePane = menu.getMenuPane();
+            sceneChanger.changeScene(newScenePane);
+        });
+
+        winMessage = new Group(winPopUp,exitButton,menuButton,winnerIcon);
         winMessage.setVisible(false);
         GUI.getChildren().add(winMessage);
 
@@ -1113,8 +1136,8 @@ public class GUI {
         });
     }
 
-    public void winMessage(){
-        //TODO add win graphic
+    public void winMessage(Player player){
+        winnerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(player.getPlayerID() - 1)] + "player.png").toExternalForm())));
         winMessage.setVisible(true);
         winMessage.toFront();
     }
@@ -1394,4 +1417,7 @@ public class GUI {
         return permanentPane;
     }
 
+    public void setSceneChanger(SceneChanger sceneChanger) {
+        this.sceneChanger = sceneChanger;
+    }
 }

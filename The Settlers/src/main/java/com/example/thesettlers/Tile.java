@@ -60,7 +60,6 @@ public class Tile extends Polygon {
         });
 
         valueLabel = new ValueLabel(x, y, value);
-
     }
 
     public Circle getValueLabel(){
