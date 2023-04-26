@@ -13,9 +13,10 @@ public class Player {
     private boolean hasLargestArmy;
     private ArrayList<Settlement> settlements;
     private int roadCount;
-    EnumMap<ResourceType,Integer> resourceCards;
+    public EnumMap<ResourceType,Integer> resourceCards;
     private ArrayList<DevelopmentCard> developmentCards;
     private ArrayList<DevelopmentCard> newDevelopmentCards;
+    private boolean devCardUsed;
     private int victoryPoints;
     private int longestRoadLength;
     private int armySize;
@@ -30,6 +31,7 @@ public class Player {
         resourceCards.put(ResourceType.BRICK,0);
         resourceCards.put(ResourceType.LUMBER,0);
         resourceCards.put(ResourceType.GRAIN,0);
+        devCardUsed = false;
         developmentCards = new ArrayList<>();
         newDevelopmentCards = new ArrayList<>();
         developmentCardCount = new EnumMap<>(DevelopmentCardType.class);
@@ -171,11 +173,12 @@ public class Player {
     }
 
     public boolean useDevCard(DevelopmentCardType type){
-        if (developmentCardCount.get(type) != 0) {
+        if (developmentCardCount.get(type) != 0 && !devCardUsed) {
             for(DevelopmentCard card: developmentCards){
                 if(card.getCardType() == type){
                     developmentCards.remove(card);
                     developmentCardCount.put(type, developmentCardCount.get(type) - 1);
+                    devCardUsed = true;
                     return true;
                 }
             }
@@ -256,6 +259,7 @@ public class Player {
     public void makeNewDevCardsActive(){
         developmentCards.addAll(newDevelopmentCards);
         newDevelopmentCards.clear();
+        devCardUsed = false;
     }
 
     public ArrayList<Settlement> getSettlements() {
