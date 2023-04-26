@@ -86,6 +86,7 @@ public class GUI {
     private Text CPLongestRoadValue;
     private Text CPDevCardsCount;
     private Text CPVPCount;
+    private int yearOfPlentyCount;
     private Text[] popUpTradeSelectionTexts;
     private Rectangle[] popUpDownArrows;
     private Rectangle selectTradePopUp;
@@ -95,6 +96,12 @@ public class GUI {
     private ArrayList<Player> acceptedTrades;
     private boolean diceCanBeRolled;
     private Group endTurn;
+    private Rectangle[] yearOfPlentyResCards;
+    private Rectangle[] yearOfPlentyUpArrows;
+    private Rectangle[] yearOfPlentyDownArrows;
+    private Text[] yearOfPlentyValueTexts;
+    private Integer[] yearOfPlentyValues;
+    private Group yearOfPlenty;
     //endregion
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
@@ -255,12 +262,58 @@ public class GUI {
             game.useRoadBuildingCard();
         });
 
+        //---------------------YEAR OF PLENTY---------------------
+
+        yearOfPlenty = new Group();
+
+        yearOfPlentyResCards = new Rectangle[5];
+        yearOfPlentyValueTexts = new Text[5];
+        yearOfPlentyValues = new Integer[5];
+        yearOfPlentyCount = 0;
+        int OFF = 25/2;
+        for (int y = 0; y < 5; y++) {
+            int i = y;
+            yearOfPlentyValues[y] = 0;
+            Rectangle yearOfPlentyResCard = new Rectangle(495 + (225 / 2) + (46.25 * y), 340 + (95 / 2) - OFF, 40, 57.5);
+            yearOfPlentyResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            yearOfPlentyResCards[y] = yearOfPlentyResCard;
+            Text yearOfPlentyValueText = (new Text(495 + (225 / 2) + 20 - 12.5 + 6.5 + (46.25 * y), 340 + (95 / 2) + 28.75 - 12.5 + 20 - OFF, "0")); //FIXME
+            yearOfPlentyValueText.setFont(new Font(20));
+            yearOfPlentyValueText.setFill(Color.WHITE);
+            yearOfPlentyValueTexts[y] = yearOfPlentyValueText;
+            yearOfPlenty.getChildren().addAll(yearOfPlentyResCard,yearOfPlentyValueText);
+            yearOfPlentyResCard.setOnMouseClicked(event ->
+            {
+                if (event.getButton() == MouseButton.PRIMARY)
+                {
+                    if (yearOfPlentyCount < 2){ //If value not > 2
+                        yearOfPlentyValues[i]++;
+                        yearOfPlentyCount++;
+                    }
+
+                } else if (event.getButton() == MouseButton.SECONDARY)
+                {
+                    if (yearOfPlentyValues[i] > 0) {
+                        yearOfPlentyValues[i]--;
+                        yearOfPlentyCount--;
+                    }
+                }
+                yearOfPlentyValueTexts[i].setText(String.valueOf(yearOfPlentyValues[i]));
+            });
+        }
+        yearOfPlenty.setVisible(false);
+        yearOfPlenty.toFront();
+        GUI.getChildren().add(yearOfPlenty);
+
         Rectangle yearOfPlentyCard = new Rectangle(72.5+(70 * 3), 610+25, 60, 84);
         yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
         Tooltip.install(yearOfPlentyCard,clickToUse);
         yearOfPlentyCard.setOnMouseClicked(e -> {
+            yearOfPlenty.setVisible(true);
             game.useYearOfPlentyCard();
         });
+
+        //---------------------MONOPOLY---------------------
 
         Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
         monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
@@ -270,6 +323,7 @@ public class GUI {
         });
 
         developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);
+
         //---------------------BUY BUTTONS---------------------
 
         buyRoadButton = new Rectangle(532.5 , 790, 60, 39.5);
@@ -532,7 +586,6 @@ public class GUI {
         popUPtradeResCards = new Rectangle[5];
         popUpTradeResCardLabels = new Rectangle[5];
         popUpTradeResCardCounts = new Text[5];
-        int OFF = 25/2;
         for (int y = 0; y < 5; y++) {
             int i = y;
             CPtradeSelectionValues[y] = 0;
@@ -811,6 +864,7 @@ public class GUI {
         else{
             CPLargestArmyValue.setFill(Color.BLACK);
         }
+
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
