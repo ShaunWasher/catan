@@ -122,9 +122,6 @@ public class GUI {
         playerIconLabels = new ArrayList<>();
         acceptedTrades = new ArrayList<>();
 
-        winMessage = new Rectangle(0,0,1440,900);
-        winMessage.setVisible(false);
-        GUI.getChildren().add(winMessage);
 
         //FIXME
         Rectangle testBox = new Rectangle(100,100,100,100);
@@ -139,93 +136,7 @@ public class GUI {
         });
         //FIXME
 
-        endTurnPopUp = new Rectangle(0,0,1440,900);
-        endTurnPopUp.setVisible(false);
-        clickToContinueButton = new Rectangle(521.5,485,397,50.5);
-        clickToContinueButton.setFill(new ImagePattern(new Image(this.getClass().getResource("clicktocontinue.png").toExternalForm())));
-        clickToContinueButton.setVisible(false);
-        GUI.getChildren().addAll(endTurnPopUp, clickToContinueButton);
-
-        selectTradePopUp = new Rectangle(0,0,1440,900);
-        selectTradePopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("selecttradepopup.png").toExternalForm())));
-        selectTradePopUp.setVisible(false);
-        tradePopUp = new Rectangle(0,0,1440,900);
-        tradePopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("tradepopup.png").toExternalForm())));
-        tradePopUp.setVisible(false);
-        popUpCPtradeIcon = new Rectangle(1045/2,391.25-(25/2),50,50);
-        popUpCPtradeIcon.setVisible(false);
-        popUpPlayerTradeIcon = new Rectangle(1045/2,486.25-(25/2),50,50);
-        popUpPlayerTradeIcon.setVisible(false);
-        GUI.getChildren().addAll(tradePopUp,popUpCPtradeIcon, popUpPlayerTradeIcon,selectTradePopUp);
-
-        acceptTrade = new Rectangle(792.5+42.5+(25/2),450-13.5-25,79,27);
-        acceptTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("accept.png").toExternalForm())));
-        acceptTrade.setVisible(false);
-        declineTrade = new Rectangle(792.5+42.5+(25/2),450-13.5+25,79,27);
-        declineTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("decline.png").toExternalForm())));
-        declineTrade.setVisible(false);
-        GUI.getChildren().addAll(acceptTrade,declineTrade);
-
-        notEnoughResourcesError = new Rectangle(644,712.5,270,42.5);
-        notEnoughResourcesError.setFill(new ImagePattern(new Image(this.getClass().getResource("notenoughresources.png").toExternalForm())));
-        notEnoughResourcesError.setVisible(false);
-        notEnoughResourcesError.toFront();
-        GUI.getChildren().add(notEnoughResourcesError);
-
-        cantPlaceRoadError = new Rectangle(644,712.5,270,42.5);
-        cantPlaceRoadError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplaceroad.png").toExternalForm())));
-        cantPlaceRoadError.setVisible(false);
-        cantPlaceRoadError.toFront();
-        GUI.getChildren().add(cantPlaceRoadError);
-
-        cantPlaceSettlementError = new Rectangle(581.5,712.5,332.5,42.5);
-        cantPlaceSettlementError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplacesettlement.png").toExternalForm())));
-        cantPlaceSettlementError.setVisible(false);
-        cantPlaceSettlementError.toFront();
-        GUI.getChildren().add(cantPlaceSettlementError);
-
-        rollDiceFirstError = new Rectangle(729,712.5,185,42.5);
-        rollDiceFirstError.setFill(new ImagePattern(new Image(this.getClass().getResource("rolldicefirst.png").toExternalForm())));
-        rollDiceFirstError.setVisible(false);
-        rollDiceFirstError.toFront();
-        GUI.getChildren().add(rollDiceFirstError);
-
-        tooManyRoadsError = new Rectangle(712.5,712.5,201.5,42.5);
-        tooManyRoadsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanyroads.png").toExternalForm())));
-        tooManyRoadsError.setVisible(false);
-        tooManyRoadsError.toFront();
-        GUI.getChildren().add(tooManyRoadsError);
-
-        tooManySettlementsError = new Rectangle(652,712.5,262,42.5);
-        tooManySettlementsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanysettlements.png").toExternalForm())));
-        tooManySettlementsError.setVisible(false);
-        tooManySettlementsError.toFront();
-        GUI.getChildren().add(tooManySettlementsError);
-
-        unfairTradeError = new Rectangle(743.5,712.5,170.5,42.5);
-        unfairTradeError.setFill(new ImagePattern(new Image(this.getClass().getResource("unfairtrade.png").toExternalForm())));
-        unfairTradeError.setVisible(false);
-        unfairTradeError.toFront();
-        GUI.getChildren().add(unfairTradeError);
-
-        tooManyCitiesError = new Rectangle(712.5,712.5,201.5,42.5);
-        tooManyCitiesError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanycities.png").toExternalForm())));
-        tooManyCitiesError.setVisible(false);
-        tooManyCitiesError.toFront();
-        GUI.getChildren().add(tooManyCitiesError);
-
-        Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
-        CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
-        GUI.getChildren().add(CPResourceUI);
-
-        developmentCardsUI = new Rectangle(45, 610, 395, 140);
-        developmentCardsUI.setFill(new ImagePattern(new Image(this.getClass().getResource("dbox.png").toExternalForm())));
-        developmentCards.getChildren().add(developmentCardsUI);
-        GUI.getChildren().add(developmentCards);
-
-        Rectangle diceUI = new Rectangle(774, 765, 140, 140);
-        diceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box2.png").toExternalForm())));
-        GUI.getChildren().add(diceUI);
+        //---------------------CURRENT PLAYER UI---------------------
 
         Rectangle CPUI = new Rectangle(960, 765, 450, 140);
         CPUI.setFill(new ImagePattern(new Image(this.getClass().getResource("pbox.png").toExternalForm())));
@@ -267,299 +178,16 @@ public class GUI {
         CPLongestRoadValue = new Text(1330+30- 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getLongestRoadLength()));
         CPLongestRoadValue.setFont(new Font(20));;
 
-        GUI.getChildren().addAll(CPIcon, CPIconLabel,CPResCards,CPResCardsLabel, CPDevCards, CPDevCardsLabel, CPResCardsCount, CPLongestRoad, CPLargestArmy, CPDevCardsCount,CPLongestRoadValue,CPLargestArmyValue,CPVPCount);
+        //---------------------RESOURCE AND DEVELOPMENT CARDS---------------------
 
-        resCardsCount = new Text[players.size() - 1];
-        devCardsCount = new Text[players.size() - 1];
-        VPCount = new Text[players.size() - 1];
-        playerLargestArmyValue = new Text[players.size() - 1];
-        playerLongestRoadValue = new Text[players.size() - 1];
-        for (int y = 0; y < players.size() - 1; y++) {
-            Rectangle playerUI = new Rectangle(960, 270 + (165 * y) , 450, 140);
-            playerUI.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
-            Rectangle playerIcon = new Rectangle(1000, 315 + (165 * y) ,65, 65);
-            playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
-            playerIcons.add(playerIcon);
-            Rectangle playerIconLabel = new Rectangle(1020, 365 + (165 * y) , 25, 25);
-            playerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"playerlabel.png").toExternalForm())));
-            playerIconLabels.add(playerIconLabel);
-            Text VPCount = new Text(1020 + 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getVictoryPoints()));
-            VPCount.setFont(new Font(20));
-            this.VPCount[y] = VPCount;
+        Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
+        CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
+        GUI.getChildren().add(CPResourceUI);
 
-            Rectangle playerResCards = new Rectangle(1105, 295 + (165 * y) , 60, 84);
-            Rectangle playerResCardsLabel = new Rectangle(1105 + 17.5, 365 + (165 * y), 25, 25);
-            playerResCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
-            playerResCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
-            int resCount = 0;
-            for (int z=0; z < 5;z++){
-                resCount += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
-            }
-            Text resCardsCount = new Text(1105 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(resCount));
-            resCardsCount.setFont(new Font(20));
-            this.resCardsCount[y] = resCardsCount;
-
-            Rectangle playerDevCards = new Rectangle(1180, 295 + (165 * y) , 60, 84);
-            Rectangle layerDevCardsLabel = new Rectangle(1180 + 17.5, 365 + (165 * y), 25, 25);
-            playerDevCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
-            layerDevCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
-            Text devCardsCount = new Text(1180 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getDevelopmentCards().size()));
-            devCardsCount.setFont(new Font(20));
-            this.devCardsCount[y] = devCardsCount;
-
-            Rectangle playerLargestArmy = new Rectangle(1255, 295 + (165 * y) , 60, 84);
-            playerLargestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
-            Text playerLargestArmyValue = new Text(1255+30- 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getArmySize()));
-            playerLargestArmyValue.setFont(new Font(20));;
-            this.playerLargestArmyValue[y] = playerLargestArmyValue;
-
-            Rectangle playerLongestRoad = new Rectangle(1330, 295 + (165 * y) , 60, 84);
-            playerLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
-            Text playerLongestRoadValue = new Text(1330+30- 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
-            playerLongestRoadValue.setFont(new Font(20));;
-            this.playerLongestRoadValue[y] = playerLongestRoadValue;
-
-            GUI.getChildren().addAll(playerUI,playerIcon,playerIconLabel,playerResCards,playerResCardsLabel,playerDevCards,layerDevCardsLabel,playerLargestArmy,playerLongestRoad,resCardsCount,playerLongestRoadValue,playerLargestArmyValue,devCardsCount,VPCount);
-            resCardsCount.toFront();
-            devCardsCount.toFront();
-            VPCount.toFront();
-            playerUI.toBack();
-        }
-
-        Rectangle tradeUI = new Rectangle(960, 25, 450, 220);
-        tradeUI.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
-        GUI.getChildren().add(tradeUI);
-
-        CPTradeIcon = new Rectangle(960+(225/2)-85,76.25,50,50);
-        CPTradeIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"player.png").toExternalForm())));
-        CPTradeIcon.toFront();
-        GUI.getChildren().add(CPTradeIcon);
-
-        CPtradeSelectionValues = new Integer[5];
-        CPtradeSelectionTexts = new Text[5];
-        popUpCPtradeSelectionTexts = new Text[5];
-        tradeSelectionValues = new Integer[5];
-        tradeSelectionTexts = new Text[5];
-        popUpTradeSelectionTexts = new Text[5];
-        downArrows = new Rectangle[5];
-        popUpDownArrows = new Rectangle[5];
-        upArrows = new Rectangle[5];
-        popUpUpArrows = new Rectangle[5];
-        popUpCPtradeResCards = new Rectangle[5];
-        popUPtradeResCards = new Rectangle[5];
-        popUpTradeResCardLabels = new Rectangle[5];
-        popUpTradeResCardCounts = new Text[5];
-        int OFF = 25/2;
-        for (int y = 0; y < 5; y++) {
-            int i = y;
-            CPtradeSelectionValues[y] = 0;
-            Rectangle CPtradeResCard = new Rectangle(960+(225/2)+(46.25*y),72.5,40,57.5);
-            CPtradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
-            Rectangle downArrow = new Rectangle(960+(225/2)+(46.25*y)+20-9.5 ,25+(95/2)+60,19,9);
-            downArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowdown.png").toExternalForm())));
-            downArrows[y] = downArrow;
-            Text CPtradeResText = (new Text(960+(225/2)+20-12.5+6.5+(46.25*y), 25+(95/2)+28.75-12.5+20,"0"));
-            CPtradeResText.setFont(new Font(20));
-            CPtradeResText.setFill(Color.WHITE);
-            CPtradeSelectionTexts[y] = CPtradeResText;
-            CPtradeResCard.setOnMouseClicked(event ->
-            {
-                if (game.gameState == GameState.MAIN) {
-                    if (diceCanBeRolled == false) {
-                        if (event.getButton() == MouseButton.PRIMARY)
-                        {
-                            if ((CPtradeSelectionValues[i] < game.getCurrentPlayer().resourceCards.get(ResourceType.values()[i])) && tradeSelectionValues[i] == 0) {
-                                CPtradeSelectionValues[i]++;
-                                downArrows[i].setVisible(true);
-                            }
-                        } else if (event.getButton() == MouseButton.SECONDARY)
-                        {
-                            if (CPtradeSelectionValues[i] > 0) {
-                                CPtradeSelectionValues[i]--;
-                                if (CPtradeSelectionValues[i] == 0){
-                                    downArrows[i].setVisible(false);
-                                }
-                            }
-                        }
-                        CPtradeSelectionTexts[i].setText(String.valueOf(CPtradeSelectionValues[i]));
-                    } else {
-                    rollDiceFirstError();
-                    System.out.println("dice must be rolled first");
-                    }
-                }
-            });
-            Rectangle popUpCPtradeResCard = new Rectangle(495+(225/2)+(46.25*y),340+(95/2)-OFF,40,57.5);
-            popUpCPtradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
-            popUpCPtradeResCards[y] = popUpCPtradeResCard;
-
-            Rectangle popUpDownArrow = new Rectangle(495+(225/2)+(46.25*y)+20-9.5 ,340+(95/2)+60-OFF,19,9); //FIXME
-            popUpDownArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowdown.png").toExternalForm())));
-            popUpDownArrows[y] = popUpDownArrow;
-
-            Text popUpCPtradeResText = (new Text(495+(225/2)+20-12.5+6.5+(46.25*y), 340+(95/2)+28.75-12.5+20-OFF,"0")); //FIXME
-            popUpCPtradeResText.setFont(new Font(20));
-            popUpCPtradeResText.setFill(Color.WHITE);
-            popUpCPtradeSelectionTexts[y] = popUpCPtradeResText;
-
-            tradeSelectionValues[y] = 0;
-            Rectangle tradeResCard = new Rectangle(960+(225/2)+(46.25*y),167.5,40,57.5);
-            tradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
-            Rectangle upArrow = new Rectangle(960+(225/2)+(46.25*y)+20-9.5,156,19,9);
-            upArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowup.png").toExternalForm())));
-            upArrows[y] = upArrow;
-            Text tradeResText = (new Text(960+(225/2)+20-12.5+6.5+(46.25*y), 197.5-40+28.75-12.5+20+10,"0"));
-            tradeResText.setFont(new Font(20));
-            tradeResText.setFill(Color.WHITE);
-            tradeSelectionTexts[y] = tradeResText;
-            tradeResCard.setOnMouseClicked(event ->
-            {
-                if (game.gameState == GameState.MAIN) {
-                    if (diceCanBeRolled == false) {
-                        if (event.getButton() == MouseButton.PRIMARY)
-                        {
-                            if (CPtradeSelectionValues[i] == 0) {
-                                tradeSelectionValues[i]++;
-                                upArrows[i].setVisible(true);
-                            }
-                        } else if (event.getButton() == MouseButton.SECONDARY)
-                        {
-                            if (tradeSelectionValues[i] > 0) {
-                                tradeSelectionValues[i]--;
-                                if (tradeSelectionValues[i] == 0){
-                                    upArrows[i].setVisible(false);
-                                }
-                            }
-                        }
-                        tradeSelectionTexts[i].setText(String.valueOf(tradeSelectionValues[i]));
-                    } else {
-                        rollDiceFirstError();
-                        System.out.println("dice must be rolled first");
-                    }
-                }
-            });
-            Rectangle popUpTradeResCard = new Rectangle(607.5+(46.25*y),482.5-OFF,40,57.5);
-            popUpTradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
-            popUPtradeResCards[y] = popUpTradeResCard;
-
-            Rectangle popUpTradeResCardLabel = new Rectangle(607.5+(11.67)+(46.25*y),482.5+(46.67)-OFF,16.67,16.67);
-            popUpTradeResCardLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + "label.png").toExternalForm())));
-            popUpTradeResCardLabels[y] = popUpTradeResCardLabel;
-
-            Text popUpTradeResCardCount = (new Text(607.5+(11.67)+(46.25*y)+2.08, 482.5+(46.67)-OFF+13.33,"0"));
-            popUpTradeResCardCount.setFont(new Font(13.33));
-            popUpTradeResCardCounts[y] = popUpTradeResCardCount;
-
-            Rectangle popUpUpArrow = new Rectangle(495+(225/2)+(46.25*y)+20-9.5,340+(95/2)+95-11.5-OFF,19,9);
-            popUpUpArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowup.png").toExternalForm())));
-            popUpUpArrows[y] = popUpUpArrow;
-
-            Text popUpTradeResText = (new Text(495+(225/2)+20-12.5+6.5+(46.25*y), 340+(95/2)+28.75-12.5+20+95-OFF,"0"));
-            popUpTradeResText.setFont(new Font(20));
-            popUpTradeResText.setFill(Color.WHITE);
-            popUpTradeSelectionTexts[y] = popUpTradeResText;
-
-            upArrow.setVisible(false);
-            downArrow.setVisible(false);
-
-            popUpCPtradeResCard.setVisible(false);
-            popUpTradeResCardCount.setVisible(false);
-            popUpCPtradeResText.setVisible(false);
-            popUpTradeResCard.setVisible(false);
-            popUpTradeResCardLabel.setVisible(false);
-            popUpTradeResText.setVisible(false);
-            popUpDownArrow.setVisible(false);
-            popUpUpArrow.setVisible(false);
-
-            GUI.getChildren().addAll(CPtradeResCard,CPtradeResText,tradeResCard,tradeResText,downArrow,upArrow);
-            GUI.getChildren().addAll(popUpCPtradeResCard,popUpCPtradeResText,popUpTradeResCard,popUpTradeResText,popUpDownArrow,popUpUpArrow,popUpTradeResCardLabel,popUpTradeResCardCount);
-        }
-
-        Rectangle playerTradeButton = new Rectangle(960+(225/2)+(46.25*4)+40+16.75+12.5,72.5+57.5-17.5,51.2,17.5);
-        playerTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
-        playerTradeButton.setOnMouseClicked(event ->
-        {
-            if (game.gameState == GameState.MAIN) {
-                if (!diceCanBeRolled) {
-                    if (containsAllZeros(CPtradeSelectionValues) && containsAllZeros(tradeSelectionValues))
-                    {
-                        tradeCount = 0;
-                        playerTrade();
-                    } else {
-                        unfairTradeError();
-                    }
-                } else {
-                    rollDiceFirstError();
-                    System.out.println("dice must be rolled first");
-                }
-            }
-        });
-
-        GUI.getChildren().addAll(playerTradeButton);
-
-        Rectangle bankTradeButton = new Rectangle(960+(225/2)+(46.25*4)+40+16.75+12.5,167.5+57.5-17.5,51.2,17.5);
-        bankTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
-        bankTradeButton.setOnMouseClicked(event ->
-        {
-            if (game.gameState == GameState.MAIN) {
-                if (!diceCanBeRolled) {
-                    bankTrade();
-                } else {
-                    rollDiceFirstError();
-                    System.out.println("dice must be rolled first");
-                }
-            }
-            //TODO functionality
-            //TODO uses CPtradeSelectionValues
-        });
-        GUI.getChildren().add(bankTradeButton);
-
-        dice1 = new Rectangle(790, 790, 50, 50);
-        dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d6.png").toExternalForm())));
-        GUI.getChildren().add(dice1);
-
-        dice2 = new Rectangle(850, 790, 50, 50);
-        dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d2.png").toExternalForm())));
-        GUI.getChildren().add(dice2);
-
-        Tooltip clickToUse = new Tooltip();
-        ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clickToUse.png").toExternalForm()));
-        clickToUseImg.setPreserveRatio(true);
-        clickToUseImg.setFitHeight(12.5);
-        clickToUse.setGraphic(clickToUseImg);
-
-        Rectangle knightCard = new Rectangle(72.5, 610+25, 60, 84);
-        knightCard.setFill(new ImagePattern(new Image(this.getClass().getResource("knightcard.png").toExternalForm())));
-        Tooltip.install(knightCard,clickToUse);
-        knightCard.setOnMouseClicked(e -> {
-            game.useKnightCard();
-        });
-
-        Rectangle VPCard = new Rectangle(72.5+70, 610+25, 60, 84);
-        VPCard.setFill(new ImagePattern(new Image(this.getClass().getResource("vpcard.png").toExternalForm())));
-
-        Rectangle roadBuildingCard = new Rectangle(72.5+(70 * 2), 610+25, 60, 84);
-        roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
-        Tooltip.install(roadBuildingCard,clickToUse);
-        roadBuildingCard.setOnMouseClicked(e -> {
-            game.useRoadBuildingCard();
-        });
-
-
-        Rectangle yearOfPlentyCard = new Rectangle(72.5+(70 * 3), 610+25, 60, 84);
-        yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
-        Tooltip.install(yearOfPlentyCard,clickToUse);
-        yearOfPlentyCard.setOnMouseClicked(e -> {
-            game.useYearOfPlentyCard();
-        });
-
-        Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
-        monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
-        Tooltip.install(monopolyCard,clickToUse);
-        monopolyCard.setOnMouseClicked(e -> {
-            game.useMonopolyCard();
-        });
-
-        developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);
+        developmentCardsUI = new Rectangle(45, 610, 395, 140);
+        developmentCardsUI.setFill(new ImagePattern(new Image(this.getClass().getResource("dbox.png").toExternalForm())));
+        developmentCards.getChildren().add(developmentCardsUI);
+        GUI.getChildren().add(developmentCards);
 
         currentResourceValues = new Text[5]; //stores text boxes for resource values in here
         currentDevCardValues = new Text[5];
@@ -600,6 +228,46 @@ public class GUI {
                 }
             }
         });
+
+        Tooltip clickToUse = new Tooltip();
+        ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clickToUse.png").toExternalForm()));
+        clickToUseImg.setPreserveRatio(true);
+        clickToUseImg.setFitHeight(12.5);
+        clickToUse.setGraphic(clickToUseImg);
+
+        Rectangle knightCard = new Rectangle(72.5, 610+25, 60, 84);
+        knightCard.setFill(new ImagePattern(new Image(this.getClass().getResource("knightcard.png").toExternalForm())));
+        Tooltip.install(knightCard,clickToUse);
+        knightCard.setOnMouseClicked(e -> {
+            game.useKnightCard();
+        });
+
+        Rectangle VPCard = new Rectangle(72.5+70, 610+25, 60, 84);
+        VPCard.setFill(new ImagePattern(new Image(this.getClass().getResource("vpcard.png").toExternalForm())));
+
+        Rectangle roadBuildingCard = new Rectangle(72.5+(70 * 2), 610+25, 60, 84);
+        roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
+        Tooltip.install(roadBuildingCard,clickToUse);
+        roadBuildingCard.setOnMouseClicked(e -> {
+            game.useRoadBuildingCard();
+        });
+
+        Rectangle yearOfPlentyCard = new Rectangle(72.5+(70 * 3), 610+25, 60, 84);
+        yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
+        Tooltip.install(yearOfPlentyCard,clickToUse);
+        yearOfPlentyCard.setOnMouseClicked(e -> {
+            game.useYearOfPlentyCard();
+        });
+
+        Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
+        monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
+        Tooltip.install(monopolyCard,clickToUse);
+        monopolyCard.setOnMouseClicked(e -> {
+            game.useMonopolyCard();
+        });
+
+        developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);
+        //---------------------BUY BUTTONS---------------------
 
         buyRoadButton = new Rectangle(532.5 , 790, 60, 39.5);
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
@@ -750,6 +418,20 @@ public class GUI {
             }
         });
 
+        //---------------------DICE---------------------
+
+        Rectangle diceUI = new Rectangle(774, 765, 140, 140);
+        diceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box2.png").toExternalForm())));
+        GUI.getChildren().add(diceUI);
+
+        dice1 = new Rectangle(790, 790, 50, 50);
+        dice1.setFill(new ImagePattern(new Image(this.getClass().getResource("d6.png").toExternalForm())));
+        GUI.getChildren().add(dice1);
+
+        dice2 = new Rectangle(850, 790, 50, 50);
+        dice2.setFill(new ImagePattern(new Image(this.getClass().getResource("d2.png").toExternalForm())));
+        GUI.getChildren().add(dice2);
+
         Rectangle rollDiceButton = new Rectangle(800, 844.5 + 5, 90, 39.5);
         rollDiceButton.setFill(new ImagePattern(new Image(this.getClass().getResource("roll.png").toExternalForm())));
         rollDiceButton.setOnMouseClicked(e -> {
@@ -762,6 +444,343 @@ public class GUI {
                 }
             }
         });
+
+        //---------------------OTHER PLAYER UI---------------------
+
+        resCardsCount = new Text[players.size() - 1];
+        devCardsCount = new Text[players.size() - 1];
+        VPCount = new Text[players.size() - 1];
+        playerLargestArmyValue = new Text[players.size() - 1];
+        playerLongestRoadValue = new Text[players.size() - 1];
+        for (int y = 0; y < players.size() - 1; y++) {
+            Rectangle playerUI = new Rectangle(960, 270 + (165 * y) , 450, 140);
+            playerUI.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
+            Rectangle playerIcon = new Rectangle(1000, 315 + (165 * y) ,65, 65);
+            playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
+            playerIcons.add(playerIcon);
+            Rectangle playerIconLabel = new Rectangle(1020, 365 + (165 * y) , 25, 25);
+            playerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+            playerIconLabels.add(playerIconLabel);
+            Text VPCount = new Text(1020 + 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getVictoryPoints()));
+            VPCount.setFont(new Font(20));
+            this.VPCount[y] = VPCount;
+
+            Rectangle playerResCards = new Rectangle(1105, 295 + (165 * y) , 60, 84);
+            Rectangle playerResCardsLabel = new Rectangle(1105 + 17.5, 365 + (165 * y), 25, 25);
+            playerResCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
+            playerResCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
+            int resCount = 0;
+            for (int z=0; z < 5;z++){
+                resCount += nonActivePlayers.get(y).resourceCards.get(ResourceType.values()[z]);
+            }
+            Text resCardsCount = new Text(1105 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(resCount));
+            resCardsCount.setFont(new Font(20));
+            this.resCardsCount[y] = resCardsCount;
+
+            Rectangle playerDevCards = new Rectangle(1180, 295 + (165 * y) , 60, 84);
+            Rectangle layerDevCardsLabel = new Rectangle(1180 + 17.5, 365 + (165 * y), 25, 25);
+            playerDevCards.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
+            layerDevCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
+            Text devCardsCount = new Text(1180 + 17.5 + 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getDevelopmentCards().size()));
+            devCardsCount.setFont(new Font(20));
+            this.devCardsCount[y] = devCardsCount;
+
+            Rectangle playerLargestArmy = new Rectangle(1255, 295 + (165 * y) , 60, 84);
+            playerLargestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
+            Text playerLargestArmyValue = new Text(1255+30- 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getArmySize()));
+            playerLargestArmyValue.setFont(new Font(20));;
+            this.playerLargestArmyValue[y] = playerLargestArmyValue;
+
+            Rectangle playerLongestRoad = new Rectangle(1330, 295 + (165 * y) , 60, 84);
+            playerLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
+            Text playerLongestRoadValue = new Text(1330+30- 6.25, 365 + (165 * y) + 20, String.valueOf(nonActivePlayers.get(y).getLongestRoadLength()));
+            playerLongestRoadValue.setFont(new Font(20));;
+            this.playerLongestRoadValue[y] = playerLongestRoadValue;
+
+            GUI.getChildren().addAll(playerUI,playerIcon,playerIconLabel,playerResCards,playerResCardsLabel,playerDevCards,layerDevCardsLabel,playerLargestArmy,playerLongestRoad,resCardsCount,playerLongestRoadValue,playerLargestArmyValue,devCardsCount,VPCount);
+            resCardsCount.toFront();
+            devCardsCount.toFront();
+            VPCount.toFront();
+            playerUI.toBack();
+        }
+
+        //---------------------TRADING---------------------
+
+        Rectangle tradeUI = new Rectangle(960, 25, 450, 220);
+        tradeUI.setFill(new ImagePattern(new Image(this.getClass().getResource("tbox.png").toExternalForm())));
+        GUI.getChildren().add(tradeUI);
+
+        CPTradeIcon = new Rectangle(960+(225/2)-85,76.25,50,50);
+        CPTradeIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"player.png").toExternalForm())));
+        CPTradeIcon.toFront();
+        GUI.getChildren().add(CPTradeIcon);
+
+        CPtradeSelectionValues = new Integer[5];
+        CPtradeSelectionTexts = new Text[5];
+        popUpCPtradeSelectionTexts = new Text[5];
+        tradeSelectionValues = new Integer[5];
+        tradeSelectionTexts = new Text[5];
+        popUpTradeSelectionTexts = new Text[5];
+        downArrows = new Rectangle[5];
+        popUpDownArrows = new Rectangle[5];
+        upArrows = new Rectangle[5];
+        popUpUpArrows = new Rectangle[5];
+        popUpCPtradeResCards = new Rectangle[5];
+        popUPtradeResCards = new Rectangle[5];
+        popUpTradeResCardLabels = new Rectangle[5];
+        popUpTradeResCardCounts = new Text[5];
+        int OFF = 25/2;
+        for (int y = 0; y < 5; y++) {
+            int i = y;
+            CPtradeSelectionValues[y] = 0;
+            Rectangle CPtradeResCard = new Rectangle(960+(225/2)+(46.25*y),72.5,40,57.5);
+            CPtradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            Rectangle downArrow = new Rectangle(960+(225/2)+(46.25*y)+20-9.5 ,25+(95/2)+60,19,9);
+            downArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowdown.png").toExternalForm())));
+            downArrows[y] = downArrow;
+            Text CPtradeResText = (new Text(960+(225/2)+20-12.5+6.5+(46.25*y), 25+(95/2)+28.75-12.5+20,"0"));
+            CPtradeResText.setFont(new Font(20));
+            CPtradeResText.setFill(Color.WHITE);
+            CPtradeSelectionTexts[y] = CPtradeResText;
+            CPtradeResCard.setOnMouseClicked(event ->
+            {
+                if (game.gameState == GameState.MAIN) {
+                    if (diceCanBeRolled == false) {
+                        if (event.getButton() == MouseButton.PRIMARY)
+                        {
+                            if ((CPtradeSelectionValues[i] < game.getCurrentPlayer().resourceCards.get(ResourceType.values()[i])) && tradeSelectionValues[i] == 0) {
+                                CPtradeSelectionValues[i]++;
+                                downArrows[i].setVisible(true);
+                            }
+                        } else if (event.getButton() == MouseButton.SECONDARY)
+                        {
+                            if (CPtradeSelectionValues[i] > 0) {
+                                CPtradeSelectionValues[i]--;
+                                if (CPtradeSelectionValues[i] == 0){
+                                    downArrows[i].setVisible(false);
+                                }
+                            }
+                        }
+                        CPtradeSelectionTexts[i].setText(String.valueOf(CPtradeSelectionValues[i]));
+                    } else {
+                        rollDiceFirstError();
+                        System.out.println("dice must be rolled first");
+                    }
+                }
+            });
+            Rectangle popUpCPtradeResCard = new Rectangle(495+(225/2)+(46.25*y),340+(95/2)-OFF,40,57.5);
+            popUpCPtradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            popUpCPtradeResCards[y] = popUpCPtradeResCard;
+
+            Rectangle popUpDownArrow = new Rectangle(495+(225/2)+(46.25*y)+20-9.5 ,340+(95/2)+60-OFF,19,9); //FIXME
+            popUpDownArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowdown.png").toExternalForm())));
+            popUpDownArrows[y] = popUpDownArrow;
+
+            Text popUpCPtradeResText = (new Text(495+(225/2)+20-12.5+6.5+(46.25*y), 340+(95/2)+28.75-12.5+20-OFF,"0")); //FIXME
+            popUpCPtradeResText.setFont(new Font(20));
+            popUpCPtradeResText.setFill(Color.WHITE);
+            popUpCPtradeSelectionTexts[y] = popUpCPtradeResText;
+
+            tradeSelectionValues[y] = 0;
+            Rectangle tradeResCard = new Rectangle(960+(225/2)+(46.25*y),167.5,40,57.5);
+            tradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            Rectangle upArrow = new Rectangle(960+(225/2)+(46.25*y)+20-9.5,156,19,9);
+            upArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowup.png").toExternalForm())));
+            upArrows[y] = upArrow;
+            Text tradeResText = (new Text(960+(225/2)+20-12.5+6.5+(46.25*y), 197.5-40+28.75-12.5+20+10,"0"));
+            tradeResText.setFont(new Font(20));
+            tradeResText.setFill(Color.WHITE);
+            tradeSelectionTexts[y] = tradeResText;
+            tradeResCard.setOnMouseClicked(event ->
+            {
+                if (game.gameState == GameState.MAIN) {
+                    if (diceCanBeRolled == false) {
+                        if (event.getButton() == MouseButton.PRIMARY)
+                        {
+                            if (CPtradeSelectionValues[i] == 0) {
+                                tradeSelectionValues[i]++;
+                                upArrows[i].setVisible(true);
+                            }
+                        } else if (event.getButton() == MouseButton.SECONDARY)
+                        {
+                            if (tradeSelectionValues[i] > 0) {
+                                tradeSelectionValues[i]--;
+                                if (tradeSelectionValues[i] == 0){
+                                    upArrows[i].setVisible(false);
+                                }
+                            }
+                        }
+                        tradeSelectionTexts[i].setText(String.valueOf(tradeSelectionValues[i]));
+                    } else {
+                        rollDiceFirstError();
+                        System.out.println("dice must be rolled first");
+                    }
+                }
+            });
+            Rectangle popUpTradeResCard = new Rectangle(607.5+(46.25*y),482.5-OFF,40,57.5);
+            popUpTradeResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            popUPtradeResCards[y] = popUpTradeResCard;
+
+            Rectangle popUpTradeResCardLabel = new Rectangle(607.5+(11.67)+(46.25*y),482.5+(46.67)-OFF,16.67,16.67);
+            popUpTradeResCardLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + "label.png").toExternalForm())));
+            popUpTradeResCardLabels[y] = popUpTradeResCardLabel;
+
+            Text popUpTradeResCardCount = (new Text(607.5+(11.67)+(46.25*y)+2.08, 482.5+(46.67)-OFF+13.33,"0"));
+            popUpTradeResCardCount.setFont(new Font(13.33));
+            popUpTradeResCardCounts[y] = popUpTradeResCardCount;
+
+            Rectangle popUpUpArrow = new Rectangle(495+(225/2)+(46.25*y)+20-9.5,340+(95/2)+95-11.5-OFF,19,9);
+            popUpUpArrow.setFill(new ImagePattern(new Image(this.getClass().getResource("arrowup.png").toExternalForm())));
+            popUpUpArrows[y] = popUpUpArrow;
+
+            Text popUpTradeResText = (new Text(495+(225/2)+20-12.5+6.5+(46.25*y), 340+(95/2)+28.75-12.5+20+95-OFF,"0"));
+            popUpTradeResText.setFont(new Font(20));
+            popUpTradeResText.setFill(Color.WHITE);
+            popUpTradeSelectionTexts[y] = popUpTradeResText;
+
+            upArrow.setVisible(false);
+            downArrow.setVisible(false);
+
+            popUpCPtradeResCard.setVisible(false);
+            popUpTradeResCardCount.setVisible(false);
+            popUpCPtradeResText.setVisible(false);
+            popUpTradeResCard.setVisible(false);
+            popUpTradeResCardLabel.setVisible(false);
+            popUpTradeResText.setVisible(false);
+            popUpDownArrow.setVisible(false);
+            popUpUpArrow.setVisible(false);
+
+            GUI.getChildren().addAll(CPtradeResCard,CPtradeResText,tradeResCard,tradeResText,downArrow,upArrow);
+            GUI.getChildren().addAll(popUpCPtradeResCard,popUpCPtradeResText,popUpTradeResCard,popUpTradeResText,popUpDownArrow,popUpUpArrow,popUpTradeResCardLabel,popUpTradeResCardCount);
+        }
+
+        Rectangle playerTradeButton = new Rectangle(960+(225/2)+(46.25*4)+40+16.75+12.5,72.5+57.5-17.5,51.2,17.5);
+        playerTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
+        playerTradeButton.setOnMouseClicked(event ->
+        {
+            if (game.gameState == GameState.MAIN) {
+                if (!diceCanBeRolled) {
+                    if (containsAllZeros(CPtradeSelectionValues) && containsAllZeros(tradeSelectionValues))
+                    {
+                        tradeCount = 0;
+                        playerTrade();
+                    } else {
+                        unfairTradeError();
+                    }
+                } else {
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
+                }
+            }
+        });
+
+        GUI.getChildren().addAll(playerTradeButton);
+
+        Rectangle bankTradeButton = new Rectangle(960+(225/2)+(46.25*4)+40+16.75+12.5,167.5+57.5-17.5,51.2,17.5);
+        bankTradeButton.setFill(new ImagePattern(new Image(this.getClass().getResource("trade.png").toExternalForm())));
+        bankTradeButton.setOnMouseClicked(event ->
+        {
+            if (game.gameState == GameState.MAIN) {
+                if (!diceCanBeRolled) {
+                    bankTrade();
+                } else {
+                    rollDiceFirstError();
+                    System.out.println("dice must be rolled first");
+                }
+            }
+            //TODO functionality
+            //TODO uses CPtradeSelectionValues
+        });
+        GUI.getChildren().add(bankTradeButton);
+
+        //---------------------TRADE POP-UP---------------------
+
+        selectTradePopUp = new Rectangle(0,0,1440,900);
+        selectTradePopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("selecttradepopup.png").toExternalForm())));
+        selectTradePopUp.setVisible(false);
+        tradePopUp = new Rectangle(0,0,1440,900);
+        tradePopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("tradepopup.png").toExternalForm())));
+        tradePopUp.setVisible(false);
+        popUpCPtradeIcon = new Rectangle(1045/2,391.25-(25/2),50,50);
+        popUpCPtradeIcon.setVisible(false);
+        popUpPlayerTradeIcon = new Rectangle(1045/2,486.25-(25/2),50,50);
+        popUpPlayerTradeIcon.setVisible(false);
+        GUI.getChildren().addAll(tradePopUp,popUpCPtradeIcon, popUpPlayerTradeIcon,selectTradePopUp);
+
+        acceptTrade = new Rectangle(792.5+42.5+(25/2),450-13.5-25,79,27);
+        acceptTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("accept.png").toExternalForm())));
+        acceptTrade.setVisible(false);
+        declineTrade = new Rectangle(792.5+42.5+(25/2),450-13.5+25,79,27);
+        declineTrade.setFill(new ImagePattern(new Image(this.getClass().getResource("decline.png").toExternalForm())));
+        declineTrade.setVisible(false);
+        GUI.getChildren().addAll(acceptTrade,declineTrade);
+
+        //---------------------END TURN POP-UP---------------------
+
+        endTurnPopUp = new Rectangle(0,0,1440,900);
+        endTurnPopUp.setVisible(false);
+        clickToContinueButton = new Rectangle(521.5,485,397,50.5);
+        clickToContinueButton.setFill(new ImagePattern(new Image(this.getClass().getResource("clicktocontinue.png").toExternalForm())));
+        clickToContinueButton.setVisible(false);
+        GUI.getChildren().addAll(endTurnPopUp, clickToContinueButton);
+
+        //---------------------WIN POP-UP---------------------
+
+        winMessage = new Rectangle(0,0,1440,900);
+        winMessage.setVisible(false);
+        GUI.getChildren().add(winMessage);
+
+        //---------------------ERRORS---------------------
+
+        notEnoughResourcesError = new Rectangle(644,712.5,270,42.5);
+        notEnoughResourcesError.setFill(new ImagePattern(new Image(this.getClass().getResource("notenoughresources.png").toExternalForm())));
+        notEnoughResourcesError.setVisible(false);
+        notEnoughResourcesError.toFront();
+        GUI.getChildren().add(notEnoughResourcesError);
+
+        cantPlaceRoadError = new Rectangle(644,712.5,270,42.5);
+        cantPlaceRoadError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplaceroad.png").toExternalForm())));
+        cantPlaceRoadError.setVisible(false);
+        cantPlaceRoadError.toFront();
+        GUI.getChildren().add(cantPlaceRoadError);
+
+        cantPlaceSettlementError = new Rectangle(581.5,712.5,332.5,42.5);
+        cantPlaceSettlementError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplacesettlement.png").toExternalForm())));
+        cantPlaceSettlementError.setVisible(false);
+        cantPlaceSettlementError.toFront();
+        GUI.getChildren().add(cantPlaceSettlementError);
+
+        rollDiceFirstError = new Rectangle(729,712.5,185,42.5);
+        rollDiceFirstError.setFill(new ImagePattern(new Image(this.getClass().getResource("rolldicefirst.png").toExternalForm())));
+        rollDiceFirstError.setVisible(false);
+        rollDiceFirstError.toFront();
+        GUI.getChildren().add(rollDiceFirstError);
+
+        tooManyRoadsError = new Rectangle(712.5,712.5,201.5,42.5);
+        tooManyRoadsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanyroads.png").toExternalForm())));
+        tooManyRoadsError.setVisible(false);
+        tooManyRoadsError.toFront();
+        GUI.getChildren().add(tooManyRoadsError);
+
+        tooManySettlementsError = new Rectangle(652,712.5,262,42.5);
+        tooManySettlementsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanysettlements.png").toExternalForm())));
+        tooManySettlementsError.setVisible(false);
+        tooManySettlementsError.toFront();
+        GUI.getChildren().add(tooManySettlementsError);
+
+        unfairTradeError = new Rectangle(743.5,712.5,170.5,42.5);
+        unfairTradeError.setFill(new ImagePattern(new Image(this.getClass().getResource("unfairtrade.png").toExternalForm())));
+        unfairTradeError.setVisible(false);
+        unfairTradeError.toFront();
+        GUI.getChildren().add(unfairTradeError);
+
+        tooManyCitiesError = new Rectangle(712.5,712.5,201.5,42.5);
+        tooManyCitiesError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanycities.png").toExternalForm())));
+        tooManyCitiesError.setVisible(false);
+        tooManyCitiesError.toFront();
+        GUI.getChildren().add(tooManyCitiesError);
+
+        GUI.getChildren().addAll(CPIcon, CPIconLabel,CPResCards,CPResCardsLabel, CPDevCards, CPDevCardsLabel, CPResCardsCount, CPLongestRoad, CPLargestArmy, CPDevCardsCount,CPLongestRoadValue,CPLargestArmyValue,CPVPCount);
         GUI.getChildren().addAll(buyRoadButton, buySettlementButton, buyCityButton, buyDevCardButton, endTurnButton, rollDiceButton);
         background.toBack();
     }
