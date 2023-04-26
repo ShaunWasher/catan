@@ -805,6 +805,12 @@ public class GUI {
         else{
             CPLongestRoadValue.setFill(Color.BLACK);
         }
+        if (game.getCurrentPlayer().getHasLargestArmy()){
+            CPLargestArmyValue.setFill(Color.web("ab0000"));
+        }
+        else{
+            CPLargestArmyValue.setFill(Color.BLACK);
+        }
         buyRoadButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buyroad.png").toExternalForm())));
         buySettlementButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buysettlement.png").toExternalForm())));
         buyCityButton.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"buycity.png").toExternalForm())));
@@ -834,6 +840,12 @@ public class GUI {
             }
             else{
                 playerLongestRoadValue[y].setFill(Color.BLACK);
+            }
+            if (nonActivePlayers.get(y).getHasLargestArmy()){
+                playerLargestArmyValue[y].setFill(Color.web("ab0000"));
+            }
+            else{
+                playerLargestArmyValue[y].setFill(Color.BLACK);
             }
             playerLargestArmyValue[y].setText(String.valueOf(nonActivePlayers.get(y).getArmySize()));
         }

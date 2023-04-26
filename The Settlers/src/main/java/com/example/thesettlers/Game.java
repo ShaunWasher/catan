@@ -107,6 +107,7 @@ public class Game {
         }
         //starting phase over
         gameState = GameState.MAIN;
+        currentPlayer.makeNewDevCardsActive();
         currentPlayer = players.get(turnCount%players.size());
         gui.refreshUI();
         gui.setDiceCanBeRolledTrue();
@@ -165,15 +166,19 @@ public class Game {
             gameBoard.transparency(true);
             //TODO take card from player
             getCurrentPlayer().increaseArmySize();
-            if(largestArmy == null){
+            if(largestArmy == null && getCurrentPlayer().getArmySize() >= 3){
                 largestArmy = getCurrentPlayer();
                 largestArmy.addVP(2);
+                largestArmy.setHasLargestArmy(true);
             }
-            else if(getCurrentPlayer().getArmySize()>largestArmy.getArmySize()){
+            else if(largestArmy != null && getCurrentPlayer().getArmySize()>largestArmy.getArmySize()){
                 largestArmy.addVP(-2);
+                largestArmy.setHasLargestArmy(false);
                 largestArmy = getCurrentPlayer();
                 largestArmy.addVP(2);
+                largestArmy.setHasLargestArmy(true);
             }
+            gui.refreshUI();
         }
     }
 
