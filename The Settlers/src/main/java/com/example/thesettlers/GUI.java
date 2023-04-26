@@ -738,14 +738,15 @@ public class GUI {
         {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
-                    bankTrade();
+                    if(game.bankTrade(CPtradeSelectionValues, tradeSelectionValues)){
+                        //TODO reset trade window values
+                        refreshUI();
+                    }
                 } else {
                     showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
-            //TODO functionality
-            //TODO uses CPtradeSelectionValues
         });
         GUI.getChildren().add(bankTradeButton);
 
@@ -984,10 +985,6 @@ public class GUI {
             }
         }
         return !allZeros;
-    }
-
-    public void bankTrade(){
-
     }
 
     public void playerTrade(){

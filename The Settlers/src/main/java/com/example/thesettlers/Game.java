@@ -283,6 +283,73 @@ public class Game {
         return false;
     }
 
+    public boolean bankTrade(Integer[] playerCards, Integer[] bankCards){
+        if(bankCards[0]+bankCards[1]+bankCards[2]+bankCards[3]+bankCards[4] != 1){
+            return false;
+            //TODO tell the player that only one card can be bought
+        }
+        int[] exchangeRates = new int[]{4,4,4,4,4};
+        boolean[] hasPorts = new boolean[]{false,false,false,false,false,false};
+        for(Settlement settlement: currentPlayer.getSettlements()) {
+            if (settlement.getPort() == PortType.BRICK) {
+                hasPorts[0] = true;
+            } else if (settlement.getPort() == PortType.LUMBER) {
+                hasPorts[1] = true;
+            } else if (settlement.getPort() == PortType.ORE) {
+                hasPorts[2] = true;
+            } else if (settlement.getPort() == PortType.GRAIN) {
+                hasPorts[3] = true;
+            } else if (settlement.getPort() == PortType.WOOL) {
+                hasPorts[4] = true;
+            } else if (settlement.getPort() == PortType.ANY) {
+                hasPorts[5] = true;
+            }
+        }
+        if(hasPorts[5]){
+            exchangeRates = new int[]{3,3,3,3,3};
+        }
+        if(hasPorts[0]){
+            exchangeRates[0] = 2;
+        }
+        if(hasPorts[1]){
+            exchangeRates[1] = 2;
+        }
+        if(hasPorts[2]){
+            exchangeRates[2] = 2;
+        }
+        if(hasPorts[3]){
+            exchangeRates[3] = 2;
+        }
+        if(hasPorts[4]){
+            exchangeRates[4] = 2;
+        }
+        if(playerCards[0]>=exchangeRates[0]){
+            currentPlayer.resourceCards.merge(ResourceType.BRICK, -exchangeRates[0], Integer::sum);
+        } else if(playerCards[1]>=exchangeRates[1]){
+            currentPlayer.resourceCards.merge(ResourceType.LUMBER, -exchangeRates[1], Integer::sum);
+        } else if(playerCards[2]>=exchangeRates[2]){
+            currentPlayer.resourceCards.merge(ResourceType.ORE, -exchangeRates[2], Integer::sum);
+        } else if(playerCards[3]>=exchangeRates[3]){
+            currentPlayer.resourceCards.merge(ResourceType.GRAIN, -exchangeRates[3], Integer::sum);
+        } else if(playerCards[4]>=exchangeRates[4]){
+            currentPlayer.resourceCards.merge(ResourceType.WOOL, -exchangeRates[4], Integer::sum);
+        } else {
+            return false;
+        }
+        if (bankCards[0] == 1){
+            currentPlayer.resourceCards.merge(ResourceType.BRICK, 1, Integer::sum);
+        } else if (bankCards[1] == 1){
+            currentPlayer.resourceCards.merge(ResourceType.LUMBER, 1, Integer::sum);
+        } else if (bankCards[2] == 1){
+            currentPlayer.resourceCards.merge(ResourceType.ORE, 1, Integer::sum);
+        } else if (bankCards[3] == 1){
+            currentPlayer.resourceCards.merge(ResourceType.GRAIN, 1, Integer::sum);
+        } else if (bankCards[4] == 1){
+            currentPlayer.resourceCards.merge(ResourceType.WOOL, 1, Integer::sum);
+        }
+        return true;
+    }
+
     public void winGame(){
         gui.winMessage();
         //TODO send data to UI to show scores
