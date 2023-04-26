@@ -1,6 +1,7 @@
 package com.example.thesettlers;
 
 import com.example.thesettlers.enums.*;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -128,6 +129,12 @@ public class Game {
     public void rollDice(int die1, int die2){
         if(die1+die2 == 7){
             gameBoard.transparency(true);
+            Platform.runLater(() -> {
+                if (getCurrentPlayer().getResourceCount() > 7){
+                    gui.throwAway();
+                }
+                // Update the GUI here
+            });
             //TODO take card from player
         }
         //for all settlements
@@ -437,5 +444,23 @@ public class Game {
             }
         }
     }
+
+    public boolean throwAwayCards(Integer[] throwAwayValues){
+        int throwCount = 0;
+        for (int y = 0; y < 5; y++) {
+           throwCount += throwAwayValues[y];
+        }
+        if (throwCount == (int) Math.floor(getCurrentPlayer().getResourceCount() / 2.0)){
+            for (int y = 0; y < 5; y++) {
+                getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(y),-throwAwayValues[y],Integer::sum);
+            }
+            gui.refreshUI();
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 
 }

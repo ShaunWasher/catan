@@ -35,7 +35,7 @@ public class GUI {
     private Pane developmentCards;
     private Rectangle dice2;
     private Rectangle dice1;
-    private Rectangle useDevCardPopUp;
+    private Rectangle yearOfPlentyPopUp;
     private Game game;
     private int tradeCount;
     private GameBoard gameBoard;
@@ -75,6 +75,7 @@ public class GUI {
     private Rectangle tooManyCitiesError;
     private Rectangle unfairTradeError;
     private Rectangle winMessage;
+    private Text discardCount;
     private Rectangle tradePopUp;
     private Rectangle developmentCardsUI;
     private Rectangle popUpCPtradeIcon;
@@ -99,11 +100,15 @@ public class GUI {
     private boolean diceCanBeRolled;
     private Group endTurn;
     private Rectangle[] yearOfPlentyResCards;
-    private Rectangle[] yearOfPlentyUpArrows;
-    private Rectangle[] yearOfPlentyDownArrows;
     private Text[] yearOfPlentyValueTexts;
     private Integer[] yearOfPlentyValues;
     private Group yearOfPlenty;
+    private Group throwAway;
+    private Rectangle[] throwAwayResCards;
+    private Text[] throwAwayValueTexts;
+    private Integer[] throwAwayValues;
+    private int throwAwayCount;
+    private int cardsToThrow;
     //endregion
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
@@ -139,12 +144,11 @@ public class GUI {
         Rectangle testBox = new Rectangle(100, 100, 100, 100);
         GUI.getChildren().add(testBox);
         testBox.setOnMouseClicked(e -> {
-            gameBoard.transparency(true);
-            game.getCurrentPlayer().resourceCards.merge(ResourceType.BRICK, 100, Integer::sum);
-            game.getCurrentPlayer().resourceCards.merge(ResourceType.LUMBER, 100, Integer::sum);
-            game.getCurrentPlayer().resourceCards.merge(ResourceType.GRAIN, 100, Integer::sum);
-            game.getCurrentPlayer().resourceCards.merge(ResourceType.WOOL, 100, Integer::sum);
-            game.getCurrentPlayer().resourceCards.merge(ResourceType.ORE, 100, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.BRICK, 5, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.LUMBER, 5, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.GRAIN, 5, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.WOOL, 5, Integer::sum);
+            game.getCurrentPlayer().resourceCards.merge(ResourceType.ORE, 5, Integer::sum);
         });
         //FIXME
 
@@ -222,11 +226,11 @@ public class GUI {
             }
         });
 
-        useDevCardPopUp = new Rectangle(0,0,1440,900);
-        useDevCardPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("usedevpopup.png").toExternalForm())));
+        yearOfPlentyPopUp = new Rectangle(0,0,1440,900);
+        yearOfPlentyPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentypopup.png").toExternalForm())));
 
         confirmButton = new Rectangle(636.475,494+5,167.05,32.5);
-        confirmButton.setFill(new ImagePattern(new Image(this.getClass().getResource("takecards.png").toExternalForm())));
+        confirmButton.setFill(new ImagePattern(new Image(this.getClass().getResource("confirm.png").toExternalForm())));
 
         Tooltip clickToUse = new Tooltip();
         ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clickToUse.png").toExternalForm()));
@@ -249,7 +253,6 @@ public class GUI {
         Rectangle VPCard = new Rectangle(72.5 + 70, 610 + 25, 60, 84);
         VPCard.setFill(new ImagePattern(new Image(this.getClass().getResource("vpcard.png").toExternalForm())));
 
-
         //---------------------ROAD BUILDING---------------------
 
         Rectangle roadBuildingCard = new Rectangle(72.5 + (70 * 2), 610 + 25, 60, 84);
@@ -262,7 +265,7 @@ public class GUI {
 
         //---------------------YEAR OF PLENTY---------------------
 
-        yearOfPlenty = new Group(useDevCardPopUp,confirmButton);
+        yearOfPlenty = new Group(yearOfPlentyPopUp,confirmButton);
         yearOfPlentyResCards = new Rectangle[5];
         yearOfPlentyValueTexts = new Text[5];
         yearOfPlentyValues = new Integer[5];
@@ -796,6 +799,53 @@ public class GUI {
         declineTrade.setVisible(false);
         GUI.getChildren().addAll(acceptTrade,declineTrade);
 
+        //---------------------THROW AWAY CARDS---------------------
+
+        Rectangle throwAwayPopUp = new Rectangle(0,0,1440,900);
+        throwAwayPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("throwawaypopup.png").toExternalForm())));
+
+        discardCount = (new Text(697.5, 370, "0")); //FIXME
+        discardCount.setFont(new Font(25));
+        discardCount.setFill(Color.WHITE);
+
+        throwAway = new Group(throwAwayPopUp,confirmButton,discardCount);
+        throwAwayResCards = new Rectangle[5];
+        throwAwayValueTexts = new Text[5];
+        throwAwayValues = new Integer[5];
+        throwAwayCount = 0;
+
+        for (int y = 0; y < 5; y++) {
+            int i = y;
+            throwAwayValues[y] = 0;
+            Rectangle throwAwayResCard = new Rectangle(495 + (225 / 2) + (46.25 * y), 340 + (95 / 2) - OFF +25+10+12.5, 40, 57.5);
+            throwAwayResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            throwAwayResCards[y] = throwAwayResCard;
+            Text throwAwayValueText = (new Text(495 + (225 / 2) + 20 - 12.5 + 6.5 + (46.25 * y), 340 + (95 / 2) + 28.75 - 12.5 + 20 - OFF +25+10+12.5, "0")); //FIXME
+            throwAwayValueText.setFont(new Font(20));
+            throwAwayValueText.setFill(Color.WHITE);
+            throwAwayValueTexts[y] = throwAwayValueText;
+            throwAway.getChildren().addAll(throwAwayResCard, throwAwayValueText);
+            throwAwayResCard.setOnMouseClicked(event ->
+            {
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    if ((throwAwayValues[i] < game.getCurrentPlayer().resourceCards.get(ResourceType.values()[i])) && throwAwayCount < (int) Math.floor(game.getCurrentPlayer().getResourceCount() / 2.0)) {
+                        throwAwayValues[i]++;
+                        throwAwayCount++;
+                    }
+
+                } else if (event.getButton() == MouseButton.SECONDARY) {
+                    if (throwAwayValues[i] > 0) {
+                        throwAwayValues[i]--;
+                        throwAwayCount--;
+                    }
+                }
+                throwAwayValueTexts[i].setText(String.valueOf(throwAwayValues[i]));
+            });
+        }
+        throwAway.setVisible(false);
+        throwAway.toFront();
+        GUI.getChildren().add(throwAway);
+
         //---------------------END TURN POP-UP---------------------
 
         endTurnPopUp = new Rectangle(0,0,1440,900);
@@ -850,6 +900,7 @@ public class GUI {
 
 
         GUI.getChildren().addAll(errors,endTurn);
+        throwAway.toFront();
     }
 
     public void showRoads(){
@@ -1254,7 +1305,23 @@ public class GUI {
 
     }
 
+    public void throwAway(){
+        discardCount.setText(String.valueOf((int) Math.floor(game.getCurrentPlayer().getResourceCount() / 2.0)));
+        throwAway.setVisible(true);
+        throwAway.toFront();
+        confirmButton.setOnMouseClicked(ee ->{
+            if (game.throwAwayCards(throwAwayValues)){
+                throwAwayCount = 0;
+                cardsToThrow = 0;
+                Arrays.stream(throwAwayValueTexts).forEach(text -> text.setText("0"));
+                Arrays.fill(throwAwayValues, 0);
+                throwAway.setVisible(false);
+            }
+        });
+    }
+
     public Pane getPermanentPane() {
         return permanentPane;
     }
+
 }

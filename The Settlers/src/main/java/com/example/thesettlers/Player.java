@@ -20,6 +20,7 @@ public class Player {
     private int victoryPoints;
     private int longestRoadLength;
     private int armySize;
+    private int resourceCount;
     private Game game;
     private EnumMap<DevelopmentCardType,Integer> developmentCardCount;
     public Player(int playerNumber, Game game){
@@ -284,6 +285,14 @@ public class Player {
     }
     public boolean getHasLargestArmy() {
         return hasLargestArmy;
+    }
+
+    public int getResourceCount() {
+        resourceCount = 0;
+        for (int y = 0; y < 5; y++) {
+            resourceCount += resourceCards.get(ResourceType.values()[y]);
+        }
+        return resourceCount;
     }
 }
 
