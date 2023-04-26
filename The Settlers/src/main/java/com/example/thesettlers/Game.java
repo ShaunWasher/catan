@@ -107,6 +107,7 @@ public class Game {
         }
         //starting phase over
         gameState = GameState.MAIN;
+        currentPlayer.makeNewDevCardsActive();
         currentPlayer = players.get(turnCount%players.size());
         gui.refreshUI();
         gui.setDiceCanBeRolledTrue();

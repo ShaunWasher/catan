@@ -15,6 +15,7 @@ public class Player {
     private int roadCount;
     EnumMap<ResourceType,Integer> resourceCards;
     private ArrayList<DevelopmentCard> developmentCards;
+    private ArrayList<DevelopmentCard> newDevelopmentCards;
     private int victoryPoints;
     private int longestRoadLength;
     private int armySize;
@@ -30,6 +31,7 @@ public class Player {
         resourceCards.put(ResourceType.LUMBER,0);
         resourceCards.put(ResourceType.GRAIN,0);
         developmentCards = new ArrayList<>();
+        newDevelopmentCards = new ArrayList<>();
         developmentCardCount = new EnumMap<>(DevelopmentCardType.class);
         developmentCardCount.put(DevelopmentCardType.KNIGHT,0);
         developmentCardCount.put(DevelopmentCardType.VP,0);
@@ -157,8 +159,11 @@ public class Player {
             developmentCardCount.put(devCard.getCardType(),developmentCardCount.get(devCard.getCardType())+1);
             if (devCard.getCardType() == DevelopmentCardType.VP){
                 addVP();
+                developmentCards.add(devCard);
             }
-            developmentCards.add(devCard);
+            else{
+                newDevelopmentCards.add(devCard);
+            }
         }
         else{
             throw new Exception("not enough resources");
@@ -167,17 +172,15 @@ public class Player {
 
     public boolean useDevCard(DevelopmentCardType type){
         if (developmentCardCount.get(type) != 0) {
-            developmentCardCount.put(type, developmentCardCount.get(type) - 1);
             for(DevelopmentCard card: developmentCards){
-                if(card.getCardType() == type && type == DevelopmentCardType.KNIGHT){
+                if(card.getCardType() == type){
                     developmentCards.remove(card);
-                    return true;
-                } else if(card.getCardType() == type){
-                    developmentCards.remove(card);
-                    game.returnDevCard(card);
+                    developmentCardCount.put(type, developmentCardCount.get(type) - 1);
                     return true;
                 }
             }
+            //TODO make the UI say "cant play the card this turn"
+            System.out.println("cant play the card this turn");
         }
         return false;
     }
@@ -248,6 +251,11 @@ public class Player {
     // returns get dev cards as an int array
     public int[] getDevelopmentCardCount() {
         return new int[]{developmentCardCount.get(DevelopmentCardType.KNIGHT),developmentCardCount.get(DevelopmentCardType.VP),developmentCardCount.get(DevelopmentCardType.ROADBUILDING),developmentCardCount.get(DevelopmentCardType.YEAROFPLENTY),developmentCardCount.get(DevelopmentCardType.MONOPOLY)};
+    }
+
+    public void makeNewDevCardsActive(){
+        developmentCards.addAll(newDevelopmentCards);
+        newDevelopmentCards.clear();
     }
 
     public ArrayList<Settlement> getSettlements() {
