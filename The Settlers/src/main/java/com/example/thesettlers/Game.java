@@ -220,11 +220,13 @@ public class Game {
         gui.refreshUI();
     }
 
-    public boolean useMonopolyCard(){
-        if(getCurrentPlayer().useDevCard(DevelopmentCardType.MONOPOLY)){
-            //TODO add card functionality
+    public void useMonopolyCard(ResourceType monopolyResType){
+        for (Player nonActivePlayer : players) {
+            int value = nonActivePlayer.resourceCards.get(monopolyResType);
+            currentPlayer.getResourceCards().merge(monopolyResType, value, Integer::sum);
+            nonActivePlayer.getResourceCards().merge(monopolyResType, -value, Integer::sum);
         }
-        return false;
+        gui.refreshUI();
     }
 
     public boolean buySettlement(Settlement settlement){

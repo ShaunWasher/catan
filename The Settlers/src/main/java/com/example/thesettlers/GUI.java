@@ -28,14 +28,13 @@ public class GUI {
     Random random = new Random();
     private Pane GUI = new Pane();
     private Pane boardPane;
-    private Rectangle confirmButton;
+    private Rectangle takeCardsButton;
     private Pane settlementPane;
     private Pane roadPane;
     private Pane permanentPane;
     private Pane developmentCards;
     private Rectangle dice2;
     private Rectangle dice1;
-    private Rectangle yearOfPlentyPopUp;
     private Game game;
     private int tradeCount;
     private GameBoard gameBoard;
@@ -50,6 +49,7 @@ public class GUI {
     private Rectangle[] popUpCPtradeResCards;
     private Rectangle[] popUPtradeResCards;
     private Text[] currentResourceValues;
+    private Rectangle discardButton;
     private Text[] resCardsCount;
     private Text[] devCardsCount;
     private Text[] VPCount;
@@ -108,7 +108,11 @@ public class GUI {
     private Text[] throwAwayValueTexts;
     private Integer[] throwAwayValues;
     private int throwAwayCount;
-    private int cardsToThrow;
+    private Rectangle[] monopolyResCards;
+    private ResourceType monopolyResType;
+    private Rectangle confirmButton;
+
+    private Group monopoly;
     //endregion
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
@@ -226,12 +230,6 @@ public class GUI {
             }
         });
 
-        yearOfPlentyPopUp = new Rectangle(0,0,1440,900);
-        yearOfPlentyPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentypopup.png").toExternalForm())));
-
-        confirmButton = new Rectangle(636.475,494+5,167.05,32.5);
-        confirmButton.setFill(new ImagePattern(new Image(this.getClass().getResource("confirm.png").toExternalForm())));
-
         Tooltip clickToUse = new Tooltip();
         ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clickToUse.png").toExternalForm()));
         clickToUseImg.setPreserveRatio(true);
@@ -265,7 +263,13 @@ public class GUI {
 
         //---------------------YEAR OF PLENTY---------------------
 
-        yearOfPlenty = new Group(yearOfPlentyPopUp,confirmButton);
+        Rectangle yearOfPlentyPopUp = new Rectangle(0,0,1440,900);
+        yearOfPlentyPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentypopup.png").toExternalForm())));
+
+        takeCardsButton = new Rectangle(636.475,494+5,167.05,32.5);
+        takeCardsButton.setFill(new ImagePattern(new Image(this.getClass().getResource("takecards.png").toExternalForm())));
+
+        yearOfPlenty = new Group(yearOfPlentyPopUp, takeCardsButton);
         yearOfPlentyResCards = new Rectangle[5];
         yearOfPlentyValueTexts = new Text[5];
         yearOfPlentyValues = new Integer[5];
@@ -310,7 +314,7 @@ public class GUI {
                 developmentCards.setVisible(false);
                 yearOfPlenty.setVisible(true);
                 yearOfPlenty.toFront();
-                confirmButton.setOnMouseClicked(ee ->{
+                takeCardsButton.setOnMouseClicked(ee ->{
                     game.useYearOfPlentyCard(yearOfPlentyValues);
                     yearOfPlentyCount = 0;
                     Arrays.fill(yearOfPlentyValues, 0);
@@ -321,11 +325,52 @@ public class GUI {
 
         //---------------------MONOPOLY---------------------
 
+        Rectangle monopolyPopUp = new Rectangle(0,0,1440,900);
+        monopolyPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolypopup.png").toExternalForm())));
+
+        confirmButton = new Rectangle(636.475,494+5,167.05,32.5);
+        confirmButton.setFill(new ImagePattern(new Image(this.getClass().getResource("confirm.png").toExternalForm())));
+
+        monopoly = new Group(monopolyPopUp, confirmButton);
+        monopolyResCards = new Rectangle[5];
+        monopolyResType = null;
+        for (int y = 0; y < 5; y++) {
+            int i = y;
+            Rectangle monopolyResCard = new Rectangle(495 + (225 / 2) + (46.25 * y), 340 + (95 / 2) - OFF +25+10+12.5, 40, 57.5);
+            monopolyResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            monopolyResCards[y] = monopolyResCard;
+            monopoly.getChildren().addAll(monopolyResCard);
+            monopolyResCard.setOnMouseClicked(event ->
+            {
+                for (Rectangle card : monopolyResCards) {
+                    card.setStroke(Color.TRANSPARENT);
+                }
+                monopolyResCard.setStroke(Color.WHITE);
+                monopolyResCard.setStrokeWidth(2);
+                monopolyResType = ResourceType.getByIndex(i);
+            });
+        }
+        monopoly.setVisible(false);
+        GUI.getChildren().add(monopoly);
+
         Rectangle monopolyCard = new Rectangle(72.5+(70 * 4), 610+25, 60, 84);
         monopolyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("monopolycard.png").toExternalForm())));
         Tooltip.install(monopolyCard,clickToUse);
         monopolyCard.setOnMouseClicked(e -> {
-            game.useMonopolyCard();
+            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.MONOPOLY)){
+                developmentCards.setVisible(false);
+                monopoly.setVisible(true);
+                monopoly.toFront();
+                confirmButton.setOnMouseClicked(ee ->{
+                    game.useMonopolyCard(monopolyResType);
+                    monopolyResType = null;
+                    for (Rectangle card : monopolyResCards) {
+                        card.setStroke(Color.TRANSPARENT);
+                    }
+                    monopoly.setVisible(false);
+
+                });
+            }
         });
 
         developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);
@@ -766,7 +811,14 @@ public class GUI {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
                     if(game.bankTrade(CPtradeSelectionValues, tradeSelectionValues)){
-                        //TODO reset trade window values
+                        for (int y = 0; y < 5; y++) {
+                            CPtradeSelectionValues[y] = 0;
+                            CPtradeSelectionTexts[y].setText("0");
+                            tradeSelectionValues[y] = 0;
+                            tradeSelectionTexts[y].setText("0");
+                            downArrows[y].setVisible(false);
+                            upArrows[y].setVisible(false);
+                        }
                         refreshUI();
                     }
                 } else {
@@ -804,11 +856,14 @@ public class GUI {
         Rectangle throwAwayPopUp = new Rectangle(0,0,1440,900);
         throwAwayPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("throwawaypopup.png").toExternalForm())));
 
-        discardCount = (new Text(697.5, 370, "0")); //FIXME
+        discardButton = new Rectangle(636.475,494+5,167.05,32.5);
+        discardButton.setFill(new ImagePattern(new Image(this.getClass().getResource("confirm.png").toExternalForm())));
+
+        discardCount = (new Text(697.5, 370, "0"));
         discardCount.setFont(new Font(25));
         discardCount.setFill(Color.WHITE);
 
-        throwAway = new Group(throwAwayPopUp,confirmButton,discardCount);
+        throwAway = new Group(throwAwayPopUp,discardButton,discardCount);
         throwAwayResCards = new Rectangle[5];
         throwAwayValueTexts = new Text[5];
         throwAwayValues = new Integer[5];
@@ -820,7 +875,7 @@ public class GUI {
             Rectangle throwAwayResCard = new Rectangle(495 + (225 / 2) + (46.25 * y), 340 + (95 / 2) - OFF +25+10+12.5, 40, 57.5);
             throwAwayResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
             throwAwayResCards[y] = throwAwayResCard;
-            Text throwAwayValueText = (new Text(495 + (225 / 2) + 20 - 12.5 + 6.5 + (46.25 * y), 340 + (95 / 2) + 28.75 - 12.5 + 20 - OFF +25+10+12.5, "0")); //FIXME
+            Text throwAwayValueText = (new Text(495 + (225 / 2) + 20 - 12.5 + 6.5 + (46.25 * y), 340 + (95 / 2) + 28.75 - 12.5 + 20 - OFF +25+10+12.5, "0"));
             throwAwayValueText.setFont(new Font(20));
             throwAwayValueText.setFill(Color.WHITE);
             throwAwayValueTexts[y] = throwAwayValueText;
@@ -1309,10 +1364,9 @@ public class GUI {
         discardCount.setText(String.valueOf((int) Math.floor(game.getCurrentPlayer().getResourceCount() / 2.0)));
         throwAway.setVisible(true);
         throwAway.toFront();
-        confirmButton.setOnMouseClicked(ee ->{
+        discardButton.setOnMouseClicked(ee ->{
             if (game.throwAwayCards(throwAwayValues)){
                 throwAwayCount = 0;
-                cardsToThrow = 0;
                 Arrays.stream(throwAwayValueTexts).forEach(text -> text.setText("0"));
                 Arrays.fill(throwAwayValues, 0);
                 throwAway.setVisible(false);
