@@ -4,6 +4,8 @@ import com.example.thesettlers.enums.DevelopmentCardType;
 import com.example.thesettlers.enums.GameState;
 import com.example.thesettlers.enums.ResourceType;
 import javafx.animation.FadeTransition;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -92,6 +94,7 @@ public class GUI {
     private Text[]  popUpTradeResCardCounts;
     private ArrayList<Player> acceptedTrades;
     private boolean diceCanBeRolled;
+    private Group endTurn;
     //endregion
     //TODO NEATEN THIS CLASS
     //TODO RENAME THINGS TO MEANINGFUL NAMES
@@ -223,7 +226,7 @@ public class GUI {
                 if (!diceCanBeRolled) {
                     developmentCards.setVisible(!developmentCards.isVisible());
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -288,13 +291,13 @@ public class GUI {
                             //make only places where you can place roads available
                             showRoads();
                         } else {
-                            notEnoughResourcesError();
+                            showError(notEnoughResourcesError);
                         }
                     } else {
-                        tooManyRoadsError();
+                        showError(tooManyRoadsError);
                     }
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -333,13 +336,13 @@ public class GUI {
                             }
                             settlementPane.setVisible(!settlementPane.isVisible());
                         } else {
-                            notEnoughResourcesError();
+                            showError(notEnoughResourcesError);
                         }
                     } else {
-                        tooManySettlementsError();
+                        showError(tooManySettlementsError);
                     }
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -360,13 +363,13 @@ public class GUI {
                         if (game.getCurrentPlayer().getResourceCards().get(ResourceType.ORE) > 2 && game.getCurrentPlayer().getResourceCards().get(ResourceType.GRAIN) > 1) {
                             roadPane.setVisible(false);
                         } else {
-                            notEnoughResourcesError();
+                            showError(notEnoughResourcesError);
                         }
                     } else {
-                        tooManyCitiesError();
+                        showError(tooManyCitiesError);
                     }
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -392,10 +395,10 @@ public class GUI {
                         }
                         developmentCards.setVisible(true);
                     } else {
-                        notEnoughResourcesError();
+                        showError(notEnoughResourcesError);
                     }
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -412,7 +415,7 @@ public class GUI {
                     game.nextPlayer();
                     endTurnMenu();
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -563,7 +566,7 @@ public class GUI {
                         }
                         CPtradeSelectionTexts[i].setText(String.valueOf(CPtradeSelectionValues[i]));
                     } else {
-                        rollDiceFirstError();
+                        showError(rollDiceFirstError);
                         System.out.println("dice must be rolled first");
                     }
                 }
@@ -612,7 +615,7 @@ public class GUI {
                         }
                         tradeSelectionTexts[i].setText(String.valueOf(tradeSelectionValues[i]));
                     } else {
-                        rollDiceFirstError();
+                        showError(rollDiceFirstError);
                         System.out.println("dice must be rolled first");
                     }
                 }
@@ -665,10 +668,10 @@ public class GUI {
                         tradeCount = 0;
                         playerTrade();
                     } else {
-                        unfairTradeError();
+                        showError(unfairTradeError);
                     }
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -684,7 +687,7 @@ public class GUI {
                 if (!diceCanBeRolled) {
                     bankTrade();
                 } else {
-                    rollDiceFirstError();
+                    showError(rollDiceFirstError);
                     System.out.println("dice must be rolled first");
                 }
             }
@@ -718,11 +721,10 @@ public class GUI {
         //---------------------END TURN POP-UP---------------------
 
         endTurnPopUp = new Rectangle(0,0,1440,900);
-        endTurnPopUp.setVisible(false);
         clickToContinueButton = new Rectangle(521.5,485,397,50.5);
         clickToContinueButton.setFill(new ImagePattern(new Image(this.getClass().getResource("clicktocontinue.png").toExternalForm())));
-        clickToContinueButton.setVisible(false);
-        GUI.getChildren().addAll(endTurnPopUp, clickToContinueButton);
+        endTurn = new Group(endTurnPopUp,clickToContinueButton);
+        endTurn.setVisible(false);
 
         //---------------------WIN POP-UP---------------------
 
@@ -734,55 +736,42 @@ public class GUI {
 
         notEnoughResourcesError = new Rectangle(644,712.5,270,42.5);
         notEnoughResourcesError.setFill(new ImagePattern(new Image(this.getClass().getResource("notenoughresources.png").toExternalForm())));
-        notEnoughResourcesError.setVisible(false);
-        notEnoughResourcesError.toFront();
-        GUI.getChildren().add(notEnoughResourcesError);
 
         cantPlaceRoadError = new Rectangle(644,712.5,270,42.5);
         cantPlaceRoadError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplaceroad.png").toExternalForm())));
-        cantPlaceRoadError.setVisible(false);
-        cantPlaceRoadError.toFront();
-        GUI.getChildren().add(cantPlaceRoadError);
 
         cantPlaceSettlementError = new Rectangle(581.5,712.5,332.5,42.5);
         cantPlaceSettlementError.setFill(new ImagePattern(new Image(this.getClass().getResource("cantplacesettlement.png").toExternalForm())));
-        cantPlaceSettlementError.setVisible(false);
-        cantPlaceSettlementError.toFront();
-        GUI.getChildren().add(cantPlaceSettlementError);
 
         rollDiceFirstError = new Rectangle(729,712.5,185,42.5);
         rollDiceFirstError.setFill(new ImagePattern(new Image(this.getClass().getResource("rolldicefirst.png").toExternalForm())));
-        rollDiceFirstError.setVisible(false);
-        rollDiceFirstError.toFront();
-        GUI.getChildren().add(rollDiceFirstError);
 
         tooManyRoadsError = new Rectangle(712.5,712.5,201.5,42.5);
         tooManyRoadsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanyroads.png").toExternalForm())));
-        tooManyRoadsError.setVisible(false);
-        tooManyRoadsError.toFront();
-        GUI.getChildren().add(tooManyRoadsError);
 
         tooManySettlementsError = new Rectangle(652,712.5,262,42.5);
         tooManySettlementsError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanysettlements.png").toExternalForm())));
-        tooManySettlementsError.setVisible(false);
-        tooManySettlementsError.toFront();
-        GUI.getChildren().add(tooManySettlementsError);
 
         unfairTradeError = new Rectangle(743.5,712.5,170.5,42.5);
         unfairTradeError.setFill(new ImagePattern(new Image(this.getClass().getResource("unfairtrade.png").toExternalForm())));
-        unfairTradeError.setVisible(false);
-        unfairTradeError.toFront();
-        GUI.getChildren().add(unfairTradeError);
 
         tooManyCitiesError = new Rectangle(712.5,712.5,201.5,42.5);
         tooManyCitiesError.setFill(new ImagePattern(new Image(this.getClass().getResource("toomanycities.png").toExternalForm())));
-        tooManyCitiesError.setVisible(false);
-        tooManyCitiesError.toFront();
-        GUI.getChildren().add(tooManyCitiesError);
+
+        Group errors = new Group(notEnoughResourcesError,cantPlaceRoadError,cantPlaceSettlementError,rollDiceFirstError,tooManyRoadsError,tooManySettlementsError,unfairTradeError,tooManyCitiesError);
+        for (Node node : errors.getChildren()) {
+            if (node instanceof Rectangle) {
+                node.setVisible(false);
+            }
+        }
 
         GUI.getChildren().addAll(CPIcon, CPIconLabel,CPResCards,CPResCardsLabel, CPDevCards, CPDevCardsLabel, CPResCardsCount, CPLongestRoad, CPLargestArmy, CPDevCardsCount,CPLongestRoadValue,CPLargestArmyValue,CPVPCount);
         GUI.getChildren().addAll(buyRoadButton, buySettlementButton, buyCityButton, buyDevCardButton, endTurnButton, rollDiceButton);
         background.toBack();
+
+
+
+        GUI.getChildren().addAll(errors,endTurn);
     }
 
     public void showRoads(){
@@ -887,117 +876,24 @@ public class GUI {
         };
         thread.start();
     }
-    public void notEnoughResourcesError(){
-        notEnoughResourcesError.setVisible(true);
-        FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
-        fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
-        fade.setFromValue(10);
-        fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(notEnoughResourcesError);
-        //playing the transition
-        fade.play();
-    }
 
-    public void unfairTradeError(){
-        unfairTradeError.setVisible(true);
+    public void showError(Node errorNode) {
+        errorNode.setVisible(true);
         FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
         fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
         fade.setFromValue(10);
         fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(unfairTradeError);
-        //playing the transition
+        fade.setNode(errorNode);
         fade.play();
     }
 
     public void cantPlaceSettlementError(){
-        cantPlaceSettlementError.setVisible(true);
-        FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
-        fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
-        fade.setFromValue(10);
-        fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(cantPlaceSettlementError);
-        //playing the transition
-        fade.play();
+        showError(cantPlaceSettlementError);
     }
 
     public void cantPlaceRoadError(){
-        cantPlaceRoadError.setVisible(true);
-        FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
-        fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
-        fade.setFromValue(10);
-        fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(cantPlaceRoadError);
-        //playing the transition
-        fade.play();
+        showError(cantPlaceRoadError);
     }
-
-    public void rollDiceFirstError(){
-        rollDiceFirstError.setVisible(true);
-        FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
-        fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
-        fade.setFromValue(10);
-        fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(rollDiceFirstError);
-        //playing the transition
-        fade.play();
-    }
-
-    public void tooManyRoadsError(){
-        tooManyRoadsError.setVisible(true);
-        FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
-        fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
-        fade.setFromValue(10);
-        fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(tooManyRoadsError);
-        //playing the transition
-        fade.play();
-    }
-
-    public void tooManySettlementsError(){
-        tooManySettlementsError.setVisible(true);
-        FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
-        fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
-        fade.setFromValue(10);
-        fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(tooManySettlementsError);
-        //playing the transition
-        fade.play();
-    }
-    public void tooManyCitiesError(){
-        tooManyCitiesError.setVisible(true);
-        FadeTransition fade = new FadeTransition();
-        //setting the duration for the Fade transition
-        fade.setDuration(Duration.millis(3500));
-        //setting the initial and the target opacity value for the transition
-        fade.setFromValue(10);
-        fade.setToValue(0);
-        //setting Circle as the node onto which the transition will be applied
-        fade.setNode(tooManyCitiesError);
-        //playing the transition
-        fade.play();
-    }
-
 
     public void endTurnMenu(){
         for (int y = 0; y < 5; y++) {
@@ -1008,14 +904,11 @@ public class GUI {
             downArrows[y].setVisible(false);
             upArrows[y].setVisible(false);
         }
-        endTurnPopUp.setVisible(true);
+        endTurn.setVisible(true);
+        endTurn.toFront();
         endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
-        endTurnPopUp.toFront();
-        clickToContinueButton.setVisible(true);
-        clickToContinueButton.toFront();
         clickToContinueButton.setOnMouseClicked(ee -> {
-            endTurnPopUp.setVisible(false);
-            clickToContinueButton.setVisible(false);
+            endTurn.setVisible(false);
         });
     }
 
@@ -1044,14 +937,11 @@ public class GUI {
     }
 
     public void playerTrade(){
-        endTurnPopUp.setVisible(true);
+        endTurn.setVisible(true);
+        endTurn.toFront();
         endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(nonActivePlayers.get(tradeCount).getPlayerID())+"endturn.png").toExternalForm())));
-        endTurnPopUp.toFront();
-        clickToContinueButton.setVisible(true);
-        clickToContinueButton.toFront();
         clickToContinueButton.setOnMouseClicked(e -> {
-            endTurnPopUp.setVisible(false);
-            clickToContinueButton.setVisible(false);
+            endTurn.setVisible(false);
             tradePopUp.setVisible(true);
             tradePopUp.toFront();
             popUpCPtradeIcon.setVisible(true);
@@ -1119,14 +1009,11 @@ public class GUI {
                         playerTrade();
                     }
                     else {
-                        endTurnPopUp.setVisible(true);
+                        endTurn.setVisible(true);
+                        endTurn.toFront();
                         endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
-                        endTurnPopUp.toFront();
-                        clickToContinueButton.setVisible(true);
-                        clickToContinueButton.toFront();
                         clickToContinueButton.setOnMouseClicked(eee -> {
-                            endTurnPopUp.setVisible(false);
-                            clickToContinueButton.setVisible(false);
+                            endTurn.setVisible(false);
                             Rectangle[] tradeOptions = new Rectangle[acceptedTrades.size()];
                             if (acceptedTrades.size() > 1){
                                 selectTradePopUp.setVisible(true);
@@ -1216,14 +1103,11 @@ public class GUI {
                     playerTrade();
                 }
                 else {
-                    endTurnPopUp.setVisible(true);
+                    endTurn.setVisible(true);
+                    endTurn.toFront();
                     endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
-                    endTurnPopUp.toFront();
-                    clickToContinueButton.setVisible(true);
-                    clickToContinueButton.toFront();
                     clickToContinueButton.setOnMouseClicked(eee -> {
-                        endTurnPopUp.setVisible(false);
-                        clickToContinueButton.setVisible(false);
+                        endTurn.setVisible(false);
                         Rectangle[] tradeOptions = new Rectangle[acceptedTrades.size()];
                         if (acceptedTrades.size() > 1){
                             selectTradePopUp.setVisible(true);
