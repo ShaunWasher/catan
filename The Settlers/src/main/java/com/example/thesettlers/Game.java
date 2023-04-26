@@ -206,11 +206,11 @@ public class Game {
         }
     }
 
-    public boolean useYearOfPlentyCard(){
-        if(getCurrentPlayer().useDevCard(DevelopmentCardType.YEAROFPLENTY)){
-            //TODO add card functionality
+    public void useYearOfPlentyCard(Integer[] yearOfPlentyValues){
+        for (int y = 0; y < 5; y++) {
+            getCurrentPlayer().getResourceCards().merge(ResourceType.getByIndex(y),yearOfPlentyValues[y],Integer::sum);
         }
-        return false;
+        gui.refreshUI();
     }
 
     public boolean useMonopolyCard(){

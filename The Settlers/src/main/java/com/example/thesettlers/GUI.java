@@ -28,12 +28,14 @@ public class GUI {
     Random random = new Random();
     private Pane GUI = new Pane();
     private Pane boardPane;
+    private Rectangle confirmButton;
     private Pane settlementPane;
     private Pane roadPane;
     private Pane permanentPane;
     private Pane developmentCards;
     private Rectangle dice2;
     private Rectangle dice1;
+    private Rectangle useDevCardPopUp;
     private Game game;
     private int tradeCount;
     private GameBoard gameBoard;
@@ -118,10 +120,10 @@ public class GUI {
         developmentCards = new Pane();
         developmentCards.setVisible(false);
         permanentPane.getChildren().addAll(gameBoard.getRoadPermPane(), gameBoard.getSettlementPermPane());
-        Rectangle background = new Rectangle(0,0,1440,900);
+        Rectangle background = new Rectangle(0, 0, 1440, 900);
         background.setFill(new ImagePattern(new Image(this.getClass().getResource("portbg.png").toExternalForm())));
 
-        GUI.getChildren().addAll(background,boardPane,settlementPane,roadPane,permanentPane);
+        GUI.getChildren().addAll(background, boardPane, settlementPane, roadPane, permanentPane);
 
         playerColours = new String[]{"red", "blue", "gold", "white"};
         players = game.getPlayers();
@@ -134,7 +136,7 @@ public class GUI {
 
 
         //FIXME
-        Rectangle testBox = new Rectangle(100,100,100,100);
+        Rectangle testBox = new Rectangle(100, 100, 100, 100);
         GUI.getChildren().add(testBox);
         testBox.setOnMouseClicked(e -> {
             gameBoard.transparency(true);
@@ -153,10 +155,19 @@ public class GUI {
         CPUI.toBack();
         GUI.getChildren().add(CPUI);
 
-        CPIcon = new Rectangle(1000, 810,65, 65);
-        CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"player.png").toExternalForm())));
+        Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
+        CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
+        GUI.getChildren().add(CPResourceUI);
+
+        developmentCardsUI = new Rectangle(45, 610, 395, 140);
+        developmentCardsUI.setFill(new ImagePattern(new Image(this.getClass().getResource("dbox.png").toExternalForm())));
+        developmentCards.getChildren().add(developmentCardsUI);
+        GUI.getChildren().add(developmentCards);
+
+        CPIcon = new Rectangle(1000, 810, 65, 65);
+        CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
         CPIconLabel = new Rectangle(1020, 860, 25, 25);
-        CPIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID()-1]+"playerlabel.png").toExternalForm())));
+        CPIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
         CPVPCount = new Text(1020 + 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getVictoryPoints()));
         CPVPCount.setFont(new Font(20));
 
@@ -165,7 +176,7 @@ public class GUI {
         CPResCards.setFill(new ImagePattern(new Image(this.getClass().getResource("rescards.png").toExternalForm())));
         CPResCardsLabel.setFill(new ImagePattern(new Image(this.getClass().getResource("rescardlabel.png").toExternalForm())));
         int CPResCount = 0;
-        for (int z=0; z < 5;z++){
+        for (int z = 0; z < 5; z++) {
             CPResCount += game.getCurrentPlayer().resourceCards.get(ResourceType.values()[z]);
         }
         CPResCardsCount = new Text(1105 + 17.5 + 6.25, 860 + 20, String.valueOf(CPResCount));
@@ -180,43 +191,15 @@ public class GUI {
 
         Rectangle CPLargestArmy = new Rectangle(1255, 790, 60, 84);
         CPLargestArmy.setFill(new ImagePattern(new Image(this.getClass().getResource("largestarmy.png").toExternalForm())));
-        CPLargestArmyValue = new Text(1255+30- 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getArmySize()));
-        CPLargestArmyValue.setFont(new Font(20));;
+        CPLargestArmyValue = new Text(1255 + 30 - 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getArmySize()));
+        CPLargestArmyValue.setFont(new Font(20));
 
         Rectangle CPLongestRoad = new Rectangle(1330, 790, 60, 84);
         CPLongestRoad.setFill(new ImagePattern(new Image(this.getClass().getResource("longestroad.png").toExternalForm())));
-        CPLongestRoadValue = new Text(1330+30- 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getLongestRoadLength()));
-        CPLongestRoadValue.setFont(new Font(20));;
+        CPLongestRoadValue = new Text(1330 + 30 - 6.25, 860 + 20, String.valueOf(game.getCurrentPlayer().getLongestRoadLength()));
+        CPLongestRoadValue.setFont(new Font(20));
 
-        //---------------------RESOURCE AND DEVELOPMENT CARDS---------------------
-
-        Rectangle CPResourceUI = new Rectangle(45, 765, 715, 140);
-        CPResourceUI.setFill(new ImagePattern(new Image(this.getClass().getResource("box.png").toExternalForm())));
-        GUI.getChildren().add(CPResourceUI);
-
-        developmentCardsUI = new Rectangle(45, 610, 395, 140);
-        developmentCardsUI.setFill(new ImagePattern(new Image(this.getClass().getResource("dbox.png").toExternalForm())));
-        developmentCards.getChildren().add(developmentCardsUI);
-        GUI.getChildren().add(developmentCards);
-
-        currentResourceValues = new Text[5]; //stores text boxes for resource values in here
-        currentDevCardValues = new Text[5];
-        for (int y = 0; y < 5; y++) {
-            Rectangle devlabel = new Rectangle(90 + (70 * y), 705, 25, 25);
-            Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
-            Rectangle reslabel = new Rectangle(90 + (70 * y), 860, 25, 25);
-            devlabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
-            resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
-            reslabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label  + "label.png").toExternalForm())));
-            Text resText = new Text(90 + 6.25 +(70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
-            Text devText  = new Text(90 + 6.25 +(70 * y), 705 + 20, "0");
-            devText.setFont(new Font(20));
-            resText.setFont(new Font(20));
-            developmentCards.getChildren().addAll(devlabel,devText);
-            GUI.getChildren().addAll(resCard, reslabel, resText);
-            currentResourceValues[y] = resText; // adding text to array
-            currentDevCardValues[y] = devText;
-        }
+        //---------------------DEVELOPMENT CARDS---------------------
 
         Rectangle devCard = new Rectangle(442.5, 790, 60, 84);
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
@@ -226,9 +209,9 @@ public class GUI {
         clickToOpenImg.setPreserveRatio(true);
         clickToOpenImg.setFitHeight(16);
         clickToOpen.setGraphic(clickToOpenImg);
-        Tooltip.install(devCard,clickToOpen);
+        Tooltip.install(devCard, clickToOpen);
 
-        devCard.setOnMouseClicked(e ->{
+        devCard.setOnMouseClicked(e -> {
             if (game.gameState == GameState.MAIN) {
                 if (!diceCanBeRolled) {
                     developmentCards.setVisible(!developmentCards.isVisible());
@@ -239,60 +222,72 @@ public class GUI {
             }
         });
 
+        useDevCardPopUp = new Rectangle(0,0,1440,900);
+        useDevCardPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("usedevpopup.png").toExternalForm())));
+
+        confirmButton = new Rectangle(636.475,494+5,167.05,32.5);
+        confirmButton.setFill(new ImagePattern(new Image(this.getClass().getResource("takecards.png").toExternalForm())));
+
         Tooltip clickToUse = new Tooltip();
         ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clickToUse.png").toExternalForm()));
         clickToUseImg.setPreserveRatio(true);
         clickToUseImg.setFitHeight(12.5);
         clickToUse.setGraphic(clickToUseImg);
 
-        Rectangle knightCard = new Rectangle(72.5, 610+25, 60, 84);
+        //---------------------KNIGHT CARD---------------------
+
+        Rectangle knightCard = new Rectangle(72.5, 610 + 25, 60, 84);
         knightCard.setFill(new ImagePattern(new Image(this.getClass().getResource("knightcard.png").toExternalForm())));
-        Tooltip.install(knightCard,clickToUse);
+        Tooltip.install(knightCard, clickToUse);
         knightCard.setOnMouseClicked(e -> {
+            developmentCards.setVisible(false);
             game.useKnightCard();
         });
 
-        Rectangle VPCard = new Rectangle(72.5+70, 610+25, 60, 84);
+        //---------------------VP CARD---------------------
+
+        Rectangle VPCard = new Rectangle(72.5 + 70, 610 + 25, 60, 84);
         VPCard.setFill(new ImagePattern(new Image(this.getClass().getResource("vpcard.png").toExternalForm())));
 
-        Rectangle roadBuildingCard = new Rectangle(72.5+(70 * 2), 610+25, 60, 84);
+
+        //---------------------ROAD BUILDING---------------------
+
+        Rectangle roadBuildingCard = new Rectangle(72.5 + (70 * 2), 610 + 25, 60, 84);
         roadBuildingCard.setFill(new ImagePattern(new Image(this.getClass().getResource("roadbuildingcard.png").toExternalForm())));
-        Tooltip.install(roadBuildingCard,clickToUse);
+        Tooltip.install(roadBuildingCard, clickToUse);
         roadBuildingCard.setOnMouseClicked(e -> {
+            developmentCards.setVisible(false);
             game.useRoadBuildingCard();
         });
 
         //---------------------YEAR OF PLENTY---------------------
 
-        yearOfPlenty = new Group();
-
+        yearOfPlenty = new Group(useDevCardPopUp,confirmButton);
         yearOfPlentyResCards = new Rectangle[5];
         yearOfPlentyValueTexts = new Text[5];
         yearOfPlentyValues = new Integer[5];
         yearOfPlentyCount = 0;
-        int OFF = 25/2;
+        int OFF = 25 / 2;
         for (int y = 0; y < 5; y++) {
             int i = y;
             yearOfPlentyValues[y] = 0;
-            Rectangle yearOfPlentyResCard = new Rectangle(495 + (225 / 2) + (46.25 * y), 340 + (95 / 2) - OFF, 40, 57.5);
+            Rectangle yearOfPlentyResCard = new Rectangle(495 + (225 / 2) + (46.25 * y), 340 + (95 / 2) - OFF +25+10+12.5, 40, 57.5);
             yearOfPlentyResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
             yearOfPlentyResCards[y] = yearOfPlentyResCard;
-            Text yearOfPlentyValueText = (new Text(495 + (225 / 2) + 20 - 12.5 + 6.5 + (46.25 * y), 340 + (95 / 2) + 28.75 - 12.5 + 20 - OFF, "0")); //FIXME
+            Text yearOfPlentyValueText = (new Text(495 + (225 / 2) + 20 - 12.5 + 6.5 + (46.25 * y), 340 + (95 / 2) + 28.75 - 12.5 + 20 - OFF +25+10+12.5, "0")); //FIXME
             yearOfPlentyValueText.setFont(new Font(20));
             yearOfPlentyValueText.setFill(Color.WHITE);
             yearOfPlentyValueTexts[y] = yearOfPlentyValueText;
-            yearOfPlenty.getChildren().addAll(yearOfPlentyResCard,yearOfPlentyValueText);
+            yearOfPlenty.getChildren().addAll(yearOfPlentyResCard, yearOfPlentyValueText);
             yearOfPlentyResCard.setOnMouseClicked(event ->
             {
-                if (event.getButton() == MouseButton.PRIMARY)
-                {
-                    if (yearOfPlentyCount < 2){ //If value not > 2
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    if (yearOfPlentyCount < 2) { //If value not > 2
                         yearOfPlentyValues[i]++;
                         yearOfPlentyCount++;
                     }
 
-                } else if (event.getButton() == MouseButton.SECONDARY)
-                {
+                } else if (event.getButton() == MouseButton.SECONDARY) {
                     if (yearOfPlentyValues[i] > 0) {
                         yearOfPlentyValues[i]--;
                         yearOfPlentyCount--;
@@ -302,15 +297,23 @@ public class GUI {
             });
         }
         yearOfPlenty.setVisible(false);
-        yearOfPlenty.toFront();
         GUI.getChildren().add(yearOfPlenty);
 
         Rectangle yearOfPlentyCard = new Rectangle(72.5+(70 * 3), 610+25, 60, 84);
         yearOfPlentyCard.setFill(new ImagePattern(new Image(this.getClass().getResource("yearofplentycard.png").toExternalForm())));
         Tooltip.install(yearOfPlentyCard,clickToUse);
         yearOfPlentyCard.setOnMouseClicked(e -> {
-            yearOfPlenty.setVisible(true);
-            game.useYearOfPlentyCard();
+            if(game.getCurrentPlayer().useDevCard(DevelopmentCardType.YEAROFPLENTY)){
+                developmentCards.setVisible(false);
+                yearOfPlenty.setVisible(true);
+                yearOfPlenty.toFront();
+                confirmButton.setOnMouseClicked(ee ->{
+                    game.useYearOfPlentyCard(yearOfPlentyValues);
+                    yearOfPlentyCount = 0;
+                    Arrays.fill(yearOfPlentyValues, 0);
+                    yearOfPlenty.setVisible(false);
+                });
+            }
         });
 
         //---------------------MONOPOLY---------------------
@@ -323,6 +326,27 @@ public class GUI {
         });
 
         developmentCards.getChildren().addAll(knightCard,VPCard,roadBuildingCard,yearOfPlentyCard,monopolyCard);
+
+        //---------------------RESOURCE AND DEVELOPMENT CARDS LABELS---------------------
+
+        currentResourceValues = new Text[5]; //stores text boxes for resource values in here
+        currentDevCardValues = new Text[5];
+        for (int y = 0; y < 5; y++) {
+            Rectangle devlabel = new Rectangle(90 + (70 * y), 705, 25, 25);
+            Rectangle resCard = new Rectangle(72.5 + (70 * y), 790, 60, 84);
+            Rectangle reslabel = new Rectangle(90 + (70 * y), 860, 25, 25);
+            devlabel.setFill(new ImagePattern(new Image(this.getClass().getResource("devcardlabel.png").toExternalForm())));
+            resCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            reslabel.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + "label.png").toExternalForm())));
+            Text resText = new Text(90 + 6.25 + (70 * y), 860 + 20, String.valueOf(game.getCurrentPlayer().resourceCards.get(ResourceType.values()[y])));
+            Text devText = new Text(90 + 6.25 + (70 * y), 705 + 20, "0");
+            devText.setFont(new Font(20));
+            resText.setFont(new Font(20));
+            developmentCards.getChildren().addAll(devlabel, devText);
+            GUI.getChildren().addAll(resCard, reslabel, resText);
+            currentResourceValues[y] = resText; // adding text to array
+            currentDevCardValues[y] = devText;
+        }
 
         //---------------------BUY BUTTONS---------------------
 
