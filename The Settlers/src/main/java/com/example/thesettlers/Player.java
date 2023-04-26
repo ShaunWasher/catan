@@ -10,6 +10,7 @@ public class Player {
     private final int MAXROADS = 15;
     private int playerID;
     private boolean hasLongestRoad;
+    private boolean hasLargestArmy;
     private ArrayList<Settlement> settlements;
     private int roadCount;
     EnumMap<ResourceType,Integer> resourceCards;
@@ -168,7 +169,10 @@ public class Player {
         if (developmentCardCount.get(type) != 0) {
             developmentCardCount.put(type, developmentCardCount.get(type) - 1);
             for(DevelopmentCard card: developmentCards){
-                if(card.getCardType() == type){
+                if(card.getCardType() == type && type == DevelopmentCardType.KNIGHT){
+                    developmentCards.remove(card);
+                    return true;
+                } else if(card.getCardType() == type){
                     developmentCards.remove(card);
                     game.returnDevCard(card);
                     return true;
@@ -261,6 +265,13 @@ public class Player {
 
     public boolean getHasLongestRoad() {
         return hasLongestRoad;
+    }
+
+    public void setHasLargestArmy(boolean hasLargestArmy) {
+        this.hasLargestArmy = hasLargestArmy;
+    }
+    public boolean getHasLargestArmy() {
+        return hasLargestArmy;
     }
 }
 
