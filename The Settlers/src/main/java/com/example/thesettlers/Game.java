@@ -211,8 +211,10 @@ public class Game {
 
     public void useKnightCard(){
         if(getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
-            gameBoard.transparency(true);
-            placeRobber = true;
+            if(currentPlayer.getClass() == Player.class) {
+                gameBoard.transparency(true);
+                placeRobber = true;
+            }
             getCurrentPlayer().increaseArmySize();
             if(largestArmy == null && getCurrentPlayer().getArmySize() >= 3){
                 largestArmy = getCurrentPlayer();
