@@ -34,7 +34,7 @@ public class Game {
         this.gameVersion = gameVersion;
         this.boardType = boardType;
         if(gameVersion == GameVersion.VP) {
-            maxVPs = 3;
+            maxVPs = 10;
         } else {
             maxVPs = 100;
             endTime = System.currentTimeMillis() + (gameLength * 60000L);
@@ -48,7 +48,7 @@ public class Game {
         for(int i = 0;i< order.length;i++) {
             if (Objects.equals(order[i], "player"))
                 players.add(new Player(i + 1, this));
-            else {
+            else if (Objects.equals(order[i], "ai")) {
                 players.add(new AIPlayer(i + 1, this));
             }
         }
@@ -155,7 +155,6 @@ public class Game {
                 }
                 // Update the GUI here
             });
-            //TODO take card from player
         }
         //for all settlements
         for(Settlement settlement: gameBoard.settlementList){
@@ -203,7 +202,6 @@ public class Game {
         if(getCurrentPlayer().useDevCard(DevelopmentCardType.KNIGHT)){ //checks if player has dev card and if so puts it back on the stack
             gameBoard.transparency(true);
             placeRobber = true;
-            //TODO take card from player
             getCurrentPlayer().increaseArmySize();
             if(largestArmy == null && getCurrentPlayer().getArmySize() >= 3){
                 largestArmy = getCurrentPlayer();
@@ -279,8 +277,8 @@ public class Game {
             return true;
         } catch (Exception exception){
             gui.cantPlaceSettlementError();
-            System.out.println("cant place settlement there"); // problem shows in console for now
-            System.out.println(exception);//TODO send to UI so the player can be told whats wrong
+            System.out.println("cant place settlement there");
+            System.out.println(exception);
         }
         return false;
     }
@@ -290,13 +288,12 @@ public class Game {
             gameBoard.setRoadPane();
             getCurrentPlayer().setLongestRoadLength(findLongestRoad(getCurrentPlayer()));
             updateLongestRoad();
-            //TODO find if longest road has changed
             gui.refreshUI();
             return true;
         } catch (Exception exception){
             gui.cantPlaceRoadError();
             System.out.println("cant place road there");
-            System.out.println(exception);//TODO send to UI so the player can be told whats wrong
+            System.out.println(exception);
         }
         return false;
     }
@@ -308,7 +305,7 @@ public class Game {
             return true;
         } catch (Exception exception){
             System.out.println("cant place city there");
-            System.out.println(exception);//TODO send to UI so the player can be told whats wrong
+            System.out.println(exception);
         }
         return false;
     }
@@ -382,7 +379,6 @@ public class Game {
 
     public void winGame(Player player){
         gui.winMessage(player);
-        //TODO send data to UI to show scores
     }
 
     public BoardType getMapType() {
@@ -496,4 +492,45 @@ public class Game {
     public long getEndTime() {
         return endTime;
     }
+
+    public void stealCardOptions(){
+        ArrayList<Player> stealOptions = new ArrayList<>();
+        for (Player player : players){
+            if (player != currentPlayer){
+                for (Settlement settlement : player.getSettlements()){
+                    for (Tile tile : settlement.getTiles()){
+                        if (tile.isRobber()){
+                            if (!stealOptions.contains(player)) {
+                                stealOptions.add(player);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (stealOptions.size() > 1) {
+            gui.stealCardSelect(stealOptions);
+        } else if (stealOptions.size() == 1) {
+            stealCard(stealOptions.get(0));
+        }
+    }
+
+    public void stealCard(Player player){
+        ArrayList<Integer> indexOptions = new ArrayList<>();
+        for (int y = 0; y < 5; y++) {
+            if (player.resourceCards.get(ResourceType.values()[y]) > 0){
+                indexOptions.add(y);
+            }
+        }
+        if (indexOptions.size() != 0){
+            Random random = new Random();
+            int index = random.nextInt(indexOptions.size());
+            int randomNumber = indexOptions.get(index);
+            currentPlayer.getResourceCards().merge(ResourceType.getByIndex(randomNumber),1,Integer::sum);
+            player.getResourceCards().merge(ResourceType.getByIndex(randomNumber),-1,Integer::sum);
+            gui.refreshUI();
+        }
+    }
+
+
 }

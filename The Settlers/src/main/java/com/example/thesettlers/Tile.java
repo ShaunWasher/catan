@@ -57,6 +57,7 @@ public class Tile extends Polygon {
             game.setPlaceRobber(false);
             setRobber(true);
             game.setRobber(this);
+            game.stealCardOptions();
         });
 
         valueLabel = new ValueLabel(x, y, value);

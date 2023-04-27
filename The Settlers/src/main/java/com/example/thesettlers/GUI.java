@@ -55,6 +55,7 @@ public class GUI {
     private Text[] currentResourceValues;
     private Rectangle discardButton;
     private Text[] resCardsCount;
+    private Rectangle stealCardPopUp;
     private Text[] devCardsCount;
     private Text[] VPCount;
     private Text[] playerLargestArmyValue;
@@ -119,8 +120,6 @@ public class GUI {
 
     private Group monopoly;
     //endregion
-    //TODO NEATEN THIS CLASS
-    //TODO RENAME THINGS TO MEANINGFUL NAMES
     public GUI(Game game) throws URISyntaxException, IOException {
         GUI.setId("GUI");
         this.game = game;
@@ -933,6 +932,60 @@ public class GUI {
         throwAway.toFront();
         GUI.getChildren().add(throwAway);
 
+        //---------------------STEAL CARD---------------------
+        stealCardPopUp = new Rectangle(0,0,1440,900);
+        stealCardPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("throwawaypopup.png").toExternalForm())));
+        stealCardPopUp.setVisible(false);
+
+        GUI.getChildren().add(stealCardPopUp);
+
+        discardButton = new Rectangle(636.475,494+5,167.05,32.5);
+        discardButton.setFill(new ImagePattern(new Image(this.getClass().getResource("confirm.png").toExternalForm())));
+
+        discardCount = (new Text(697.5, 370, "0"));
+        discardCount.setFont(new Font(25));
+        discardCount.setFill(Color.WHITE);
+
+        throwAway = new Group(throwAwayPopUp,discardButton,discardCount);
+        throwAwayResCards = new Rectangle[5];
+        throwAwayValueTexts = new Text[5];
+        throwAwayValues = new Integer[5];
+        throwAwayCount = 0;
+
+        for (int y = 0; y < 5; y++) {
+            int i = y;
+            throwAwayValues[y] = 0;
+            Rectangle throwAwayResCard = new Rectangle(495 + (225 / 2) + (46.25 * y), 340 + (95 / 2) - OFF +25+10+12.5, 40, 57.5);
+            throwAwayResCard.setFill(new ImagePattern(new Image(this.getClass().getResource(ResourceType.values()[y].label + ".png").toExternalForm())));
+            throwAwayResCards[y] = throwAwayResCard;
+            Text throwAwayValueText = (new Text(495 + (225 / 2) + 20 - 12.5 + 6.5 + (46.25 * y), 340 + (95 / 2) + 28.75 - 12.5 + 20 - OFF +25+10+12.5, "0"));
+            throwAwayValueText.setFont(new Font(20));
+            throwAwayValueText.setFill(Color.WHITE);
+            throwAwayValueTexts[y] = throwAwayValueText;
+            throwAway.getChildren().addAll(throwAwayResCard, throwAwayValueText);
+            throwAwayResCard.setOnMouseClicked(event ->
+            {
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    if ((throwAwayValues[i] < game.getCurrentPlayer().resourceCards.get(ResourceType.values()[i])) && throwAwayCount < (int) Math.floor(game.getCurrentPlayer().getResourceCount() / 2.0)) {
+                        throwAwayValues[i]++;
+                        throwAwayCount++;
+                    }
+
+                } else if (event.getButton() == MouseButton.SECONDARY) {
+                    if (throwAwayValues[i] > 0) {
+                        throwAwayValues[i]--;
+                        throwAwayCount--;
+                    }
+                }
+                throwAwayValueTexts[i].setText(String.valueOf(throwAwayValues[i]));
+            });
+        }
+        throwAway.setVisible(false);
+        throwAway.toFront();
+        GUI.getChildren().add(throwAway);
+
+
+
         //---------------------END TURN POP-UP---------------------
 
         endTurnPopUp = new Rectangle(0,0,1440,900);
@@ -1463,5 +1516,35 @@ public class GUI {
         long minutes = remainingTime / 60000;
         long seconds = (remainingTime % 60000) / 1000;
         countdownLabel.setText(String.format("%02d:%02d", minutes, seconds));
+    }
+
+    public void stealCardSelect(ArrayList<Player> players){
+        stealCardPopUp.setVisible(true);
+        stealCardPopUp.toFront();
+        Rectangle[] icons = new Rectangle[players.size()];
+        int offset = 0;
+        for (int y = 0; y < players.size(); y++) {
+            int i = y;
+            if (players.size() == 2 ){
+                offset = 595;} else if (players.size() == 3) {
+                offset = 545;
+            }
+            Rectangle playerOption = new Rectangle(offset+(125*y), 425, 100, 100);
+            icons[y] = playerOption;
+            if (players.get(y) instanceof AIPlayer) {
+                playerOption.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(players.get(y)).getPlayerID() - 1] + "ai.png").toExternalForm())));
+            } else {
+                playerOption.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(players.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+            }
+            GUI.getChildren().add(playerOption);
+            playerOption.setOnMouseClicked(ct -> {
+                for (Rectangle icon : icons){
+                    GUI.getChildren().remove(icon);
+                }
+                stealCardPopUp.setVisible(false);
+                game.stealCard(players.get(i));
+
+            });
+        }
     }
 }
