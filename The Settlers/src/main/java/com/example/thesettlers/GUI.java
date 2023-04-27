@@ -935,7 +935,7 @@ public class GUI {
 
         //---------------------STEAL CARD---------------------
         stealCardPopUp = new Rectangle(0,0,1440,900);
-        stealCardPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("throwawaypopup.png").toExternalForm())));
+        stealCardPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("stealpopup.png").toExternalForm())));
         stealCardPopUp.setVisible(false);
 
         GUI.getChildren().add(stealCardPopUp);
