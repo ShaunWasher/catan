@@ -4,6 +4,9 @@ import com.example.thesettlers.enums.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+/**
+ * Represents a player in the game of The Settlers.
+ */
 public class Player {
     public final int MAXSETTLEMENTS = 5;
     public final int MAXCITIES = 4;
@@ -23,6 +26,13 @@ public class Player {
     public int resourceCount;
     public Game game;
     public EnumMap<DevelopmentCardType,Integer> developmentCardCount;
+
+    /**
+     * Constructs a new Player object with a given player number and associated game.
+     *
+     * @param playerNumber the unique identifier of the player.
+     * @param game the associated game that the player is participating in.
+     */
     public Player(int playerNumber, Game game){
         settlements = new ArrayList<>();
         roadCount = 0;
@@ -48,6 +58,11 @@ public class Player {
         this.game = game;
     }
 
+    /**
+     * Returns the number of cities owned by the player.
+     *
+     * @return the number of cities owned by the player.
+     */
     public int getNumberOfCities() {
         int count = 0;
         for (Settlement settlement : settlements) {
@@ -58,6 +73,12 @@ public class Player {
         return count;
     }
 
+    /**
+     * Attempts to place a settlement for the player at the given location.
+     *
+     * @param settlement the settlement to be placed.
+     * @throws Exception if the settlement cannot be placed due to various conditions.
+     */
     public void placeSettlement(Settlement settlement) throws Exception{
         //check if settlement is empty
         if(settlement.getOwner() != null){
@@ -94,6 +115,12 @@ public class Player {
         }
     }
 
+    /**
+     * Attempts to place a road for the player at the given location.
+     *
+     * @param road the road to be placed.
+     * @throws Exception if the road cannot be placed due to various conditions.
+     */
     public void placeRoad(Road road) throws Exception {
         //check path has no road
         if(road.getOwner() != null) throw new Exception("road already paved");
@@ -127,6 +154,12 @@ public class Player {
         }
     }
 
+    /**
+     * Attempts to upgrade the given settlement to a city for the player.
+     *
+     * @param settlement the settlement to be upgraded.
+     * @throws Exception if the settlement cannot be upgraded due to various conditions.
+     */
     public void upgradeToCity(Settlement settlement) throws Exception {
         //check if settlement is owned by player
         if(settlement.getOwner() != this){
@@ -149,6 +182,11 @@ public class Player {
         }
     }
 
+    /**
+     * Attempts to buy a development card for the player.
+     *
+     * @throws Exception if the development card cannot be bought due to various conditions.
+     */
     public void buyDevCard() throws Exception {
         if(game.getDevQueueSize() <= 0){
             throw new Exception("dev card queue empty");
@@ -173,6 +211,12 @@ public class Player {
         }
     }
 
+    /**
+     * Attempts to use a development card of the specified type for the player.
+     *
+     * @param type the type of the development card to be used.
+     * @return true if the development card was used, false otherwise.
+     */
     public boolean useDevCard(DevelopmentCardType type){
         if (developmentCardCount.get(type) != 0 && !devCardUsed) {
             for(DevelopmentCard card: developmentCards){
@@ -189,12 +233,23 @@ public class Player {
         return false;
     }
 
+    /**
+     * Gives the player a specified amount of a specific resource type.
+     *
+     * @param resourceType the type of resource to be given.
+     * @param amount the amount of the resource to be given.
+     */
     public void giveResource(ResourceType resourceType, int amount) {
         if (resourceType != null) {
             resourceCards.put(resourceType, resourceCards.get(resourceType) + amount);
         }
     }
 
+    /**
+     * Adds 1 victory point to the player's current total. If the player has
+     * reached the maximum victory points needed to win the game, the game
+     * is ended.
+     */
     public void addVP(){
         victoryPoints++;
         if(victoryPoints >= game.getMaxVPs()){
@@ -202,6 +257,13 @@ public class Player {
         }
     }
 
+    /**
+     * Adds the specified quantity of victory points to the player's current
+     * total. If the player has reached the maximum victory points needed to
+     * win the game, the game is ended.
+     *
+     * @param quantity The number of victory points to add.
+     */
     public void addVP(int quantity){
         victoryPoints += quantity;
         if(victoryPoints >= game.getMaxVPs()){
@@ -209,84 +271,172 @@ public class Player {
         }
     }
 
+    /**
+     * Returns the player's current army size.
+     *
+     * @return The player's army size.
+     */
     public int getArmySize() {
         return armySize;
     }
 
+    /**
+     * Increases the player's army size by 1.
+     */
     public void increaseArmySize(){
         armySize++;
     }
 
+    /**
+     * Returns the player's longest road length.
+     *
+     * @return The player's longest road length.
+     */
     public int getLongestRoadLength() {
         return longestRoadLength;
     }
 
+    /**
+     * Returns the player's unique ID.
+     *
+     * @return The player's ID.
+     */
     public int getPlayerID() {
         return playerID;
     }
 
+    /**
+     * Returns the player's resource cards as an EnumMap.
+     *
+     * @return The player's resource cards.
+     */
     public EnumMap<ResourceType, Integer> getResourceCards() {
         return resourceCards;
     }
 
+    /**
+     * Returns the player's development cards as an ArrayList.
+     *
+     * @return The player's development cards.
+     */
     public ArrayList<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
 
+    /**
+     * Returns the player's current victory points.
+     *
+     * @return The player's victory points.
+     */
     public int getVictoryPoints() {
         return victoryPoints;
     }
 
-    // returns true if the player has to many settlements
+    /**
+     * Checks if the player has too many settlements.
+     *
+     * @return true if the player has reached the maximum number of settlements, false otherwise.
+     */
     public boolean checkTooManySettlements(){
         return (settlements.size() >= MAXSETTLEMENTS);
     }
 
-    // returns true if the player has to many roads
+    /**
+     * Checks if the player has too many roads.
+     *
+     * @return true if the player has reached the maximum number of roads, false otherwise.
+     */
     public boolean checkTooManyRoads(){
         return (roadCount >= MAXROADS);
     }
 
-    // returns true if the player has to many cities
+    /**
+     * Checks if the player has too many cities.
+     *
+     * @return true if the player has reached the maximum number of cities, false otherwise.
+     */
     public boolean checkTooManyCities() {
         return (getNumberOfCities() >= MAXCITIES);
     }
 
-    // returns get dev cards as an int array
+    /**
+     * Returns the count of each type of development card the player has as an int array.
+     *
+     * @return An int array representing the count of each type of development card.
+     */
     public int[] getDevelopmentCardCount() {
         return new int[]{developmentCardCount.get(DevelopmentCardType.KNIGHT),developmentCardCount.get(DevelopmentCardType.VP),developmentCardCount.get(DevelopmentCardType.ROADBUILDING),developmentCardCount.get(DevelopmentCardType.YEAROFPLENTY),developmentCardCount.get(DevelopmentCardType.MONOPOLY)};
     }
 
+    /**
+     * Makes all new development cards active and resets the flag for whether a development card
+     * has been used this turn.
+     */
     public void makeNewDevCardsActive(){
         developmentCards.addAll(newDevelopmentCards);
         newDevelopmentCards.clear();
         devCardUsed = false;
     }
 
+    /**
+     * Returns the player's settlements as an ArrayList.
+     *
+     * @return The player's settlements.
+     */
     public ArrayList<Settlement> getSettlements() {
         return settlements;
     }
 
+    /**
+     * Sets the player's longest road length.
+     *
+     * @param longestRoadLength The player's new longest road length.
+     */
     public void setLongestRoadLength(int longestRoadLength) {
         this.longestRoadLength = longestRoadLength;
     }
 
-
+    /**
+     * Sets whether the player has the longest road.
+     *
+     * @param hasLongestRoad true if the player has the longest road, false otherwise.
+     */
     public void setHasLongestRoad(boolean hasLongestRoad) {
         this.hasLongestRoad = hasLongestRoad;
     }
 
+    /**
+     * Returns whether the player has the longest road.
+     *
+     * @return true if the player has the longest road, false otherwise.
+     */
     public boolean getHasLongestRoad() {
         return hasLongestRoad;
     }
 
+    /**
+     * Sets whether the player has the largest army.
+     *
+     * @param hasLargestArmy true if the player has the largest army, false otherwise.
+     */
     public void setHasLargestArmy(boolean hasLargestArmy) {
         this.hasLargestArmy = hasLargestArmy;
     }
+
+    /**
+     * Returns whether the player has the largest army.
+     *
+     * @return true if the player has the largest army, false otherwise.
+     */
     public boolean getHasLargestArmy() {
         return hasLargestArmy;
     }
 
+    /**
+     * Calculates and returns the player's total resource count.
+     *
+     * @return The player's total resource count.
+     */
     public int getResourceCount() {
         resourceCount = 0;
         for (int y = 0; y < 5; y++) {

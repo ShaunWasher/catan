@@ -17,6 +17,11 @@ import java.io. * ;
 
 import static java.lang.Math.sqrt;
 
+/**
+ * The GameBoard class represents the game board for the Settlers of Catan game.
+ * It creates and manages the game board's visual elements, including the tiles,
+ * settlements, and roads.
+ */
 public class GameBoard {
     String[] ports;
     private Pane settlementPermPane = new Pane();
@@ -45,6 +50,13 @@ public class GameBoard {
     private final static double n = sqrt(r * r * 0.75); // the inner radius from hexagon center to middle of the axis
     private Game game;
 
+    /**
+     * Constructs a new GameBoard object, initializing the game board layout and game elements.
+     *
+     * @param game The Game object to which this GameBoard belongs.
+     * @throws URISyntaxException If a URI syntax exception occurs.
+     * @throws IOException If an I/O exception occurs.
+     */
     public GameBoard(Game game) throws URISyntaxException, IOException {
         this.game = game;
         startingTerrainList = new ArrayList<>();
@@ -275,42 +287,80 @@ public class GameBoard {
         labelPane.toFront();
     }
 
+    /**
+     * Returns the game board pane.
+     * @return the game board pane
+     */
     public Pane getGameBoard() {
         return gameBoard;
     }
 
+    /**
+     * Returns the settlement pane.
+     * @return the settlement pane
+     */
     public Pane getSettlementPane() {
         return settlementPane;
     }
 
+    /**
+     * Returns the road pane.
+     * @return the road pane
+     */
     public Pane getRoadPane() {
         return roadPane;
     }
+
+    /**
+     * Toggles the visibility of the settlement pane and brings it to front.
+     */
     public void setSettlementPane() {
         settlementPane.setVisible(!settlementPane.isVisible());
         settlementPane.toFront();
     }
 
+    /**
+     * Toggles the visibility of the road pane and brings it to front.
+     */
     public void setRoadPane() {
         roadPane.setVisible(!roadPane.isVisible());
         roadPane.toFront();
     }
 
+    /**
+     * Returns the array of settlements on the game board.
+     * @return the array of settlements
+     */
     public Settlement[] getSettlementList() {
         return settlementList;
     }
 
+    /**
+     * Returns the array of roads on the game board.
+     * @return the array of roads
+     */
     public Road[] getRoadList(){return roadList;}
 
+    /**
+     * Returns the road placement pane.
+     * @return the road placement pane
+     */
     public Pane getRoadPermPane() {
         return roadPermPane;
     }
 
+    /**
+     * Returns the settlement placement pane.
+     * @return the settlement placement pane
+     */
     public Pane getSettlementPermPane() {
         return settlementPermPane;
     }
 
-
+    /**
+     * Sets the transparency of the game board elements depending on the boolean value passed as argument.
+     * @param bool the boolean value to set transparency
+     */
     public void transparency(Boolean bool){
         for (Tile tile : tileList){
             if (bool){

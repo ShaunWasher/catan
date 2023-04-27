@@ -12,9 +12,20 @@ import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
+
+/**
+ * The GameFX class is the main class for the graphical user interface of The Settlers game. It extends the JavaFX
+ * Application class and implements the SceneChanger interface, which defines the method for changing the scene of the
+ * graphical user interface.
+ */
 public class GameFX extends Application implements SceneChanger {
 
     private Pane root;
+    /**
+     * Changes the scene of the graphical user interface to the specified pane.
+     *
+     * @param newScenePane the new pane to be displayed
+     */
     @Override
     public void changeScene(Pane newScenePane) {
         root.getChildren().clear();
@@ -22,6 +33,13 @@ public class GameFX extends Application implements SceneChanger {
         newScenePane.setPrefHeight(root.getPrefHeight());
         root.getChildren().add(newScenePane);
     }
+
+    /**
+     * The main entry point for the application.
+     *
+     * @param primaryStage the primary stage for this application
+     * @throws Exception if something goes wrong
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Settlers");
@@ -65,6 +83,11 @@ public class GameFX extends Application implements SceneChanger {
             }
         });}
 
+    /**
+     * The main method for launching the application.
+     *
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         launch(args);
     }

@@ -6,6 +6,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 
+/**
+ * Represents a settlement in the game of The Settlers.
+ */
 public class Settlement {
     private ArrayList<Road> roads;
     private ArrayList<Tile> tiles;
@@ -15,6 +18,16 @@ public class Settlement {
     private Game game;
     private PortType port;
 
+    /**
+     * Constructs a new Settlement object with the specified x, y coordinates and associated Game.
+     * Initializes the Settlement with null owner and empty lists of roads and tiles. Sets up a
+     * Rectangle object to represent the Settlement and sets its appearance based on the game state.
+     * Also sets up the OnMouseClicked event for the Settlement's rectangle.
+     *
+     * @param x The x-coordinate of the Settlement's location.
+     * @param y The y-coordinate of the Settlement's location.
+     * @param game The associated Game object.
+     */
     public Settlement(double x, double y, Game game){
         this.game = game;
         this.roads = new ArrayList<>();
@@ -53,7 +66,12 @@ public class Settlement {
         });
     }
 
-    //check if there is a road connection to the player
+    /**
+     * Checks if there is a road connection to the given player.
+     *
+     * @param player The player to check for a road connection.
+     * @return true if there is a road connection to the player, false otherwise.
+     */
     public boolean checkRoadConnection(Player player){
         for(Road road: roads){
             if(road.getOwner() == player){
@@ -63,44 +81,99 @@ public class Settlement {
         return false;
     }
 
+    /**
+     * Returns the list of roads connected to the settlement.
+     *
+     * @return An ArrayList of Road objects connected to the settlement.
+     */
     public ArrayList<Road> getRoads() {
         return roads;
     }
 
+    /**
+     * Returns the list of tiles connected to the settlement.
+     *
+     * @return An ArrayList of Tile objects connected to the settlement.
+     */
     public ArrayList<Tile> getTiles() {
         return tiles;
     }
 
+    /**
+     * Returns the owner of the settlement.
+     *
+     * @return The player who owns the settlement.
+     */
     public Player getOwner() {
         return owner;
     }
 
+    /**
+     * Sets the owner of the settlement.
+     *
+     * @param owner The player who owns the settlement.
+     */
     public void setOwner(Player owner) {
         this.owner = owner;
     }
 
+    /**
+     * Makes the settlement a city.
+     */
     public void makeCity() {
         isCity = true;
     }
 
+    /**
+     * Returns true if the settlement is a city, false otherwise.
+     *
+     * @return true if the settlement is a city, false otherwise.
+     */
     public boolean isCity() {
         return isCity;
     }
 
+    /**
+     * Adds a road to the settlement.
+     *
+     * @param road The road to be added.
+     */
     public void addRoad(Road road){
         roads.add(road);
     }
+
+    /**
+     * Adds a tile to the settlement.
+     *
+     * @param tile The tile to be added.
+     */
     public void addTile(Tile tile){
         tiles.add(tile);
     }
+
+    /**
+     * Returns the settlement's icon as a Rectangle object.
+     *
+     * @return The settlement's icon.
+     */
     public Rectangle getIcon() {
         return rectangle;
     }
 
+    /**
+     * Sets the port of the settlement.
+     *
+     * @param port The PortType of the port.
+     */
     public void setPort(PortType port) {
         this.port = port;
     }
 
+    /**
+     * Returns the port of the settlement.
+     *
+     * @return The PortType of the settlement's port.
+     */
     public PortType getPort() {
         return port;
     }

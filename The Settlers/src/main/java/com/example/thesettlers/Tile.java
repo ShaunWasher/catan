@@ -11,6 +11,9 @@ import java.util.Objects;
 
 import static java.lang.Math.sqrt;
 
+/**
+ * Represents a hexagonal tile in the game of The Settlers.
+ */
 public class Tile extends Polygon {
     private Image image;
     private final static double r = 70; // the inner radius from hexagon center to outer corner
@@ -20,6 +23,19 @@ public class Tile extends Polygon {
     private boolean robber;
     private ValueLabel valueLabel;
     private Circle robberImage;
+
+    /**
+     * Constructs a new Tile object with the specified x, y coordinates, type, value, and associated Game.
+     * Initializes the Tile with the given type, value, and an Image representation of the tile type.
+     * Sets up a Circle object to represent the robber and a ValueLabel object for the tile's value.
+     * Also sets up the OnMouseClicked event for the Tile's Polygon object.
+     *
+     * @param x The x-coordinate of the Tile's location.
+     * @param y The y-coordinate of the Tile's location.
+     * @param type The type of the Tile as a String (e.g., "HILLS", "FOREST", etc.).
+     * @param value The numerical value associated with the Tile.
+     * @param game The associated Game object.
+     */
     public Tile(double x, double y, String type, int value,Game game) {
         this.value = value;
         robberImage = new Circle((x + ((sqrt(3) / 2) * 70)),(y+35),35);
@@ -63,10 +79,20 @@ public class Tile extends Polygon {
         valueLabel = new ValueLabel(x, y, value);
     }
 
+    /**
+     * Returns the value label (the number) of the tile as a Circle object.
+     *
+     * @return The Circle object representing the value label of the tile.
+     */
     public Circle getValueLabel(){
         return valueLabel.getCircle();
     }
 
+    /**
+     * Sets the robber presence on the tile.
+     *
+     * @param robber A boolean value indicating whether the robber is on the tile or not.
+     */
     public void setRobber(boolean robber) {
         this.robber = robber;
         if(robber){
@@ -77,22 +103,48 @@ public class Tile extends Polygon {
         }
     }
 
+    /**
+     * Returns true if the robber is on the tile, false otherwise.
+     *
+     * @return true if the robber is on the tile, false otherwise.
+     */
     public boolean isRobber(){
         return robber;
     }
 
+    /**
+     * Returns the robber's image as a Circle object.
+     *
+     * @return The Circle object representing the robber's image.
+     */
     public Circle getRobberImage() {
         return robberImage;
     }
 
+    /**
+     * Returns the value (number) of the tile.
+     *
+     * @return The value (number) of the tile.
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Returns the terrain type of the tile.
+     *
+     * @return The TerrainType enum value of the tile.
+     */
     public TerrainType getTileType() {
         return tileType;
     }
 
+    /**
+     * Returns the image representing the terrain type of the tile.
+     *
+     * @param type The TerrainType of the tile.
+     * @return The Image object representing the terrain type of the tile.
+     */
     public Image getImage(TerrainType type) {
         if (Objects.equals(type, TerrainType.HILLS)) {
             this.image = new Image(this.getClass().getResource("hills.png").toExternalForm());

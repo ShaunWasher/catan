@@ -26,6 +26,12 @@ public class Menu {
     private int gameLengthValue;
     private String[] playerColours;
     private String[] order;
+
+    /**
+     Constructs a new Menu object.
+     The constructor initializes the various GUI elements and sets default values for the game parameters.
+     It also sets up event handlers for user interactions with the menu options.
+     */
     public Menu(){
         Rectangle background = new Rectangle(0, 0, 1440, 900);
         background.setFill(new ImagePattern(new Image(this.getClass().getResource("menubg.png").toExternalForm())));
@@ -311,14 +317,26 @@ public class Menu {
         menu.getChildren().addAll(menuOptions,exitMenu);
     }
 
+    /**
+     Sets the SceneChanger object for this Menu instance.
+     @param sceneChanger the SceneChanger object to be set
+     */
     public void setSceneChanger(SceneChanger sceneChanger) {
         this.sceneChanger = sceneChanger;
     }
 
+    /**
+    Returns the Pane object that contains the Menu GUI.
+    @return the Pane object that contains the Menu GUI
+    */
     public Pane getMenuPane() {
         return menu;
     }
 
+    /**
+     Starts the game by creating a new Game object and a GUI object.
+     Sets the SceneChanger for the GUI and changes the scene to the GUI Pane.
+    */
     public void startGame(){
         System.out.println(Arrays.toString(order));
         Game game = null; //TODO get number of players from setup screen
