@@ -1,7 +1,10 @@
 package com.example.thesettlers;
 
 import com.example.thesettlers.enums.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -25,8 +28,7 @@ public class Game {
     private boolean placeRobber;
     private Tile robber;
 
-    //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
-    public Game(GameVersion gameVersion, BoardType boardType, int numOfPlayers, int numOfAgents) throws URISyntaxException, IOException {
+    public Game(GameVersion gameVersion,int gameLength, BoardType boardType, String[] order) throws URISyntaxException, IOException {
         placeRobber = false;
         roadBuilding = 0;
         this.gameVersion = gameVersion;
@@ -35,7 +37,7 @@ public class Game {
             maxVPs = 3;
         } else {
             maxVPs = 100;
-            endTime = System.currentTimeMillis() + 60000; //TODO + Length of game
+            endTime = System.currentTimeMillis() + (gameLength * 60000L);
         }
         gui = null;
         this.gameBoard = new GameBoard(this);
@@ -43,8 +45,12 @@ public class Game {
         longestRoad = 0;
         largestArmy = null;
         players = new ArrayList<>();
-        for(int i = 0;i<numOfPlayers;i++) {
-            players.add(new Player(i + 1, this));
+        for(int i = 0;i< order.length;i++) {
+            if (Objects.equals(order[i], "player"))
+                players.add(new Player(i + 1, this));
+            else {
+                players.add(new AIPlayer(i + 1, this));
+            }
         }
         currentPlayer = players.get(0);
         turnCount = 0;
@@ -69,6 +75,11 @@ public class Game {
         for(int i = 0;i<25;i++) {
             developmentCards.addFirst(cards.remove(rand.nextInt(25-i)));
         }
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> gui.updateCountdown()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+
     }
 
     public void setGUI(GUI gui){
@@ -482,4 +493,7 @@ public class Game {
         this.placeRobber = placeRobber;
     }
 
+    public long getEndTime() {
+        return endTime;
+    }
 }

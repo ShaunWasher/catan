@@ -7,6 +7,7 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -114,6 +115,7 @@ public class GUI {
     private Rectangle[] monopolyResCards;
     private ResourceType monopolyResType;
     private Rectangle confirmButton;
+    private Label countdownLabel;
 
     private Group monopoly;
     //endregion
@@ -146,10 +148,17 @@ public class GUI {
         playerIconLabels = new ArrayList<>();
         acceptedTrades = new ArrayList<>();
 
+        countdownLabel = new Label();
+        countdownLabel.setPrefSize(200, 100);
+        countdownLabel.setStyle("-fx-font-size: 50px; -fx-text-fill: white;");
+        countdownLabel.setLayoutX(25);
+        countdownLabel.setLayoutY(5);
+
+        GUI.getChildren().add(countdownLabel);
 
         //FIXME
         Rectangle testBox = new Rectangle(100, 100, 100, 100);
-        GUI.getChildren().add(testBox);
+        //GUI.getChildren().add(testBox);
         testBox.setOnMouseClicked(e -> {
             game.getCurrentPlayer().resourceCards.merge(ResourceType.BRICK, 5, Integer::sum);
             game.getCurrentPlayer().resourceCards.merge(ResourceType.LUMBER, 5, Integer::sum);
@@ -601,7 +610,11 @@ public class GUI {
             Rectangle playerUI = new Rectangle(960, 270 + (165 * y) , 450, 140);
             playerUI.setFill(new ImagePattern(new Image(this.getClass().getResource("p2box.png").toExternalForm())));
             Rectangle playerIcon = new Rectangle(1000, 315 + (165 * y) ,65, 65);
-            playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
+            if (nonActivePlayers.get(y) instanceof AIPlayer) {
+                playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"ai.png").toExternalForm())));
+            } else {
+                playerIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"player.png").toExternalForm())));
+            }
             playerIcons.add(playerIcon);
             Rectangle playerIconLabel = new Rectangle(1020, 365 + (165 * y) , 25, 25);
             playerIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID()-1]+"playerlabel.png").toExternalForm())));
@@ -1017,7 +1030,11 @@ public class GUI {
         }
         CPResCardsCount.setText(String.valueOf(currentPlayerResNumber));
         CPDevCardsCount.setText(String.valueOf(game.getCurrentPlayer().getDevelopmentCards().size()));
-        CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
+        if (game.getCurrentPlayer() instanceof AIPlayer) {
+            CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "ai.png").toExternalForm())));
+        } else {
+            CPIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
+        }
         CPIconLabel.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
         CPVPCount.setText(String.valueOf(game.getCurrentPlayer().getVictoryPoints()));
         CPLargestArmyValue.setText(String.valueOf(game.getCurrentPlayer().getArmySize()));
@@ -1041,9 +1058,17 @@ public class GUI {
         players = game.getPlayers();
         nonActivePlayers = new ArrayList<>(players);
         nonActivePlayers.remove(game.getCurrentPlayer());
-        CPTradeIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
+        if (game.getCurrentPlayer() instanceof AIPlayer) {
+            CPTradeIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "ai.png").toExternalForm())));
+        } else {
+            CPTradeIcon.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[game.getCurrentPlayer().getPlayerID() - 1] + "player.png").toExternalForm())));
+        }
         for (int y = 0; y < players.size() - 1; y++) {
-            playerIcons.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+            if (nonActivePlayers.get(y) instanceof AIPlayer) {
+                playerIcons.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "ai.png").toExternalForm())));
+            } else {
+                playerIcons.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+            }
             playerIconLabels.get(y).setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(nonActivePlayers.get(y)).getPlayerID() - 1] + "playerlabel.png").toExternalForm())));
             int altResNumber = 0;
             for (int z=0; z < 5;z++){
@@ -1246,7 +1271,11 @@ public class GUI {
                                         offset = 545;
                                     }
                                     Rectangle chooseTrade = new Rectangle(offset+(125*y), 425, 100, 100);
-                                    chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+                                    if (acceptedTrades.get(y) instanceof AIPlayer) {
+                                        chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "ai.png").toExternalForm())));
+                                    } else {
+                                        chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+                                    }
                                     tradeOptions[y] = chooseTrade;
                                     GUI.getChildren().add(chooseTrade);
                                     chooseTrade.setOnMouseClicked(ct -> {
@@ -1340,7 +1369,11 @@ public class GUI {
                                     offset = 545;
                                 }
                                 Rectangle chooseTrade = new Rectangle(offset+(125*y), 425, 100, 100);
-                                chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+                                if (acceptedTrades.get(y) instanceof AIPlayer) {
+                                    chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "ai.png").toExternalForm())));
+                                } else {
+                                    chooseTrade.setFill(new ImagePattern(new Image(this.getClass().getResource(playerColours[(acceptedTrades.get(y)).getPlayerID() - 1] + "player.png").toExternalForm())));
+                                }
                                 tradeOptions[y] = chooseTrade;
                                 GUI.getChildren().add(chooseTrade);
                                 chooseTrade.setOnMouseClicked(ct -> {
@@ -1419,5 +1452,16 @@ public class GUI {
 
     public void setSceneChanger(SceneChanger sceneChanger) {
         this.sceneChanger = sceneChanger;
+    }
+
+    void updateCountdown() {
+        long remainingTime = game.getEndTime() - System.currentTimeMillis();
+        if (remainingTime <= 0) {
+            return;
+        }
+
+        long minutes = remainingTime / 60000;
+        long seconds = (remainingTime % 60000) / 1000;
+        countdownLabel.setText(String.format("%02d:%02d", minutes, seconds));
     }
 }

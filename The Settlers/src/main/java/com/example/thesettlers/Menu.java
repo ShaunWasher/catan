@@ -4,12 +4,13 @@ import com.example.thesettlers.enums.BoardType;
 import com.example.thesettlers.enums.GameVersion;
 import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,6 +23,7 @@ public class Menu {
     private BoardType boardtype;
     private int playerCount;
     private int agentCount;
+    private int gameLengthValue;
     private String[] playerColours;
     private String[] order;
     public Menu(){
@@ -29,13 +31,13 @@ public class Menu {
         background.setFill(new ImagePattern(new Image(this.getClass().getResource("menubg.png").toExternalForm())));
         menu.getChildren().add(background);
         background.toBack();
-
         gameversion = GameVersion.VP;
         boardtype = BoardType.STARTING;
         playerCount = 1;
         agentCount = 0;
         playerColours = new String[]{"blue", "gold", "white"};
         order = new String[]{"player",null,null,null};
+        gameLengthValue = 0;
 
         Rectangle startGame = new Rectangle(362.5, 280,715,100);
         startGame.setFill(new ImagePattern(new Image(this.getClass().getResource("startgame.png").toExternalForm())));
@@ -60,16 +62,58 @@ public class Menu {
         timeBased.setFill(new ImagePattern(new Image(this.getClass().getResource("timebased.png").toExternalForm())));
         timeBased.setOpacity(0.35);
 
+        Rectangle gameLengthPopUp = new Rectangle(0,0,1440,900);
+        gameLengthPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("gamelengthpopup.png").toExternalForm())));
+
+        Rectangle add = new Rectangle(720-200,410-5+10,40,40);
+        add.setFill(new ImagePattern(new Image(this.getClass().getResource("plus.png").toExternalForm())));
+
+        Rectangle subtract = new Rectangle(720+200-40,410-5+10,40,40);
+        subtract.setFill(new ImagePattern(new Image(this.getClass().getResource("minus.png").toExternalForm())));
+
+        Text value = new Text(720-200+60+5,410-10+45+10,"0 minutes");
+        value.setFont(new Font(60));
+        value.setFill(Color.WHITE);
+
+        add.setOnMouseClicked(e -> {
+            gameLengthValue++;
+            value.setText((String.valueOf(gameLengthValue)+" minutes"));
+
+        });
+
+        subtract.setOnMouseClicked(e -> {
+            if (gameLengthValue > 0)
+            gameLengthValue--;
+            value.setText((String.valueOf(gameLengthValue)+" minutes"));
+        });
+
+        Rectangle confirmButton = new Rectangle(636.475,494+5,167.05,32.5);
+        confirmButton.setFill(new ImagePattern(new Image(this.getClass().getResource("confirm.png").toExternalForm())));
+
+        Group gameLength = new Group(gameLengthPopUp,confirmButton,value,add,subtract);
+        gameLength.setVisible(false);
+        menu.getChildren().add(gameLength);
+
+        confirmButton.setOnMouseClicked(e->{
+            if (gameLengthValue > 0){
+                gameLength.setVisible(false);
+            }
+        });
+
         vpBased.setOnMouseClicked(e -> {
             vpBased.setOpacity(1);
             gameversion = GameVersion.VP;
             timeBased.setOpacity(0.35);
+            gameLengthValue = 0;
+            value.setText((String.valueOf(gameLengthValue)+" minutes"));
         });
 
         timeBased.setOnMouseClicked(e -> {
             timeBased.setOpacity(1);
             gameversion = GameVersion.TIMED;
             vpBased.setOpacity(0.35);
+            gameLength.setVisible(true);
+            gameLength.toFront();
             //TODO PLAYER TO SELECT LENGTH OF GAME
         });
 
@@ -279,7 +323,7 @@ public class Menu {
         System.out.println(Arrays.toString(order));
         Game game = null; //TODO get number of players from setup screen
         try {
-            game = new Game(gameversion,boardtype, playerCount, agentCount); //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
+            game = new Game(gameversion, gameLengthValue,boardtype,order); //TODO PASS THROUGH LENGTH OF GAME FOR TIMED
         } catch (URISyntaxException | IOException ex) {
             throw new RuntimeException(ex);
         }
