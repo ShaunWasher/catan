@@ -112,7 +112,11 @@ public class Game {
         if(turnCount<players.size()){
             gameBoard.setSettlementPane();
             currentPlayer = players.get(turnCount);
-            gui.endTurnMenu();
+            if(currentPlayer.getClass() == Player.class) {
+                gui.endTurnMenu();
+            } else {
+                ((AIPlayer)currentPlayer).playTurn();
+            }
             return currentPlayer;
         }
         // second round
@@ -120,7 +124,11 @@ public class Game {
             gameBoard.setSettlementPane();
             currentPlayer = players.get((2*players.size())-turnCount-1);
             gui.refreshUI();
-            gui.endTurnMenu();
+            if(currentPlayer.getClass() == Player.class) {
+                gui.endTurnMenu();
+            } else {
+                ((AIPlayer)currentPlayer).playTurn();
+            }
             return currentPlayer;
         }
         //starting phase over
@@ -142,11 +150,14 @@ public class Game {
                 winGame(winner);
             }
         }
+        if(currentPlayer.getClass() == AIPlayer.class) {
+            ((AIPlayer)currentPlayer).playTurn();
+        }
         return currentPlayer;
     }
 
     public void rollDice(int die1, int die2){
-        if(die1+die2 == 7){
+        if(die1+die2 == 7 && getCurrentPlayer().getClass() == Player.class){
             gameBoard.transparency(true);
             placeRobber = true;
             Platform.runLater(() -> {
@@ -508,9 +519,9 @@ public class Game {
                 }
             }
         }
-        if (stealOptions.size() > 1) {
+        if (stealOptions.size() > 1 && getCurrentPlayer().getClass() == Player.class) {
             gui.stealCardSelect(stealOptions);
-        } else if (stealOptions.size() == 1) {
+        } else if (stealOptions.size() == 1 || (getCurrentPlayer().getClass() == AIPlayer.class && stealOptions.size()>0)) {
             stealCard(stealOptions.get(0));
         }
     }

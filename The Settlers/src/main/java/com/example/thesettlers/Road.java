@@ -9,7 +9,7 @@ public class Road {
     private Player owner;
     private Settlement settlementA;
     private Settlement settlementB;
-    private Rectangle rectangle;
+    public Rectangle rectangle;
     private Image image;
     private Game game;
     private String[] playerColours;

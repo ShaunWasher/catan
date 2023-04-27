@@ -38,7 +38,7 @@ public class GameBoard {
     private Integer[][] portSettlementData;
     Settlement[] settlementList;
     private Road[] roadList;
-    private Tile[] tileList;
+    public Tile[] tileList;
     private double yStartOffset = 155;
     private double xOff = 145;
     private final static double r = 70; // the inner radius from hexagon center to outer corner

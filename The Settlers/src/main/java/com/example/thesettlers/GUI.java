@@ -32,12 +32,12 @@ public class GUI {
     private SceneChanger sceneChanger;
     private Pane boardPane;
     private Rectangle takeCardsButton;
-    private Pane settlementPane;
-    private Pane roadPane;
+    Pane settlementPane;
+    Pane roadPane;
     private Pane permanentPane;
-    private Pane developmentCards;
-    private Rectangle dice2;
-    private Rectangle dice1;
+    Pane developmentCards;
+    public Rectangle dice2;
+    public Rectangle dice1;
     private Game game;
     private int tradeCount;
     private GameBoard gameBoard;
@@ -1206,12 +1206,14 @@ public class GUI {
             downArrows[y].setVisible(false);
             upArrows[y].setVisible(false);
         }
-        endTurn.setVisible(true);
-        endTurn.toFront();
-        endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p"+(game.getCurrentPlayer().getPlayerID())+"endturn.png").toExternalForm())));
-        clickToContinueButton.setOnMouseClicked(ee -> {
-            endTurn.setVisible(false);
-        });
+        if(game.getCurrentPlayer().getClass() == Player.class) {
+            endTurn.setVisible(true);
+            endTurn.toFront();
+            endTurnPopUp.setFill(new ImagePattern(new Image(this.getClass().getResource("p" + (game.getCurrentPlayer().getPlayerID()) + "endturn.png").toExternalForm())));
+            clickToContinueButton.setOnMouseClicked(ee -> {
+                endTurn.setVisible(false);
+            });
+        }
     }
 
     public void winMessage(Player player){

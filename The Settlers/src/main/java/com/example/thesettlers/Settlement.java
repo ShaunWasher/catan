@@ -11,7 +11,7 @@ public class Settlement {
     private ArrayList<Tile> tiles;
     private Player owner;
     boolean isCity;
-    private Rectangle rectangle;
+    public Rectangle rectangle;
     private Game game;
     private PortType port;
 
