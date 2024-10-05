@@ -8,7 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -70,10 +69,18 @@ public class GameBoard {
 
         String line = "";
         String splitBy = ",";
-        URL fileUrlSM = getClass().getResource("startingmap.csv");
-        File fileSM = new File(fileUrlSM.toURI());
-        FileReader frSM = new FileReader(fileSM);
-        BufferedReader brSM = new BufferedReader(frSM);
+
+        // Load the resource using getResourceAsStream()
+        InputStream inputStream = getClass().getResourceAsStream("/com/example/thesettlers/startingmap.csv");
+
+        if (inputStream == null) {
+            throw new FileNotFoundException("Resource startingmap.csv not found");
+        }
+
+        // Wrap the InputStream in InputStreamReader and BufferedReader
+        InputStreamReader isrSM = new InputStreamReader(inputStream);
+        BufferedReader brSM = new BufferedReader(isrSM);
+
         while ((line = brSM.readLine()) != null) {
             String[] data = line.split(splitBy);
             startingTerrainList.add(data[0]);
@@ -101,10 +108,17 @@ public class GameBoard {
         }
 
 
-        URL fileUrlTS = getClass().getResource("tilesettlementdata.csv");
-        File fileTS = new File(fileUrlTS.toURI());
-        FileReader frTS = new FileReader(fileTS);
-        BufferedReader brTS = new BufferedReader(frTS);
+        // Load the resource using getResourceAsStream()
+        InputStream inputStreamTS = getClass().getResourceAsStream("/com/example/thesettlers/tilesettlementdata.csv");
+
+        if (inputStreamTS == null) {
+            throw new FileNotFoundException("Resource tilesettlementdata.csv not found");
+        }
+
+        // Wrap the InputStream in InputStreamReader and BufferedReader
+        InputStreamReader isrTS = new InputStreamReader(inputStreamTS);
+        BufferedReader brTS = new BufferedReader(isrTS);
+
         int i = 0;
         while ((line = brTS.readLine()) != null) {
             String[] data = line.split(splitBy);
@@ -115,10 +129,17 @@ public class GameBoard {
             i++;
         }
 
-        URL fileUrlRS = getClass().getResource("roadsettlementdata.csv");
-        File fileRS = new File(fileUrlRS.toURI());
-        FileReader frRS = new FileReader(fileRS);
-        BufferedReader brRS = new BufferedReader(frRS);
+        // Load the resource using getResourceAsStream()
+        InputStream inputStreamRS = getClass().getResourceAsStream("/com/example/thesettlers/roadsettlementdata.csv");
+
+        if (inputStreamRS == null) {
+            throw new FileNotFoundException("Resource roadsettlementdata.csv not found");
+        }
+
+        // Wrap the InputStream in InputStreamReader and BufferedReader
+        InputStreamReader isrRS = new InputStreamReader(inputStreamRS);
+        BufferedReader brRS = new BufferedReader(isrRS);
+
         i = 0;
         while ((line = brRS.readLine()) != null) {
             String[] data = line.split(splitBy);
@@ -130,10 +151,18 @@ public class GameBoard {
         }
 
         ports = new String[9];
-        URL fileUrlPS = getClass().getResource("portsettlementdata.csv");
-        File filePS = new File(fileUrlPS.toURI());
-        FileReader frPS = new FileReader(filePS);
-        BufferedReader brPS = new BufferedReader(frPS);
+
+        // Load the resource using getResourceAsStream()
+        InputStream inputStreamPS = getClass().getResourceAsStream("/com/example/thesettlers/portsettlementdata.csv");
+
+        if (inputStreamPS == null) {
+            throw new FileNotFoundException("Resource portsettlementdata.csv not found");
+        }
+
+        // Wrap the InputStream in InputStreamReader and BufferedReader
+        InputStreamReader isrPS = new InputStreamReader(inputStreamPS);
+        BufferedReader brPS = new BufferedReader(isrPS);
+
         i = 0;
         while ((line = brPS.readLine()) != null) {
             String[] data = line.split(splitBy);

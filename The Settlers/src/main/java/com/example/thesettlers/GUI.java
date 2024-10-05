@@ -225,7 +225,7 @@ public class GUI {
         devCard.setFill(new ImagePattern(new Image(this.getClass().getResource("devcard.png").toExternalForm())));
         GUI.getChildren().add(devCard);
         Tooltip clickToOpen = new Tooltip();
-        ImageView clickToOpenImg = new ImageView(new Image(this.getClass().getResource("clickToOpen.png").toExternalForm()));
+        ImageView clickToOpenImg = new ImageView(new Image(this.getClass().getResource("clicktoopen.png").toExternalForm()));
         clickToOpenImg.setPreserveRatio(true);
         clickToOpenImg.setFitHeight(16);
         clickToOpen.setGraphic(clickToOpenImg);
@@ -246,7 +246,7 @@ public class GUI {
         });
 
         Tooltip clickToUse = new Tooltip();
-        ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clickToUse.png").toExternalForm()));
+        ImageView clickToUseImg = new ImageView(new Image(this.getClass().getResource("clicktouse.png").toExternalForm()));
         clickToUseImg.setPreserveRatio(true);
         clickToUseImg.setFitHeight(12.5);
         clickToUse.setGraphic(clickToUseImg);
