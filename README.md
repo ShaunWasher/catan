@@ -18,8 +18,8 @@ The game follows the core mechanics of the original Settlers of Catan board game
 ## Installation and Running the game
 
 - install JDK 23 (19 or newer should also work) if you don't have it already
-- download thesettlers-1.0-SNAPSHOT.jar from the target folder
-- run the following command in the directory where the file is installed
+- download thesettlers-1.0-SNAPSHOT.jar from the target folder and you should be able to run it!
+- if not try running the following command in the directory where the file is installed
 ```PS
 java -jar thesettlers-1.0-SNAPSHOT.jar
 ```
